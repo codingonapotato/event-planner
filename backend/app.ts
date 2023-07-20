@@ -1,13 +1,15 @@
 import pg from 'pg'
 import express from 'express'
 
-const client = new pg.Client({
+const Pool = new pg.Pool({
   user: 'admin',
   host: 'db',
   database: 'test_db',
   password: 'mypassword',
-  port: 5432,
+  port: 5432
 });
+
+Pool.connect();
 
 const app = express();
 app.get('/', (req, res) => {
@@ -15,21 +17,9 @@ app.get('/', (req, res) => {
 });
 
 app.listen(8000, () => {
-  console.log('Listening on port 8000');
+  console.log('Listening on port 8000 test');
 });
 
-client.connect().then(() => {
-  client.query('SELECT * FROM users', (err, res) => {
-    console.log(err);
-    console.log(res.rows)
-    client.end();
-  });
-
-  client.query('select * from accounts', (err, res) => {
-    console.log(res.rows);
-  })
-
-  client.end();
-}).catch((error) => {
-  console.log(error)
+Pool.query('select * from users', (err, res) => {
+  console.log(res.rows);
 });
