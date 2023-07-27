@@ -1,25 +1,16 @@
-import pg from 'pg'
 import express from 'express'
+import mountRoutes from './src/routes'
 
-const Pool = new pg.Pool({
-  user: 'admin',
-  host: 'db',
-  database: 'test_db',
-  password: 'mypassword',
-  port: 5432
-});
 
-Pool.connect();
+// Pool.connect();
 
 const app = express();
-app.get('/', (req, res) => {
-  res.send("hello world!");
-});
+mountRoutes(app);
 
 app.listen(8000, () => {
-  console.log('Listening on port 8000 test');
+  console.log('Listening on port 8000');
 });
 
-Pool.query('select * from users', (err, res) => {
-  console.log(res.rows);
-});
+// Pool.query('select * from users', (err, res) => {
+//   console.log(res.rows);
+// });

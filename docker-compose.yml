@@ -5,7 +5,7 @@ services:
     image: postgres:latest
     volumes:
       - ./data:/var/lib/postgresql/data
-      - ./backend/scripts/seed.sql:/docker-entrypoint-initdb.d/seed_db.sql
+      - ./backend/scripts/tables.sql:/docker-entrypoint-initdb.d/seed_db.sql
     restart: always
     env_file: ./backend/.env
     ports:
@@ -18,11 +18,11 @@ services:
       - ./backend:/usr/src/app
     ports:
       - 8000:8000
-  frontend:
-    build: ./frontend
-    depends_on:
-      - app
-    volumes:
-      - ./frontend:/usr/src/app
-    ports:
-      - 5173:5173
+  # frontend:
+  #   build: ./frontend
+  #   depends_on:
+  #     - app
+  #   volumes:
+  #     - ./frontend:/usr/src/app
+  #   ports:
+  #     - 5173:5173
