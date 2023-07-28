@@ -1,14 +1,15 @@
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
-import LoginCard from './components/Login'
+import LoginCard from './components/LoginCard'
+import LoginPage from './components/LoginPage'
 
 function App() {
   // const [count, setCount] = useState(0)
 
   return (
     <>
-      <LoginCard/>
+      <LoginPage />
     </>
     // <>
     //   <div className="min-h-full h-screen flex items-center justify-center">
