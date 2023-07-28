@@ -3,14 +3,14 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
 import LoginCard from './components/LoginCard'
 import LoginPage from './components/LoginPage'
+import HyperLogin from './components/HyperLogin'
 
 function App() {
   // const [count, setCount] = useState(0)
 
   return (
-    <>
+      // <HyperLogin />
       <LoginPage />
-    </>
     // <>
     //   <div className="min-h-full h-screen flex items-center justify-center">
     //     <div className="max-w-md w-full space-y-8">
