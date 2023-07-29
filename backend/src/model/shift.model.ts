@@ -1,8 +1,17 @@
 import * as db from "../../db";
 
 // returns a query containing the row of the shift specified by [id: number]
-export function getShift(id: number) {
+export function get_using_shiftID(id: number) {
     return db.query('SELECT * FROM shift WHERE shift_id = $1::integer', [id]);
+}
+
+// returns a query containing the row of the shift specified by [id: number]
+export function get_using_eventID(id: number) {
+    return db.query('SELECT * FROM shift WHERE event_id = $1::integer', [id]);
+}
+
+export function get_using_volunteerID(id: number) {
+    return db.query('SELECT * FROM shift WHERE volunteer_id = $1::integer', [id]);
 }
 
 // updates a shift's ID provided by the old [id: number] and new [new_id: string]

@@ -7,10 +7,40 @@ export const shiftRouter = Router();
 // - responds with a tuple of shift on success with status(200)
 // - responds with status(404) if query is not in the database
 // - responds with status(500) if the query fails otherwise
-shiftRouter.get('/:id', async (req, res) => {
+shiftRouter.get('/shiftID/:id', async (req, res) => {
    const id = parseInt(req.params.id);
 
-   Shift.getShift(id)
+   Shift.get_using_shiftID(id)
+   .then((result) => {
+      if (result.rowCount === 0) {
+         res.status(404).send('shift not found') 
+      }
+      res.status(200).send(result.rows);
+   })
+   .catch((err) => {
+      res.status(500).send('Database query failed');
+   });
+}); 
+
+shiftRouter.get('/eventID/:id', async (req, res) => {
+   const id = parseInt(req.params.id);
+
+   Shift.get_using_eventID(id)
+   .then((result) => {
+      if (result.rowCount === 0) {
+         res.status(404).send('shift not found') 
+      }
+      res.status(200).send(result.rows);
+   })
+   .catch((err) => {
+      res.status(500).send('Database query failed');
+   });
+}); 
+
+shiftRouter.get('/volunteerID/:id', async (req, res) => {
+   const id = parseInt(req.params.id);
+
+   Shift.get_using_volunteerID(id)
    .then((result) => {
       if (result.rowCount === 0) {
          res.status(404).send('shift not found') 
