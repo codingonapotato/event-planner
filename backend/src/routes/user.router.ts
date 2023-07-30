@@ -18,6 +18,15 @@ userRouter.get('/:id', async (req, res) => {
    });
 }); 
 
+userRouter.post('/login', async (req, res) => {
+   const id: number = await User.login(req.body.email, req.body.password).then();
+   if (id === -1) {
+      res.status(401).send('Invalid credentials');
+   } else {
+      res.status(200).json({'message': 'Login successful!', 'user_id': id});
+   }
+})
+
 export default userRouter;
 
 
