@@ -1,22 +1,20 @@
 import { Router } from 'express';
-import * as User from '../model/user.model'
+import User from '../model/user.model'
+
 
 export const userRouter = Router();
+const user = new User();
 
-userRouter.get('/:id', async (req, res) => {
+
+userRouter.get('/:id', (req, res) => {
    const id = parseInt(req.params.id);
+   user.findUser(id, res);
+});
 
-   User.findUser(id)
-   .then((result) => {
-      if (result.rows.length === 0) {
-         res.status(404).send('User not found') 
-      }
-      res.status(200).send(result.rows);
-   })
-   .catch((err) => {
-      res.status(500).send('Database query failed');
-   });
-}); 
+userRouter.post('/:id/:phone_num/:first_name/:last_name/:street/:street_num/:postal_code/:birthdate/:email/:balance', (req, res) => {
+   const id = parseInt(req.params.id);
+   user.updateUser(id, req, res);
+});
 
 export default userRouter;
 
