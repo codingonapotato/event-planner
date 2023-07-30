@@ -56,7 +56,7 @@ export default function LoginCard() {
                     {props => (
                         <Form>
                             <Input 
-                                id={'email'}
+                                id={'loginEmail'}
                                 type={'email'}
                                 placeholder={'name@email.com'}
                                 labelText={'Email Address'}
@@ -66,9 +66,9 @@ export default function LoginCard() {
                             {(serverError) ? <div className="text-sm dark:text-red-400">{serverError}</div> :
                             (props.errors.email && props.touched.email) ? <div className="text-sm dark:text-red-400">{props.errors.email}</div> : null}
                             <Input 
-                                id={'password'}
+                                id={'loginPassword'}
                                 type={'password'}
-                                placeholder={'●●●●●●●●●●'}
+                                placeholder={'•••••••••'}
                                 labelText={'Password'}
                                 onChange={props.handleChange}
                                 value={props.values.password}
