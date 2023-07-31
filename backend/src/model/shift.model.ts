@@ -14,32 +14,6 @@ export function get_using_volunteerID(id: number) {
     return db.query('SELECT * FROM shift WHERE volunteer_id = $1::integer', [id]);
 }
 
-// // updates a shift's ID provided by the old [id: number] and new [new_id: string]
-// export function updateSID(id: number, new_id: number) {
-//     return db.query('UPDATE shift SET shift_id = $2::text WHERE shift_id = $1::integer', [id, new_id]);
-// }
-
-// // updates a shift's role provided by [id: number] and [role: string]
-// export function updateRole(id: number, role: string) {
-//     return db.query(`UPDATE shift SET role = $2::text WHERE shift_id = $1::integer`, [id, role]);
-// }
-
-// // updates a shift's start time provided by [id: number] and [startTime: string]
-// export function updateStartTime(id: number, startTime: string) {
-//     return db.query('UPDATE shift SET start_time = $2::timestamp WHERE shift_id = $1::integer', [id, startTime]);
-// }
-
-// // updates a shift's end time provided by [id: number] and [endTime: string]
-// export function updateEndTime(id: number, endTime: string) {
-//     return db.query('UPDATE shift SET end_time = $2::timestamp WHERE shift_id = $1::integer', [id, endTime]);
-// }
-
-// // updates a shift's station provided by [id: number] and [station: string]
-// export function updateStation(id: number, station: string) {
-//     return db.query('UPDATE shift SET station = $2::text WHERE shift_id = $1::integer', [id, station]);
-// }
-
-
 /**
  * Updates all attributes with the exception of foreign keys in Shift
  * @param id the shift_id of the shift we want to change
