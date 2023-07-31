@@ -31,10 +31,10 @@ customerRouter.get('/dependant/:id', (req, res) => {
 
 customerRouter.get('/tickets/:id', (req, res) => {
     const id = parseInt(req.params.id);
-    Customer.removeDependant(id, req);
+    Customer.getTickets(id);
 })
 
-customerRouter.post('/dependant-modify/:id/:first_name/:last_name/:new_first_name/:new_last_name/:birthdate', (req, res) => {
+customerRouter.post('/dependant-modify/:id/:first_name/:last_name/', (req, res) => {
     const id = parseInt(req.params.id);
     Customer.modifyDependant(id, req).then((result) => {
         if (result === -1) {
@@ -48,7 +48,7 @@ customerRouter.post('/dependant-modify/:id/:first_name/:last_name/:new_first_nam
     });
 })
 
-customerRouter.put('/dependant-add/:id/:first_name/:last_name/:birthdate', (req, res) => {
+customerRouter.put('/dependant-add/:id/', (req, res) => {
     const id = parseInt(req.params.id);
     Customer.addDependant(id, req).then((result) => {
         if (result === -1) {

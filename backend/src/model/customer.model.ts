@@ -25,7 +25,7 @@ export async function getDependant(id: number) {
 
 /** EFFECTS: Adds a new dependant associated to a customer with id=@param id */
 export async function addDependant(id: number, req) {
-    const { first_name: firstName, last_name: lastName, birthdate } = req.params;
+    const { first_name: firstName, last_name: lastName, birthdate } = req.body;
     const res = await db.query(`INSERT INTO dependants VALUES ($1, $2, $3, $4) RETURNING *`,
         [firstName, lastName, id, birthdate]);
     if (res.rows.length === 0) {
@@ -33,12 +33,12 @@ export async function addDependant(id: number, req) {
     } else {
         return res.rows;
     }
-
 }
 
 /** EFFECTS: Modifies a new dependant associated to a customer with id=@param id */
 export async function modifyDependant(id: number, req) {
-    const { first_name: firstName, last_name: lastName, new_first_name: newFirstName, new_last_name: newLastName, birthdate } = req.params;
+    const { first_name: firstName, last_name: lastName } = req.params;
+    const { first_name: newFirstName, last_name: newLastName, birthdate } = req.body;
     const res = await db.query(`UPDATE dependants SET 
         first_name = $1,
         last_name = $2,
@@ -69,5 +69,11 @@ export async function removeDependant(id: number, req) {
 /** EFFECTS: Retrieves all tickets that a customer holds (including information on the event the ticket is for) */
 export async function getTickets(id: number) {
     // call event.model function with return eventID maybe?
-    return 0; // stub
+    // still under development pausing until we cover the SQL for joins
+    const res = await db.query('SELECT * FROM tickets WHERE customer_id = $1', [id]);
+    if (res.rows.length === 0) {
+        return -1;
+    } else {
+        return res.rows;
+    }
 }

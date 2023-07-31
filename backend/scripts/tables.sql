@@ -154,12 +154,20 @@ CREATE TABLE volunteers_for_event (
 
 CREATE TABLE tier (
     tier_id             INTEGER PRIMARY KEY,
+    event_id            INTEGER,
+    organizer_id        INTEGER,
     tier_description    TEXT,
     tier_name           TEXT,
-    price               MONEY);
+    price               MONEY,
+    FOREIGN KEY (event_id) REFERENCES event
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+    FOREIGN KEY (organizer_id) REFERENCES organizer
+    ON UPDATE CASCADE
+    ON DELETE CASCADE);
 
 CREATE TABLE ticket (
-    ticket_id   INTEGER     PRIMARY KEY,
+    ticket_id   SERIAL     PRIMARY KEY,
     seat_number INTEGER,
     tier_id     INTEGER     NOT NULL,
     event_id    INTEGER     NOT NULL,
@@ -347,24 +355,24 @@ VALUES
 
 
 INSERT
-INTO tier (tier_id, tier_description, tier_name, price)
+INTO tier (tier_id, event_id, organizer_id, tier_description, tier_name, price)
 VALUES
-	(1,  'Balcony Seating', 	'Tier 1',   49),
-	(2,  'Standard Seating',	'Tier 2',   79),
-	(3,  'Rear Standing',		'Tier 3',   99),
-	(4,  'Front Standing',		'Tier 4',   129),
-	(5,  'VIP Box',				'VIP',  	550),
-	(6, 'General Admission',	'Tier 0', 	5);
+	(1, 1, 1,  'Balcony Seating', 	'Tier 1',   49),
+	(2, 2, 7,   'Standard Seating',	'Tier 2',   79),
+	(3, 3, 3,  'Rear Standing',		'Tier 3',   99),
+	(4, 4, 4,  'Front Standing',		'Tier 4',   129),
+	(5, 5, 2,  'VIP Box',				'VIP',  	550),
+	(6, 1, 1, 'General Admission',	'Tier 0', 	5);
 
 
 INSERT INTO 
-ticket(ticket_id, seat_number, tier_id, event_id, customer_id)
+ticket(seat_number, tier_id, event_id, customer_id)
 VALUES
-	(1, NULL, 6, 5, NULL),
-	(2, NULL, 6, 5, 8),
-	(3, 500, 2, 1, 1),
-	(4, 125, 4, 4, 4),
-	(5, 5, 5, 3, 2);
+	(NULL, 6, 5, NULL),
+	(NULL, 6, 5, 8),
+	(500, 2, 1, 1),
+	(125, 4, 4, 4),
+	(5, 5, 3, 2);
 
 
 INSERT

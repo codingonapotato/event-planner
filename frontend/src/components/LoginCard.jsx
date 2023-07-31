@@ -12,7 +12,7 @@ export default function LoginCard() {
             <div className="px-12 py-6 w-full bg-white rounded-lg shadow dark:border dark:bg-gray-800 dark:border-gray-700">
                 <div className="flex justify-center items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 dark:text-blue-500 text-black">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                     </svg>
                 </div>
 
@@ -20,14 +20,14 @@ export default function LoginCard() {
                     <h1 className="text-2xl font-bold leading-tight tracking-tight text-center text-white">Sign in to your account</h1>
                 </div>
                 <Formik
-                    initialValues={{email: '', password: ''}}
+                    initialValues={{ email: '', password: '' }}
                     onSubmit={async (values, actions) => {
-                            await axios.post('http://localhost:8000/user/login', {
-                                'email': values.email,
-                                'password': values.password
-                            }, {
-                                headers: {'content-type': 'application/json'}
-                            })
+                        await axios.post('http://localhost:8000/user/login', {
+                            'email': values.email,
+                            'password': values.password
+                        }, {
+                            headers: { 'content-type': 'application/json' }
+                        })
                             .then((res) => {
                                 localStorage.setItem('user_id', res.data.user_id);
                             }, reason => {
@@ -38,8 +38,8 @@ export default function LoginCard() {
                     validate={(values) => {
                         setServerError('');
                         const errors = {};
-                        if (!values.email) { 
-                            errors.email = "Email is required" 
+                        if (!values.email) {
+                            errors.email = "Email is required"
                         } else if (!/.*@.*/.test(values.email)) {
                             errors.email = 'Invalid email';
                         }
@@ -55,7 +55,7 @@ export default function LoginCard() {
                 >
                     {props => (
                         <Form>
-                            <Input 
+                            <Input
                                 id={'email'}
                                 type={'email'}
                                 placeholder={'name@email.com'}
@@ -64,8 +64,8 @@ export default function LoginCard() {
                                 value={props.values.email}
                             />
                             {(serverError) ? <div className="text-sm dark:text-red-400">{serverError}</div> :
-                            (props.errors.email && props.touched.email) ? <div className="text-sm dark:text-red-400">{props.errors.email}</div> : null}
-                            <Input 
+                                (props.errors.email && props.touched.email) ? <div className="text-sm dark:text-red-400">{props.errors.email}</div> : null}
+                            <Input
                                 id={'password'}
                                 type={'password'}
                                 placeholder={'●●●●●●●●●●'}
@@ -74,8 +74,8 @@ export default function LoginCard() {
                                 value={props.values.password}
                             />
                             {(serverError) ? <div className="text-sm dark:text-red-400">{serverError}</div> :
-                            (props.errors.password && props.touched.password) ? <div className="text-sm dark:text-red-400">{props.errors.password}</div> : null}
-                            <Input 
+                                (props.errors.password && props.touched.password) ? <div className="text-sm dark:text-red-400">{props.errors.password}</div> : null}
+                            <Input
                                 id={'submitLogin'}
                                 type={"submit"}
                                 value={'Sign in'}
