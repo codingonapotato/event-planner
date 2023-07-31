@@ -21,7 +21,7 @@ export default function LoginCard() {
                 </div>
                 <Formik
                     initialValues={{email: '', password: ''}}
-                    onSubmit={async (values, actions) => {
+                    onSubmit={async (values) => {
                             await axios.post('http://localhost:8000/user/login', {
                                 'email': values.email,
                                 'password': values.password
@@ -49,14 +49,13 @@ export default function LoginCard() {
                         } else if (!/[A-Za-z0-9-]{4}/.test(values.password)) {
                             errors.password = 'Invalid password';
                         }
-
                         return errors;
                     }}
                 >
                     {props => (
                         <Form>
                             <Input 
-                                id={'loginEmail'}
+                                id={'email'}
                                 type={'email'}
                                 placeholder={'name@email.com'}
                                 labelText={'Email Address'}
@@ -66,7 +65,7 @@ export default function LoginCard() {
                             {(serverError) ? <div className="text-sm dark:text-red-400">{serverError}</div> :
                             (props.errors.email && props.touched.email) ? <div className="text-sm dark:text-red-400">{props.errors.email}</div> : null}
                             <Input 
-                                id={'loginPassword'}
+                                id={'password'}
                                 type={'password'}
                                 placeholder={'•••••••••'}
                                 labelText={'Password'}
@@ -76,7 +75,7 @@ export default function LoginCard() {
                             {(serverError) ? <div className="text-sm dark:text-red-400">{serverError}</div> :
                             (props.errors.password && props.touched.password) ? <div className="text-sm dark:text-red-400">{props.errors.password}</div> : null}
                             <Input 
-                                id={'submitLogin'}
+                                id={'submit'}
                                 type={"submit"}
                                 value={'Sign in'}
                                 customClass={'mt-2'}

@@ -1,5 +1,6 @@
 import * as db from "../../db";
 export default class User {
+
     /** EFFECTS: Retrieves the tuple of data corresponding to the user with id = @param id as JSON response object */
     async findUser(id: number, res) {
         db.query(`SELECT * FROM users WHERE user_id = $1`, [id]).then((result) => {
@@ -49,4 +50,10 @@ export default class User {
         }
         return res.rows[0]['user_id'];
     }
+}
+
+export async function registerUser(params: any[]) {
+    const res = await db.query(`INSERT INTO users(first_name, last_name, email_address, password, birthdate)
+    VALUES ($1, $2, $3, $4, $5) RETURNING *`, params).then(); 
+    return parseInt(res.rows[0]['user_id']);
 }
