@@ -5,6 +5,7 @@ import mountRoutes from './src/routes'
 // Pool.connect();
 
 const app = express();
+app.use(express.json());
 mountRoutes(app);
 
 app.listen(8000, () => {
