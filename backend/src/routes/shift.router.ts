@@ -74,93 +74,16 @@ shiftRouter.post('/:id', async (req, res) => {
    });
 }); 
 
+/**
+ * Creates a new shift using info from request body
+ * The request body must contain the following fields:
+ * new_id, role, start_time, end_time, station, volunteer_id, event_id
+ */
+shiftRouter.put('', async (req, res) => {
 
+   const {new_id, role, start_time, end_time, station, volunteer_id, event_id} = req.body;
 
-// shiftRouter.post('/role/:id/:role', async (req, res) => {
-//    const id = parseInt(req.params.id);
-//    const role = req.params.role.toString();
-//    Shift.updateRole(id,role)
-//    .then((result) => {
-//       if (result.rowCount === 0) {
-//          res.status(404).send('shift not found') 
-//       }
-//       res.status(200).send(result.rows);
-//    })
-//    .catch((err) => {
-//       res.status(500).send('Database query failed');
-//    });
-// }); 
-
-// shiftRouter.post('/startTime/:id/:startTime', async (req, res) => {
-//    const id = parseInt(req.params.id);
-//    const startTime = req.params.startTime.toString();
-//    Shift.updateStartTime(id,startTime)
-//    .then((result) => {
-//       if (result.rowCount === 0) {
-//          res.status(404).send('shift not found') 
-//       }
-//       res.status(200).send(result.rows);
-//    })
-//    .catch((err) => {
-//       res.status(500).send('Database query failed');
-//    });
-// }); 
-
-// shiftRouter.post('/endTime/:id/:endTime', async (req, res) => {
-//    const id = parseInt(req.params.id);
-//    const endTime = req.params.endTime.toString();
-//    Shift.updateStartTime(id,endTime)
-//    .then((result) => {
-//       if (result.rowCount === 0) {
-//          res.status(404).send('shift not found') 
-//       }
-//       res.status(200).send(result.rows);
-//    })
-//    .catch((err) => {
-//       res.status(500).send('Database query failed');
-//    });
-// });
-
-// shiftRouter.post('/station/:id/:station', async (req, res) => {
-//    const id = parseInt(req.params.id);
-//    const station = req.params.station.toString();
-//    Shift.updateStartTime(id,station)
-//    .then((result) => {
-//       if (result.rowCount === 0) {
-//          res.status(404).send('shift not found') 
-//       }
-//       res.status(200).send(result.rows);
-//    })
-//    .catch((err) => {
-//       res.status(500).send('Database query failed');
-//    });
-// });
-
-// shiftRouter.post('/id/:id/:new_id', async (req, res) => {
-//    const id = parseInt(req.params.id);
-//    const new_id = parseInt(req.params.new_id);
-//    Shift.updateSID(id,new_id)
-//    .then((result) => {
-//       if (result.rowCount === 0) {
-//          res.status(404).send('shift not found') 
-//       }
-//       res.status(200).send(result.rows);
-//    })
-//    .catch((err) => {
-//       res.status(500).send('Database query failed');
-//    });
-// });
-
-shiftRouter.put('/:id/:role/:startTime/:endTime/:station/:volunteer_id/:event_id', async (req, res) => {
-   const id          = parseInt(req.params.id);
-   const role        = req.params.role.toString();
-   const startTime   = req.params.startTime.toString();
-   const endTime     = req.params.endTime.toString();
-   const station     = req.params.station.toString();
-   const volunteer_id= parseInt(req.params.volunteer_id);
-   const event_id    = parseInt(req.params.event_id);
-
-   Shift.addShift(id,role,startTime,endTime,station,volunteer_id,event_id)
+   Shift.addShift(new_id, role, start_time, end_time, station, volunteer_id, event_id)
    .then((result) => {
       if (result.rowCount === 0) {
          res.status(404).send('shift not found') 
