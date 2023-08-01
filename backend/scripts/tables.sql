@@ -10,10 +10,10 @@ CREATE TABLE users (
     birthdate       DATE,
     email_address   TEXT        UNIQUE,
     password        TEXT,
-    balance         MONEY);
+    balance         MONEY DEFAULT 0.00);
 
 CREATE TABLE items (
-    item_id         INTEGER     NOT NULL,
+    item_id         SERIAL,
     amount          INTEGER     NOT NULL,
     item_name       TEXT        NOT NULL,
     PRIMARY KEY (item_ID)
@@ -52,7 +52,7 @@ CREATE TABLE venue (
     street          TEXT,
     postal_code     CHAR(6),
     name            TEXT,
-    capacity        INTEGER,
+    capacity        INTEGER DEFAULT 0,
     PRIMARY KEY (street_num, street, postal_code));
 
 CREATE TABLE belongs (
@@ -81,9 +81,7 @@ CREATE TABLE city(
     postal_code CHAR(6),
     city TEXT,
     PRIMARY KEY (postal_code));
-
-CREATE TABLE customer (
-    customer_id INTEGER PRIMARY KEY,
+CREATE TABLE customer ( customer_id INTEGER PRIMARY KEY,
     FOREIGN KEY (customer_id) REFERENCES Users(user_id)
     ON DELETE CASCADE
     ON UPDATE CASCADE);
@@ -102,11 +100,12 @@ CREATE TABLE volunteer (
         ON UPDATE CASCADE);
 
 CREATE TABLE event (
-    event_id        INTEGER     PRIMARY KEY,
-    start_time      TIMESTAMP,
-    end_time        TIMESTAMP,
-    visibility      TEXT,
-    budget          MONEY,
+    -- event_id        INTEGER     PRIMARY KEY,
+    event_id        SERIAL PRIMARY KEY,
+    start_time      TIMESTAMP DEFAULT LOCALTIMESTAMP,
+    end_time        TIMESTAMP DEFAULT LOCALTIMESTAMP,
+    visibility      TEXT DEFAULT 'public',
+    budget          MONEY DEFAULT 0.00,
     organizer_id    INTEGER     NOT NULL,
     street_num      INTEGER     NOT NULL,
     street          TEXT        NOT NULL,
@@ -119,7 +118,7 @@ CREATE TABLE event (
         ON DELETE CASCADE);
 
 CREATE TABLE special_guest (
-    id          INTEGER PRIMARY KEY,
+    id          SERIAL PRIMARY KEY,
     first_name  TEXT,
     last_name   TEXT);
 
@@ -128,13 +127,13 @@ CREATE TABLE performs (
     event_id    INTEGER,
     start_time  TIMESTAMP,
     end_time    TIMESTAMP,
-    location    TEXT,
+   location    TEXT,
     PRIMARY KEY (guest_id, event_id),
     FOREIGN KEY (guest_id) REFERENCES special_guest,
     FOREIGN KEY (event_id) REFERENCES event);
 
 CREATE TABLE shift (
-    shift_id        INTEGER     PRIMARY KEY,
+    shift_id        SERIAL     PRIMARY KEY,
     role            TEXT,
     start_time      TIMESTAMP,
     end_time        TIMESTAMP,
@@ -154,13 +153,13 @@ CREATE TABLE volunteers_for_event (
     FOREIGN KEY (event_id) REFERENCES event);
 
 CREATE TABLE tier (
-    tier_id             INTEGER PRIMARY KEY,
+    tier_id             SERIAL PRIMARY KEY,
     tier_description    TEXT,
     tier_name           TEXT,
-    price               MONEY);
+    price               MONEY DEFAULT 0.0);
 
 CREATE TABLE ticket (
-    ticket_id   INTEGER     PRIMARY KEY,
+    ticket_id   SERIAL     PRIMARY KEY,
     seat_number INTEGER,
     tier_id     INTEGER     NOT NULL,
     event_id    INTEGER     NOT NULL,
@@ -168,7 +167,6 @@ CREATE TABLE ticket (
     UNIQUE (seat_number, event_id),
     FOREIGN KEY (tier_id)   REFERENCES tier (tier_id),
     FOREIGN KEY (event_id)  REFERENCES event (event_id));
-
 
 
 CREATE TABLE dependants (
@@ -249,20 +247,33 @@ VALUES
 INSERT INTO 
 province (postal_code, province)
 VALUES
-	('K7S9E2', 'ON'),
-	('V3A3R2', 'BC'),
-	('M6K3L3', 'ON'),
-	('M4W34K', 'ON'),
-	('V5L4S1', 'BC');
+	('K8V2V3', 'ON'),
+	('V6B6G1', 'BC'),
+	('V6T1Z3', 'BC'),
+	('M6K3C3', 'ON'),
+	('V6B6B1', 'BC'),
+    ('T4E0N7', 'AB'),
+    ('K8V0A9', 'BC'),
+    ('M6S0A1', 'ON'),
+    ('V6P1S8', 'BC'),
+    ('V6E1H3', 'BC'),
+    ('V5N1M1', 'BC');
 
 INSERT INTO 
 city (postal_code, city)
 VALUES
-	('V6B6G1', 'Vancouver'),
-    ('V3A3R2', 'Langley City'),
-    ('M6K3L3', 'Toronto'),
-    ('M4W34K', 'Toronto'),
-	('V5L4S1', 'Vancouver');
+    ('K8V2V3', 'Trenton'),
+    ('V6B6G1', 'Vancouver'),
+    ('V6T1Z3', 'Vancouver'),
+    ('M6K3C3', 'Toronto'),
+    ('V6B6B1', 'Vancouver'),
+    ('T4E0N7', 'Red Deer County'),
+    ('K8V0A9', 'Vancouver'),
+    ('M6S0A1', 'Hamilton'),
+    ('V6P1S8', 'Vancouver'),
+    ('V6E1H3', 'Vancouver'),
+    ('V5L2V7', 'Vancouver'),
+    ('V5N1M1', 'Vancouver');
 
 INSERT INTO 
 venue (street_num, street, postal_code, name, capacity)
@@ -297,14 +308,14 @@ VALUES
 INSERT INTO 
 users (phone_num, first_name, last_name, street, street_num, postal_code, birthdate, email_address, password, balance)
 VALUES
-	('1111111111', 'John', 'Smith', 'Johnson Street', 1111, 'V1R68B', '1990-05-08', 'john@gmail.com', 'pass1', 1.00),
-	('2222222222', 'Jon', 'Smythe', 'Jonson Avenue', 2222, 'T4E0N7', '1991-06-27', 'jon@gmail.com', 'pass2', 2.00),
-	('3333333333', 'Jonathon', 'Smiff', 'Jonathon Court', 3333, 'J0T8X6', '1993-03-03', 'jonathon3@gmail.com', 'pass3', 3.00),
-	('4444444444', 'Johnnefer', 'Smith', 'Johnson Street', 1111, 'V1R68B', '1990-08-05', 'johnnefer85@gmail.com', 'pass4', 4.00),
-	('5555555555', 'Johnson', 'Smyff', 'John Avenue', 5555, 'V3H7E1', '2003-08-15', 'jonsmyff@outlook.com', 'pass5', 5.00),
-	('6666666666', 'Vawlin', 'Tear', 'Main Street', 50, 'P9N3R6', '2000-02-05', 'vawlintear@gmail.com', 'pass6', 1000.00),
-	('7777777777', 'Ore', 'Guhnaiser', 'Pender Street', 30, 'E8L8L4', '1985-11-30', 'oreguhaniser@outlook.com', 'pass7', 50.00),
-	('8888888888', 'Kaw', 'Stoomer', 'North Road', 3048, 'J0E4H0', '1992-12-01', 'kawstoomer@gmail.com', 'pass8', 35.00);
+	('1111111111', 'John',      'Smith',    'Johnson Street',   1111,   'K8V0A9',   '1990-05-08',   'john@gmail.com',           'pass1', 1.00),
+	('2222222222', 'Jon',       'Smythe',   'Jonson Avenue',    2222,   'T4E0N7',   '1991-06-27',   'jon@gmail.com',            'pass2', 2.00),
+	('3333333333', 'Jonathon',  'Smiff',    'Jonathon Court',   3333,   'M6S0A1',   '1993-03-03',   'jonathon3@gmail.com',      'pass3', 3.00),
+	('4444444444', 'Johnnefer', 'Smith',    'Johnson Street',   1111,   'K8V0A9',   '1990-08-05',   'johnnefer85@gmail.com',    'pass4', 4.00),
+	('5555555555', 'Johnson',   'Smyff',    'John Avenue',      5555,   'V6P1S8',   '2003-08-15',   'jonsmyff@outlook.com',     'pass5', 5.00),
+	('6666666666', 'Vawlin',    'Tear',     'Main Street',      50,     'V6E1H3',   '2000-02-05',   'vawlintear@gmail.com',     'pass6', 1000.00),
+	('7777777777', 'Ore',       'Guhnaiser','Pender Street',    30,     'V5L2V7',   '1985-11-30',   'oreguhaniser@outlook.com', 'pass7', 50.00),
+	('8888888888', 'Kaw',       'Stoomer',  'North Road',       3048,   'V5N1M1',   '1992-12-01',   'kawstoomer@gmail.com',     'pass8', 35.00);
 
 
 INSERT INTO 
@@ -356,7 +367,7 @@ VALUES
 	(3,  'Rear Standing',		'Tier 3',   99),
 	(4,  'Front Standing',		'Tier 4',   129),
 	(5,  'VIP Box',				'VIP',  	550),
-	(6, 'General Admission',	'Tier 0', 	5);
+	(6,  'General Admission',	'Tier 0', 	5);
 
 
 INSERT INTO 
