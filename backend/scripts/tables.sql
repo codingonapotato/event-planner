@@ -153,7 +153,7 @@ CREATE TABLE volunteers_for_event (
     FOREIGN KEY (event_id) REFERENCES event);
 
 CREATE TABLE tier (
-    tier_id             INTEGER PRIMARY KEY,
+    tier_id             SERIAL PRIMARY KEY,
     event_id            INTEGER,
     organizer_id        INTEGER,
     tier_description    TEXT,
@@ -355,14 +355,14 @@ VALUES
 
 
 INSERT
-INTO tier (tier_id, event_id, organizer_id, tier_description, tier_name, price)
+INTO tier (event_id, organizer_id, tier_description, tier_name, price)
 VALUES
-	(1, 1, 1,  'Balcony Seating', 	'Tier 1',   49),
-	(2, 2, 7,   'Standard Seating',	'Tier 2',   79),
-	(3, 3, 3,  'Rear Standing',		'Tier 3',   99),
-	(4, 4, 4,  'Front Standing',		'Tier 4',   129),
-	(5, 5, 2,  'VIP Box',				'VIP',  	550),
-	(6, 1, 1, 'General Admission',	'Tier 0', 	5);
+	(1, 1,  'Balcony Seating', 	'Tier 1',   49),
+	(2, 7,   'Standard Seating',	'Tier 2',   79),
+	(3, 3,  'Rear Standing',		'Tier 3',   99),
+	(4, 4,  'Front Standing',		'Tier 4',   129),
+	(5, 2,  'VIP Box',				'VIP',  	550),
+	(1, 1, 'General Admission',	'Tier 0', 	5);
 
 
 INSERT INTO 

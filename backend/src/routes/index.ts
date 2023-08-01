@@ -6,13 +6,15 @@ import volunteers from './volunteer.router'
 import tickets from './ticket.router'
 import events from './event.router';
 import shift from './shift.router';
+import tier from './tier.router';
 
 const mountRoutes = (app: Application) => {
     app.use('/user', users);
     app.use('/customer', customers);
     app.use('/organizer', organizers)
-    app.use('/volunteer', volunteers)
-    app.use('/ticket', tickets)
+    app.use('/volunteer', volunteers);
+    app.use('/ticket', tickets);
+    app.use('/tier', tier);
     app.use('/event', events);
     app.use('/shift', shift);
 }

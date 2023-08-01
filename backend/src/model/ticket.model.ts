@@ -27,10 +27,30 @@ export async function modifyTicket(id: number, req) {
     }
 }
 
-// export async function createTicket(id: number, req) {
-//     const { } = req.body;
-//     const res = await db.query(`INSERT INTO dependants VALUES ($1, $2, $3, $4) RETURNING *`,
-//         [firstName, lastName, id, birthdate]);
+export async function createTicket(req) {
+    const { seat_number: seatNumber, tier_id: tierId, event_id: eventId, customer_id: customerId } = req.body;
+    const res = await db.query(`INSERT INTO ticket (seat_number, tier_id, event_id, customer_id) VALUES ($1, $2, $3, $4) RETURNING *`,
+        [seatNumber, tierId, eventId, customerId]);
+    if (res.rows.length === 0) {
+        return -1;
+    } else {
+        return res.rows;
+    }
+}
+
+export async function removeTicket(id: number) {
+    const res = await db.query(`DELETE FROM ticket WHERE ticket_id = $1 RETURNING *`, [id])
+    if (res.rows.length === 0) {
+        return -1;
+    } else {
+        return res.rows;
+    }
+}
+
+// //** EFFECTS:  */
+// export async function findTier(ticketId: number) {
+//     const res = await db.query(`SELECT * FROM ticket, tier
+//     WHERE tier_id = SELECT tier_id FROM ticket WHERE ticket_id = $1`, [ticketId])
 //     if (res.rows.length === 0) {
 //         return -1;
 //     } else {

@@ -9,6 +9,6 @@ export async function findUser(id: number) {
     if (res.rows.length === 0) {
         return -1;
     } else {
-        return User.findUser(id);
+        return res.rows;
     }
 }
