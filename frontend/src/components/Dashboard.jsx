@@ -9,7 +9,7 @@ export default function Dashboard() {
         )
     } else {
         return (
-            <h1>Dashboard</h1>
+            <div className='min-w-min'>Dashboard</div>
         )
     }
 }
