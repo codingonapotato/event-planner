@@ -93,9 +93,9 @@ itemsRouter.get('/item/:id', async (req, res) => {
 // }); 
 
 itemsRouter.put('/item', async (req, res) => {
-   const {item_id, amount, item_name} = req.body;
+   const {amount, item_name} = req.body;
 
-   Items.add_item(item_id,amount,item_name)
+   Items.add_item(amount,item_name)
    .then((result) => {
       if (result.rowCount === 0) {
          res.status(404).send('Item not found') 

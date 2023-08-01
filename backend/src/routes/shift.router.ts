@@ -12,13 +12,15 @@ shiftRouter.get('/shiftID/:id', async (req, res) => {
 
    Shift.get_using_shiftID(id)
    .then((result) => {
-      if (result.rowCount === 0) {
-         res.status(404).send('shift not found') 
-      }
-      res.status(200).send(result.rows);
+      const info: any[] = [result.rows[0]['role'],          result.rows[0]['start_time'], 
+                           result.rows[0]['end_time'],      result.rows[0]['station'], 
+                           result.rows[0]['volunteer_id'],  result.rows[0]['event_id']];
+
+      res.status(200).send(info);
+      
    })
    .catch((err) => {
-      res.status(500).send('Database query failed');
+      res.status(401).json({message: 'Shift not found', error: err});
    });
 }); 
 
@@ -27,13 +29,14 @@ shiftRouter.get('/eventID/:id', async (req, res) => {
 
    Shift.get_using_eventID(id)
    .then((result) => {
-      if (result.rowCount === 0) {
-         res.status(404).send('shift not found') 
-      }
-      res.status(200).send(result.rows);
+      const info: any[] = [result.rows[0]['shift_id'],   result.rows[0]['role'],
+                           result.rows[0]['start_time'], result.rows[0]['end_time'], 
+                           result.rows[0]['station'],    result.rows[0]['volunteer_id']];
+
+      res.status(200).send(info);
    })
    .catch((err) => {
-      res.status(500).send('Database query failed');
+      res.status(401).json({message: 'Shift not found', error: err});
    });
 }); 
 
@@ -42,13 +45,14 @@ shiftRouter.get('/volunteerID/:id', async (req, res) => {
 
    Shift.get_using_volunteerID(id)
    .then((result) => {
-      if (result.rowCount === 0) {
-         res.status(404).send('shift not found') 
-      }
-      res.status(200).send(result.rows);
+      const info: any[] = [result.rows[0]['shift_id'],   result.rows[0]['role'],
+                           result.rows[0]['start_time'], result.rows[0]['end_time'], 
+                           result.rows[0]['station'],    result.rows[0]['event_id']];
+
+      res.status(200).send(info);
    })
    .catch((err) => {
-      res.status(500).send('Database query failed');
+      res.status(401).json({message: 'Shift not found', error: err});
    });
 }); 
 
@@ -64,13 +68,17 @@ shiftRouter.post('/:id', async (req, res) => {
 
    Shift.updateShift(id,new_id,role, start_time, end_time, station)
    .then((result) => {
-      if (result.rowCount === 0) {
-         res.status(404).send('shift not found') 
-      }
+
+      console.log(`command:: ${result.command}`);
+      console.log(`fields: ${result.fields}`);
+      console.log(`oid: ${result.oid}`);
+      console.log(`rowCount: ${result.rowCount}`);
+      console.log(`rows: ${result.rows}`);
+
       res.status(200).send(result.rows);
    })
    .catch((err) => {
-      res.status(500).send('Database query failed');
+      res.status(401).json({message: 'Shift not found', error: err});
    });
 }); 
 
@@ -81,17 +89,14 @@ shiftRouter.post('/:id', async (req, res) => {
  */
 shiftRouter.put('', async (req, res) => {
 
-   const {new_id, role, start_time, end_time, station, volunteer_id, event_id} = req.body;
+   const {role, start_time, end_time, station, volunteer_id, event_id} = req.body;
 
-   Shift.addShift(new_id, role, start_time, end_time, station, volunteer_id, event_id)
+   Shift.addShift(role, start_time, end_time, station, volunteer_id, event_id)
    .then((result) => {
-      if (result.rowCount === 0) {
-         res.status(404).send('shift not found') 
-      }
       res.status(200).send(result.rows);
    })
    .catch((err) => {
-      res.status(500).send('Database query failed');
+      res.status(401).json({message: 'Shift not found', error: err});
    });
 });
 
@@ -99,17 +104,13 @@ shiftRouter.delete('/:id', async (req, res) => {
    const id = parseInt(req.params.id);
    Shift.deleteShift(id)
    .then((result) => {
-      if (result.rowCount === 0) {
-         res.status(404).send('shift not found') 
-      }
+
       res.status(200).send(result.rows);
    })
    .catch((err) => {
-      res.status(500).send('Database query failed');
+      res.status(401).json({message: 'Shift not found', error: err});
    });
 });
 
 
 export default shiftRouter;
-
-

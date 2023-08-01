@@ -13,7 +13,7 @@ CREATE TABLE users (
     balance         MONEY);
 
 CREATE TABLE items (
-    item_id         INTEGER     NOT NULL,
+    item_id         SERIAL     NOT NULL,
     amount          INTEGER     NOT NULL,
     item_name       TEXT        NOT NULL,
     PRIMARY KEY (item_ID)
@@ -134,7 +134,7 @@ CREATE TABLE performs (
     FOREIGN KEY (event_id) REFERENCES event);
 
 CREATE TABLE shift (
-    shift_id        INTEGER     PRIMARY KEY,
+    shift_id        SERIAL     PRIMARY KEY,
     role            TEXT,
     start_time      TIMESTAMP,
     end_time        TIMESTAMP,

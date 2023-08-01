@@ -33,10 +33,10 @@ export function update_item(id: number, new_id: number, amount: number, item_nam
 //     return db.query('UPDATE items SET item_name = $2::text WHERE item_id = $1::integer', [id, item_name]);
 // }
 
-// adds a new item using provided by the parameters: [id: number], [amount: string], [item_name: string]
-export function add_item(id: number, amount: number, item_name: string) {
-    return db.query(`INSERT INTO items VALUES ($1::integer, $2::integer, $3::text);`, 
-        [id, amount, item_name]);
+// adds a new item using provided by the parameters: [amount: string], [item_name: string]
+export function add_item(amount: number, item_name: string) {
+    return db.query(`INSERT INTO items(amount, item_name) VALUES ($1::integer, $2::text);`, 
+        [amount, item_name]);
 }
 
 // delete the item associated with [id:number] from the database
