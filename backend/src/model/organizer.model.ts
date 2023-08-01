@@ -1,5 +1,4 @@
 import * as db from "../../db";
-import * as User from "./user.model"
 
 /**EFFECTS: Checks for existence of customer with @param id and if the user is a customer, then retrieve
      * their data. Otherwise, return 'Customer not found' or handle errors.

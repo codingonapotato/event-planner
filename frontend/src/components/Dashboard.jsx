@@ -1,5 +1,15 @@
+import { Navigate } from "react-router-dom"
+
 export default function Dashboard() {
-    return (
-        <h1>Dashboard</h1>
-    )
+    const userID = localStorage.getItem('user_id');
+
+    if (userID === null || userID < 0) {
+        return (
+            <Navigate to='/login' replace={true}/>
+        )
+    } else {
+        return (
+            <h1>Dashboard</h1>
+        )
+    }
 }

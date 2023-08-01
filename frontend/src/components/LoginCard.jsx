@@ -2,15 +2,17 @@ import { useState } from "react";
 import Input from "./Input";
 import { Formik, Form } from 'formik';
 import axios from 'axios';
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 export default function LoginCard() {
-    const [serverError, setServerError] = useState('')
+    const [serverError, setServerError] = useState('');
+    const [auth, setAuth] = useState(localStorage.getItem('user_id'));
 
     return (
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto rounded-lg">
             <div className="px-12 py-6 w-full bg-white rounded-lg shadow dark:border dark:bg-gray-800 dark:border-gray-700">
                 <div className="flex justify-center items-center">
+                    {(auth) ? <Navigate to="/" replace={true} /> : null}
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 dark:text-blue-500 text-black">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                     </svg>
@@ -21,7 +23,7 @@ export default function LoginCard() {
                 </div>
                 <Formik
                     initialValues={{ email: '', password: '' }}
-                    onSubmit={async (values, actions) => {
+                    onSubmit={async (values) => {
                         await axios.post('http://localhost:8000/user/login', {
                             'email': values.email,
                             'password': values.password
@@ -30,6 +32,7 @@ export default function LoginCard() {
                         })
                             .then((res) => {
                                 localStorage.setItem('user_id', res.data.user_id);
+                                setAuth(res.data.user_id);
                             }, reason => {
                                 console.log(reason);
                                 setServerError('Email or password not found')
@@ -49,7 +52,6 @@ export default function LoginCard() {
                         } else if (!/[A-Za-z0-9-]{4}/.test(values.password)) {
                             errors.password = 'Invalid password';
                         }
-
                         return errors;
                     }}
                 >
@@ -68,7 +70,7 @@ export default function LoginCard() {
                             <Input
                                 id={'password'}
                                 type={'password'}
-                                placeholder={'●●●●●●●●●●'}
+                                placeholder={'•••••••••'}
                                 labelText={'Password'}
                                 onChange={props.handleChange}
                                 value={props.values.password}
@@ -76,7 +78,7 @@ export default function LoginCard() {
                             {(serverError) ? <div className="text-sm dark:text-red-400">{serverError}</div> :
                                 (props.errors.password && props.touched.password) ? <div className="text-sm dark:text-red-400">{props.errors.password}</div> : null}
                             <Input
-                                id={'submitLogin'}
+                                id={'submit'}
                                 type={"submit"}
                                 value={'Sign in'}
                                 customClass={'mt-2'}
