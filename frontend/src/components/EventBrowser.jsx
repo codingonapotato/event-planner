@@ -1,6 +1,6 @@
 
 export default function EventBrowser() {
     return (
-        <div>EventBrowser</div>
+        <h1>EventBrowser</h1>
     )
 }

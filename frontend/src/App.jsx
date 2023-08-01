@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import RegisterPage from './components/RegisterPage'
 import EventBrowser from './components/EventBrowser'
 import NotFound from './components/NotFound'
+import ShiftBrowser from './components/ShiftBrowser'
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
         <Route path="/" element={<Layout/>}>
           <Route index element={<Dashboard/>}/>
           <Route path="/events" element={<EventBrowser />} />
+          <Route path="/shifts" element={<ShiftBrowser />} />
         </Route> 
         <Route path="/login" element={<LoginPage/>} />
         <Route path="/register" element={<RegisterPage/>} />
