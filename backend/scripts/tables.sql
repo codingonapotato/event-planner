@@ -1,5 +1,6 @@
 CREATE TABLE users (
-    user_id         INTEGER     PRIMARY KEY,
+    -- user_id         INTEGER     PRIMARY KEY,
+    user_id         SERIAL      PRIMARY KEY,
     phone_num       CHAR(10)    UNIQUE,
     first_name      TEXT,
     last_name       TEXT,
@@ -8,6 +9,7 @@ CREATE TABLE users (
     postal_code     CHAR(6),
     birthdate       DATE,
     email_address   TEXT        UNIQUE,
+    password        TEXT,
     balance         MONEY);
 
 CREATE TABLE items (
@@ -291,17 +293,18 @@ VALUES
 	(5, 'Suisei',	'Hoshimachi'),
 	(6, 'Gawr',		'Gura');
 
+-- Omitting user_id because of auto-incrementing serial type
 INSERT INTO 
-users (user_id, phone_num, first_name, last_name, street, street_num, postal_code, birthdate, email_address, balance)
+users (phone_num, first_name, last_name, street, street_num, postal_code, birthdate, email_address, password, balance)
 VALUES
-	(1, '1111111111', 'John', 'Smith', 'Johnson Street', 1111, 'V1R68B', '1990-05-08', 'john@gmail.com', 1.00),
-	(2, '2222222222', 'Jon', 'Smythe', 'Jonson Avenue', 2222, 'T4E0N7', '1991-06-27', 'jon@gmail.com', 2.00),
-	(3, '3333333333', 'Jonathon', 'Smiff', 'Jonathon Court', 3333, 'J0T8X6', '1993-03-03', 'jonathon3@gmail.com', 3.00),
-	(4, '4444444444', 'Johnnefer', 'Smith', 'Johnson Street', 1111, 'V1R68B', '1990-08-05', 'johnnefer85@gmail.com', 4.00),
-	(5, '5555555555', 'Johnson', 'Smyff', 'John Avenue', 5555, 'V3H7E1', '2003-08-15', 'jonsmyff@outlook.com', 5.00),
-	(6, '6666666666', 'Vawlin', 'Tear', 'Main Street', 50, 'P9N3R6', '2000-02-05', 'vawlintear@gmail.com', 1000.00),
-	(7, '7777777777', 'Ore', 'Guhnaiser', 'Pender Street', 30, 'E8L8L4', '1985-11-30', 'oreguhaniser@outlook.com', 50.00),
-	(8, '8888888888', 'Kaw', 'Stoomer', 'North Road', 3048, 'J0E4H0', '1992-12-01', 'kawstoomer@gmail.com', 35.00);
+	('1111111111', 'John', 'Smith', 'Johnson Street', 1111, 'V1R68B', '1990-05-08', 'john@gmail.com', 'pass1', 1.00),
+	('2222222222', 'Jon', 'Smythe', 'Jonson Avenue', 2222, 'T4E0N7', '1991-06-27', 'jon@gmail.com', 'pass2', 2.00),
+	('3333333333', 'Jonathon', 'Smiff', 'Jonathon Court', 3333, 'J0T8X6', '1993-03-03', 'jonathon3@gmail.com', 'pass3', 3.00),
+	('4444444444', 'Johnnefer', 'Smith', 'Johnson Street', 1111, 'V1R68B', '1990-08-05', 'johnnefer85@gmail.com', 'pass4', 4.00),
+	('5555555555', 'Johnson', 'Smyff', 'John Avenue', 5555, 'V3H7E1', '2003-08-15', 'jonsmyff@outlook.com', 'pass5', 5.00),
+	('6666666666', 'Vawlin', 'Tear', 'Main Street', 50, 'P9N3R6', '2000-02-05', 'vawlintear@gmail.com', 'pass6', 1000.00),
+	('7777777777', 'Ore', 'Guhnaiser', 'Pender Street', 30, 'E8L8L4', '1985-11-30', 'oreguhaniser@outlook.com', 'pass7', 50.00),
+	('8888888888', 'Kaw', 'Stoomer', 'North Road', 3048, 'J0E4H0', '1992-12-01', 'kawstoomer@gmail.com', 'pass8', 35.00);
 
 
 INSERT INTO 
