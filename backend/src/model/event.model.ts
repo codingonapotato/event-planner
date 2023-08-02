@@ -42,3 +42,22 @@ export async function createEvent(params: any[]) {
 
 
 }
+
+export async function getUpcomingEvents(user_id: number) {
+    const res = await db.query(`SELECT
+        start_time,
+        end_time,
+        street_num,
+        street,
+        postal_code,
+        city,
+        province
+        FROM event NATURAL JOIN city NATURAL JOIN province NATURAL JOIN ticket 
+        WHERE customer_id = $1`, [user_id]);
+    return res.rows;
+}
+
+export async function deleteEvent(event_id: number): Promise<boolean> {
+    const res = await db.query(`DELETE FROM events WHERE event_id = $1`, [event_id])
+    return (res.rows.length === 1);
+};

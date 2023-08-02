@@ -20,6 +20,7 @@ eventRouter.get('/:id', async (req, res) => {
    });
 }); 
 
+// TODO: add search functionality (search by name)
 eventRouter.get('/', async (req, response) => {
    if (req.query.city) {
       console.log(req.query.city);
@@ -44,9 +45,36 @@ eventRouter.get('/', async (req, response) => {
    }
 });
 
+
+// Retrieve upcoming events for user with given id
+eventRouter.get('/user/:id', async (req, response) => {
+   const user_id = parseInt(req.params.id);
+   Event.getUpcomingEvents(user_id).then(res => {
+      response.status(200).send(res);
+   }).catch(err => {
+      console.log(err);
+      response.status(500).send('Database error');
+   });
+
+});
+
 eventRouter.post('/', async (req, response) => {
 
 });
+
+eventRouter.delete('/:id', async (req, response) => {
+   const event_id = parseInt(req.params.id);
+   Event.deleteEvent(event_id).then((res) => {
+      if (res) {
+         response.status(200).send('Deleted event with id ' + event_id);
+      } else {
+         response.status(401).send('No such event found');
+      }
+   }).catch(err => {
+      console.log(err);
+      response.status(500).send('Database error');
+   })
+})
 
 export default eventRouter;
 

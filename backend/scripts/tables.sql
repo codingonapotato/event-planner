@@ -102,6 +102,7 @@ CREATE TABLE volunteer (
 CREATE TABLE event (
     -- event_id        INTEGER     PRIMARY KEY,
     event_id        SERIAL PRIMARY KEY,
+    name            TEXT,
     start_time      TIMESTAMP DEFAULT LOCALTIMESTAMP,
     end_time        TIMESTAMP DEFAULT LOCALTIMESTAMP,
     visibility      TEXT DEFAULT 'public',
@@ -156,7 +157,11 @@ CREATE TABLE tier (
     tier_id             SERIAL PRIMARY KEY,
     tier_description    TEXT,
     tier_name           TEXT,
-    price               MONEY DEFAULT 0.0);
+    price               MONEY DEFAULT 0.0,
+    event_id            INTEGER NOT NULL,
+    organizer_id        INTEGER NOT NULL,
+    FOREIGN KEY (event_id) REFERENCES event (event_id)
+    FOREIGN KEY (organizer_id) REFERENCES organizer (organizer_id));
 
 CREATE TABLE ticket (
     ticket_id   SERIAL     PRIMARY KEY,
@@ -332,7 +337,8 @@ VALUES (6, 500), (2, 4), (4, 8), (1, 5), (5, 10);
 
 
 INSERT 
-INTO contributes (contrib_user_id, item_id, contrib_start_time, contrib_end_time, contrib_amt) VALUES
+INTO contributes (contrib_user_id, item_id, contrib_start_time, contrib_end_time, contrib_amt) 
+VALUES
 	(1,  1, '2023-07-25 9:00:00',	'2023-07-25 16:00:00',  5),
 	(2,  1, '2023-07-25 9:00:00',	'2023-07-25 16:00:00',  10),
 	(4,  3, '2023-07-25 9:00:00',	'2023-07-25 16:00:00',  20),
@@ -350,24 +356,25 @@ VALUES
 
 
 INSERT INTO 
-event (event_id, start_time, end_time, visibility, budget, organizer_id, street_num, street, postal_code)
+event (event_id, name, start_time, end_time, visibility, budget, organizer_id, street_num, street, postal_code)
 VALUES
-	(1, '2023-08-20 10:00:00', '2023-08-20 16:00:00', 'public', 1000.00, 7, 1234, 'Sesame St', 'K8V2V3'),
-	(2, '2023-09-17 18:00:00', '2023-09-18 00:00:00', 'private', 500.00, 3, 1234, 'Sesame St', 'K8V2V3'),
-	(3, '2023-05-18 12:00:00', '2023-05-18 16:00:00', 'public', 0.00, 4, 350, 'W Georgia St', 'V6B6B1'),
-	(4, '2023-12-31 23:00:00', '2024-01-01 02:00:00', 'public', 10000.00, 1, 800, 'Griffiths Way', 'V6B6G1'),
-	(5, '2023-08-17 12:00:00', '2023-08-20 12:00:00', 'public', 1000.00, 2, 350, 'W Georgia St', 'V6B6B1');
+	(1, 'Big Bird''s Talk Show',    '2023-08-20 10:00:00', '2023-08-20 16:00:00', 'public', 1000.00, 7, 1234, 'Sesame St', 'K8V2V3'),
+	(2, 'Big Bird''s Seminar',      '2023-09-17 18:00:00', '2023-09-18 00:00:00', 'private', 500.00, 3, 1234, 'Sesame St', 'K8V2V3'),
+	(3, 'Family Storytime',         '2023-05-18 12:00:00', '2023-05-18 16:00:00', 'public', 0.00, 4, 350, 'W Georgia St', 'V6B6B1'),
+	(4, 'Hockey Match',             '2023-12-31 23:00:00', '2024-01-01 02:00:00', 'public', 10000.00, 1, 800, 'Griffiths Way', 'V6B6G1'),
+	(5, 'Summer Storytime',         '2023-08-17 12:00:00', '2023-08-20 12:00:00', 'public', 1000.00, 2, 350, 'W Georgia St', 'V6B6B1');
 
 
 INSERT
-INTO tier (tier_id, tier_description, tier_name, price)
+INTO tier (tier_id, tier_description, tier_name, price, event_id, organizer_id)
 VALUES
-	(1,  'Balcony Seating', 	'Tier 1',   49),
-	(2,  'Standard Seating',	'Tier 2',   79),
-	(3,  'Rear Standing',		'Tier 3',   99),
-	(4,  'Front Standing',		'Tier 4',   129),
-	(5,  'VIP Box',				'VIP',  	550),
-	(6,  'General Admission',	'Tier 0', 	5);
+	(1,  'Balcony Seating', 	'Tier 1',   49, 1, 7),
+	(2,  'Standard Seating',	'Tier 2',   79, 1, 7),
+	(3,  'Rear Standing',		'Tier 3',   99, 2, 3),
+	(4,  'Front Standing',		'Tier 4',   129, 2, 3),
+	(5,  'VIP Box',				'VIP',  	550, 4, 1),
+	(6,  'General Admission',	'Tier 0', 	5, 5, 2),
+	(7,  'General Admission',	'Tier 0', 	5, 3, 4);
 
 
 INSERT INTO 
@@ -390,13 +397,13 @@ VALUES
 ('Jack',	'Black',	8,	'2016-12-25');
 
 INSERT
-INTO organizes_event(organizer_id, event_id, customer_id)
+INTO organizes_event(organizer_id, event_id)
 VALUES
-	(7, 1, 8),
-	(3, 2, 1),
-	(4, 3, 2),
-	(1, 4, 4),
-	(2, 5, 5);
+	(7, 1),
+	(3, 2),
+	(4, 3),
+	(1, 4),
+	(2, 5);
 
 INSERT
 INTO customer_invite(customer_id, event_id, date_sent, date_accepted)
