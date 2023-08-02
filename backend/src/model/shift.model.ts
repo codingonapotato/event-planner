@@ -28,12 +28,12 @@ export function get_using_volunteerID(id: number) {
  * @param station 
  * @returns promise to a query result
  */
-export function updateShift(id: number, new_id: number, role: string, startTime: string, 
+export function updateShift(id: number, role: string, startTime: string, 
     endTime: string, station: string) {
         
-    return db.query(`UPDATE shift SET shift_id = $2::SERIAL, role = $3::text, start_time = $4::timestamp, 
-        end_time = $5::timestamp, station = $6::text WHERE shift_id = $1::SERIAL;`, 
-        [id, new_id, role, startTime, endTime, station]);
+    return db.query(`UPDATE shift SET role = $2::text, start_time = $3::timestamp, 
+        end_time = $4::timestamp, station = $5::text WHERE shift_id = $1::integer;`, 
+        [id, role, startTime, endTime, station]);
 }
 
 /**

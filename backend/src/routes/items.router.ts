@@ -24,15 +24,13 @@ itemsRouter.get('/item/:id', async (req, res) => {
  
  /**
   * Give the id of the item in the URI, change its attribtes listed in request body
-  * Request body must contain: new_item_id, amount, item_name
+  * Request body must contain: amount, item_name
   */
  itemsRouter.post('/item/:id', async (req, res) => {
    const id = parseInt(req.params.id);
-
-   const new_item_id = req.body.item_id;
    const {amount, item_name} = req.body;
 
-   Items.update_item(id,new_item_id, amount, item_name)
+   Items.update_item(id, amount, item_name)
    .then((result) => {
       if (result.rowCount === 0) {
          res.status(404).send('Item not found') 

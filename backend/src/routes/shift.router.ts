@@ -59,21 +59,21 @@ shiftRouter.get('/volunteerID/:id', async (req, res) => {
 /**
  * updates all attributes in shift given the initial shift_id in the URI
  * Attributes to be changed are passed through req.body and they must 
- * include: new_id, role, start_time, end_time, station
+ * include: role, start_time, end_time, station
  */
 shiftRouter.post('/:id', async (req, res) => {
    const id = parseInt(req.params.id);
 
    const {new_id, role, start_time, end_time, station} = req.body;
 
-   Shift.updateShift(id,new_id,role, start_time, end_time, station)
+   Shift.updateShift(id,role, start_time, end_time, station)
    .then((result) => {
 
-      console.log(`command:: ${result.command}`);
-      console.log(`fields: ${result.fields}`);
-      console.log(`oid: ${result.oid}`);
-      console.log(`rowCount: ${result.rowCount}`);
-      console.log(`rows: ${result.rows}`);
+      // console.log(`command:: ${result.command}`);
+      // console.log(`fields: ${result.fields}`);
+      // console.log(`oid: ${result.oid}`);
+      // console.log(`rowCount: ${result.rowCount}`);
+      // console.log(`rows: ${result.rows}`);
 
       res.status(200).send(result.rows);
    })
@@ -85,7 +85,7 @@ shiftRouter.post('/:id', async (req, res) => {
 /**
  * Creates a new shift using info from request body
  * The request body must contain the following fields:
- * new_id, role, start_time, end_time, station, volunteer_id, event_id
+ * role, start_time, end_time, station, volunteer_id, event_id
  */
 shiftRouter.put('', async (req, res) => {
 

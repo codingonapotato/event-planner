@@ -13,9 +13,9 @@ export function get_using_itemID(id: number) {
  * @param item_name 
  * @returns promise to query result
  */
-export function update_item(id: number, new_id: number, amount: number, item_name: string) {
-    return db.query(`UPDATE items SET item_id = $2::integer, amount = $3::integer, 
-        item_name = $4::text WHERE item_id = $1::integer`, [id, new_id, amount, item_name]);
+export function update_item(id: number, amount: number, item_name: string) {
+    return db.query(`UPDATE items SET amount = $2::integer, 
+        item_name = $3::text WHERE item_id = $1::integer`, [id, amount, item_name]);
 }
 
 // // updates a item's ID provided by the old [id: number] and new [new_id: string]
