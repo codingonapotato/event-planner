@@ -8,6 +8,7 @@ import RegisterPage from './components/RegisterPage'
 import EventBrowser from './components/EventBrowser'
 import NotFound from './components/NotFound'
 import ShiftBrowser from './components/ShiftBrowser'
+import UserProfile from './components/UserProfile'
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
           <Route index element={<Dashboard/>}/>
           <Route path="/events" element={<EventBrowser />} />
           <Route path="/shifts" element={<ShiftBrowser />} />
+          <Route path="/profile" element={<UserProfile />} />
         </Route> 
         <Route path="/login" element={<LoginPage/>} />
         <Route path="/register" element={<RegisterPage/>} />
