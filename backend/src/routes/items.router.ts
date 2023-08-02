@@ -12,13 +12,10 @@ itemsRouter.get('/item/:id', async (req, res) => {
  
     Items.get_using_itemID(id)
     .then((result) => {
-       if (result.rowCount === 0) {
-          res.status(404).send('Item not found') 
-       }
        res.status(200).send(result.rows);
     })
     .catch((err) => {
-       res.status(500).send('Database query failed');
+       res.status(404).send('Item not found');
     });
  }); 
  
@@ -32,13 +29,10 @@ itemsRouter.get('/item/:id', async (req, res) => {
 
    Items.update_item(id, amount, item_name)
    .then((result) => {
-      if (result.rowCount === 0) {
-         res.status(404).send('Item not found') 
-      }
       res.status(200).send(result.rows);
    })
    .catch((err) => {
-      res.status(500).send('Database query failed');
+      res.status(404).send('Item not found');
    });
 }); 
 
@@ -95,13 +89,11 @@ itemsRouter.put('/item', async (req, res) => {
 
    Items.add_item(amount,item_name)
    .then((result) => {
-      if (result.rowCount === 0) {
-         res.status(404).send('Item not found') 
-      }
+      
       res.status(200).send(result.rows);
    })
    .catch((err) => {
-      res.status(500).send('Database query failed');
+      res.status(404).send('Item not found');
    });
 }); 
 
@@ -110,13 +102,11 @@ itemsRouter.delete('/item/:id', async (req, res) => {
 
    Items.delete_item(id)
    .then((result) => {
-      if (result.rowCount === 0) {
-         res.status(404).send('Item not found') 
-      }
+      
       res.status(200).send(result.rows);
    })
    .catch((err) => {
-      res.status(500).send('Database query failed');
+      res.status(404).send('Item not found');
    });
 });
 
@@ -133,13 +123,11 @@ itemsRouter.get('/belongs/:street_num/:street/:postal_code/:item_id', async (req
 
    Items.get_belongs(street_num, street, postal_code, item_id)
    .then((result) => {
-      if (result.rowCount === 0) {
-         res.status(404).send('Item not found') 
-      }
+
       res.status(200).send(result.rows);
    })
    .catch((err) => {
-      res.status(500).send('Database query failed');
+      res.status(404).send('Belongs not found');
    });
 }); 
 
@@ -158,13 +146,11 @@ itemsRouter.post('/belongs/:street_num/:street/:postal_code/:item_id', async (re
 
    Items.update_belongs(street_num, street, postal_code, item_id,venue_location)
    .then((result) => {
-      if (result.rowCount === 0) {
-         res.status(404).send('Item not found') 
-      }
+
       res.status(200).send(result.rows);
    })
    .catch((err) => {
-      res.status(500).send('Database query failed');
+      res.status(404).send('Belongs not found');
    });
 }); 
 
@@ -174,13 +160,11 @@ itemsRouter.put('/belongs', async (req, res) => {
 
    Items.add_belongs(street_num, street, postal_code, item_id, venue_location)
    .then((result) => {
-      if (result.rowCount === 0) {
-         res.status(404).send('Item not found') 
-      }
+      
       res.status(200).send(result.rows);
    })
    .catch((err) => {
-      res.status(500).send('Database query failed');
+      res.status(404).send('Belongs not found');
    });
 }); 
 
@@ -192,13 +176,11 @@ itemsRouter.delete('/belongs/:street_num/:street/:postal_code/:item_id', async (
 
    Items.delete_belongs(street_num,street,postal_code,item_id)
    .then((result) => {
-      if (result.rowCount === 0) {
-         res.status(404).send('Item not found') 
-      }
+  
       res.status(200).send(result.rows);
    })
    .catch((err) => {
-      res.status(500).send('Database query failed');
+      res.status(404).send('Belongs not found');
    });
 });
 
@@ -210,13 +192,11 @@ itemsRouter.get('/contributes/:contrib_user_id', async (req, res) => {
 
    Items.get_contributions_user(contrib_user_id)
    .then((result) => {
-      if (result.rowCount === 0) {
-         res.status(404).send('Item not found') 
-      }
+      
       res.status(200).send(result.rows);
    })
    .catch((err) => {
-      res.status(500).send('Database query failed');
+      res.status(404).send('Contribution not found');
    });
 }); 
 
@@ -235,13 +215,11 @@ itemsRouter.post('/contributes/:contrib_user_id/:item_id', async (req, res) => {
    Items.update_contributions(contrib_user_id,item_id,new_contrib_user_id, new_item_id,
       contrib_start_time, contrib_end_time, contrib_amt)
    .then((result) => {
-      if (result.rowCount === 0) {
-         res.status(404).send('Item not found') 
-      }
+      
       res.status(200).send(result.rows);
    })
    .catch((err) => {
-      res.status(500).send('Database query failed');
+      res.status(404).send('Contribution not found');
    });
 }); 
 
@@ -253,13 +231,11 @@ itemsRouter.put('/contributes', async (req, res) => {
    Items.add_contributions(contrib_user_id, item_id, contrib_start_time, 
       contrib_end_time, contrib_amt)
    .then((result) => {
-      if (result.rowCount === 0) {
-         res.status(404).send('Item not found') 
-      }
+      
       res.status(200).send(result.rows);
    })
    .catch((err) => {
-      res.status(500).send('Database query failed');
+      res.status(404).send('Item not found');
    });
 }); 
 
@@ -269,13 +245,11 @@ itemsRouter.delete('/contributes/:contrib_user_id/:item_id', async (req, res) =>
 
    Items.delete_contributes(contrib_user_id,item_id)
    .then((result) => {
-      if (result.rowCount === 0) {
-         res.status(404).send('Item not found') 
-      }
+      
       res.status(200).send(result.rows);
    })
    .catch((err) => {
-      res.status(500).send('Database query failed');
+      res.status(404).send('Item not found');
    });
 });
 
@@ -288,13 +262,11 @@ itemsRouter.get('/requests/:req_user_id', async (req, res) => {
 
    Items.get_request_requester(req_user_id)
    .then((result) => {
-      if (result.rowCount === 0) {
-         res.status(404).send('Item not found') 
-      }
+      
       res.status(200).send(result.rows);
    })
    .catch((err) => {
-      res.status(500).send('Database query failed');
+      res.status(404).send('Item not found');
    });
 }); 
 
@@ -312,13 +284,11 @@ itemsRouter.post('/requests/:req_user_id/:item_id', async (req, res) => {
 
    Items.update_request(req_user_id, item_id, new_req_user_id, new_item_id, req_amt)
    .then((result) => {
-      if (result.rowCount === 0) {
-         res.status(404).send('Item not found') 
-      }
+      
       res.status(200).send(result.rows);
    })
    .catch((err) => {
-      res.status(500).send('Database query failed');
+      res.status(404).send('Item not found');
    });
 }); 
 
@@ -328,13 +298,11 @@ itemsRouter.put('/requests', async (req, res) => {
 
    Items.add_request(req_user_id, item_id, req_amt)
    .then((result) => {
-      if (result.rowCount === 0) {
-         res.status(404).send('Item not found') 
-      }
+      
       res.status(200).send(result.rows);
    })
    .catch((err) => {
-      res.status(500).send('Database query failed');
+      res.status(404).send('Item not found');
    });
 }); 
 
@@ -344,13 +312,11 @@ itemsRouter.delete('/requests/:req_user_id/:item_id', async (req, res) => {
 
    Items.delete_request(req_user_id,item_id)
    .then((result) => {
-      if (result.rowCount === 0) {
-         res.status(404).send('Item not found') 
-      }
+      
       res.status(200).send(result.rows);
    })
    .catch((err) => {
-      res.status(500).send('Database query failed');
+      res.status(404).send('Item not found');
    });
 });
 
