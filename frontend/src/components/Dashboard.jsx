@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom"
 
 export default function Dashboard() {
-    const [userID, setUserID] = useState(-1);
-    useEffect(() => {
-        setUserID(localStorage.getItem('user_id'));
-    })
-    return (
-        <>
-            {(userID < 0) ? <Navigate to='/login' replace={true} /> : null}
+    const userID = localStorage.getItem('user_id');
+
+    if (userID === null || userID < 0) {
+        return (
+            <Navigate to='/login' replace={true}/>
+        )
+    } else {
+        return (
             <h1>Dashboard</h1>
-        </>
-    )
+        )
+    }
 }
