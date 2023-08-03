@@ -34,6 +34,15 @@ export async function updateUser(id: number, req) {
     }
 }
 
+export async function removeUser(id: number) {
+    const res = await db.query(`DELETE FROM users WHERE user_id = $1 RETURNING *`, [id]);
+    if (res.rows.length === 0) {
+        return -1;
+    } else {
+        return res.rows;
+    }
+}
+
 export async function login(email: string, password: string): Promise<number> {
     const res = await db.query('SELECT user_id FROM users WHERE email_address = $1 AND password = $2', [email, password]);
     if (res.rows.length === 0) {

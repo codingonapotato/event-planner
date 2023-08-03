@@ -29,11 +29,6 @@ customerRouter.get('/dependant/:id', (req, res) => {
     })
 })
 
-customerRouter.get('/tickets/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    Customer.getTickets(id);
-})
-
 customerRouter.post('/dependant-modify/:id/:first_name/:last_name/', (req, res) => {
     const id = parseInt(req.params.id);
     Customer.modifyDependant(id, req).then((result) => {
@@ -75,3 +70,16 @@ customerRouter.delete('/dependant-remove/:id/:first_name/:last_name', (req, res)
     });
 })
 export default customerRouter;
+
+customerRouter.get('/tickets/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    Customer.findTickets(id).then((result) => {
+        if (result === -1) {
+            res.status(404).send(`Could not retrieve tickets for customer with id = ${id}`);
+        } else {
+            res.status(200).send(result);
+        }
+    }).catch((err) => {
+        res.status(500).send('Database query failed');
+    });
+});

@@ -103,6 +103,7 @@ CREATE TABLE volunteer (
 
 CREATE TABLE event (
     event_id        INTEGER     PRIMARY KEY,
+    name            TEXT,
     start_time      TIMESTAMP,
     end_time        TIMESTAMP,
     visibility      TEXT,
@@ -117,6 +118,11 @@ CREATE TABLE event (
     FOREIGN KEY (street_num, street, postal_code) REFERENCES venue(street_num,
     street, postal_code)
         ON DELETE CASCADE);
+
+CREATE VIEW volunteer_event (event_id, name, start_time, end_time, organizer_first_name, organizer_last_name, street_num, street, postal_code) AS
+SELECT e.event_id, e.name, e.start_time, e.end_time, u.first_name, u.last_name, e.street_num, e.street, e.postal_code
+FROM event e, users u 
+WHERE e.organizer_id = u.user_id;
 
 CREATE TABLE special_guest (
     id          INTEGER PRIMARY KEY,
@@ -176,8 +182,6 @@ CREATE TABLE ticket (
     UNIQUE (seat_number, event_id),
     FOREIGN KEY (tier_id)   REFERENCES tier (tier_id),
     FOREIGN KEY (event_id)  REFERENCES event (event_id));
-
-
 
 CREATE TABLE dependants (
     first_name  TEXT,
@@ -347,13 +351,13 @@ VALUES
 
 
 INSERT INTO 
-event (event_id, start_time, end_time, visibility, budget, organizer_id, street_num, street, postal_code)
+event (event_id, name, start_time, end_time, visibility, budget, organizer_id, street_num, street, postal_code)
 VALUES
-	(1, '2023-08-20 10:00:00', '2023-08-20 16:00:00', 'public', 1000.00, 7, 1234, 'Sesame St', 'K8V2V3'),
-	(2, '2023-09-17 18:00:00', '2023-09-18 00:00:00', 'private', 500.00, 3, 1234, 'Sesame St', 'K8V2V3'),
-	(3, '2023-05-18 12:00:00', '2023-05-18 16:00:00', 'public', 0.00, 4, 350, 'W Georgia St', 'V6B6B1'),
-	(4, '2023-12-31 23:00:00', '2024-01-01 02:00:00', 'public', 10000.00, 1, 800, 'Griffiths Way', 'V6B6G1'),
-	(5, '2023-08-17 12:00:00', '2023-08-20 12:00:00', 'public', 1000.00, 2, 350, 'W Georgia St', 'V6B6B1');
+	(1, 'Sesame Street and Friends', '2023-08-20 10:00:00', '2023-08-20 16:00:00', 'public', 1000.00, 7, 1234, 'Sesame St', 'K8V2V3'),
+	(2, 'Polnareff Land', '2023-09-17 18:00:00', '2023-09-18 00:00:00', 'private', 500.00, 3, 1234, 'Sesame St', 'K8V2V3'),
+	(3, 'The Wild West', '2023-05-18 12:00:00', '2023-05-18 16:00:00', 'public', 0.00, 4, 350, 'W Georgia St', 'V6B6B1'),
+	(4, 'Oppenheimer', '2023-12-31 23:00:00', '2024-01-01 02:00:00', 'public', 10000.00, 1, 800, 'Griffiths Way', 'V6B6G1'),
+	(5, 'Barbie', '2023-08-17 12:00:00', '2023-08-20 12:00:00', 'public', 1000.00, 2, 350, 'W Georgia St', 'V6B6B1');
 
 
 INSERT

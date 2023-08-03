@@ -16,7 +16,7 @@ volunteerRouter.get('/:id', (req, res) => {
     });
 })
 
-volunteerRouter.get('/:id/hours-volunteered', (req, res) => {
+volunteerRouter.get('/hours-volunteered/:id', (req, res) => {
     const id = parseInt(req.params.id);
     Volunteer.findHoursVolunteered(id).then((result) => {
         if (result === - 1) {
@@ -29,11 +29,11 @@ volunteerRouter.get('/:id/hours-volunteered', (req, res) => {
     });
 })
 
-volunteerRouter.get('/:id/events', (req, res) => {
+volunteerRouter.get('/shifts/:id', (req, res) => {
     const id = parseInt(req.params.id);
-    Volunteer.findEvents(id).then((result) => {
+    Volunteer.findShifts(id).then((result) => {
         if (result === - 1) {
-            res.status(404).send('Volunteer not found');
+            res.status(404).send('Could not retrieve volunteer shifts :(');
         } else {
             res.status(200).send(result);
         }

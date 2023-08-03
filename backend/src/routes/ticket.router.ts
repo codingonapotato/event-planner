@@ -16,18 +16,18 @@ ticketRouter.get('/:id', (req, res) => {
     });
 })
 
-// ticketRouter.get('/tier/:id', (req, res) => {
-//     const id = parseInt(req.params.id);
-//     Ticket.findTier(id).then((result) => {
-//         if (result === - 1) {
-//             res.status(404).send('Tier not found');
-//         } else {
-//             res.status(200).send(result);
-//         }
-//     }).catch((err) => {
-//         res.status(500).send('Database query failed');
-//     });
-// })
+ticketRouter.get('/tier/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    Ticket.findTier(id).then((result) => {
+        if (result === - 1) {
+            res.status(404).send('Tier not found');
+        } else {
+            res.status(200).send(result);
+        }
+    }).catch((err) => {
+        res.status(500).send('Database query failed');
+    });
+})
 
 ticketRouter.post('/modify/:id', (req, res) => {
     const id = parseInt(req.params.id);

@@ -47,13 +47,13 @@ export async function removeTicket(id: number) {
     }
 }
 
-// //** EFFECTS:  */
-// export async function findTier(ticketId: number) {
-//     const res = await db.query(`SELECT * FROM ticket, tier
-//     WHERE tier_id = SELECT tier_id FROM ticket WHERE ticket_id = $1`, [ticketId])
-//     if (res.rows.length === 0) {
-//         return -1;
-//     } else {
-//         return res.rows;
-//     }
-// }
+/** EFFECTS: Returns the tier for the ticket with @param ticketId */
+export async function findTier(ticketId: number) {
+    const res = await db.query(`SELECT * FROM ticket t, tier ti
+    WHERE t.ticket_id = $1 AND t.tier_id = ti.tier_id`, [ticketId])
+    if (res.rows.length === 0) {
+        return -1;
+    } else {
+        return res.rows;
+    }
+}

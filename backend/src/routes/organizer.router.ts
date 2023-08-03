@@ -16,4 +16,17 @@ organizerRouter.get('/:id', (req, res) => {
     });
 })
 
+organizerRouter.get('/events/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    Organizer.findEvents(id).then((result) => {
+        if (result === - 1) {
+            res.status(404).send('Could not find any events for this organizer');
+        } else {
+            res.status(200).send(result);
+        }
+    }).catch((err) => {
+        res.status(500).send('Database query failed');
+    });
+})
+
 export default organizerRouter;

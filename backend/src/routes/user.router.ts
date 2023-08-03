@@ -19,11 +19,24 @@ userRouter.get('/:id', async (req, res) => {
       });
 });
 
-userRouter.post('/:id/modify-user', (req, res) => {
+userRouter.post('/:id/user-modify', (req, res) => {
    const id = parseInt(req.params.id);
    User.updateUser(id, req).then((result) => {
       if (result === -1) {
          res.status(404).send(`User information for user with id = ${id} could not be modified`);
+      } else {
+         res.status(200).send(result);
+      }
+   }).catch((err) => {
+      res.status(500).send('Database query failed');
+   });
+});
+
+userRouter.delete('/:id/user-remove', (req, res) => {
+   const id = parseInt(req.params.id);
+   User.removeUser(id).then((result) => {
+      if (result === -1) {
+         res.status(404).send(`Could not delete user with user id = ${id}`);
       } else {
          res.status(200).send(result);
       }

@@ -67,10 +67,10 @@ export async function removeDependant(id: number, req) {
 }
 
 /** EFFECTS: Retrieves all tickets that a customer holds (including information on the event the ticket is for) */
-export async function getTickets(id: number) {
-    // call event.model function with return eventID maybe?
-    // still under development pausing until we cover the SQL for joins
-    const res = await db.query('SELECT * FROM tickets WHERE customer_id = $1', [id]);
+export async function findTickets(id: number) {
+    const res = await db.query(`SELECT DISTINCT *
+    FROM ticket t, event e, organizer o, tier ti
+    WHERE t.customer_id = $1 AND t.event_id = e.event_id AND t.tier_id = ti.tier_id AND e.organizer_id = o.organizer_id`, [id]);
     if (res.rows.length === 0) {
         return -1;
     } else {
