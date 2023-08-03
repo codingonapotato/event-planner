@@ -376,14 +376,14 @@ VALUES
 
 
 INSERT INTO 
-ticket(ticket_id, seat_number, tier_id, event_id, customer_id)
+ticket(seat_number, tier_id, event_id, customer_id)
 VALUES
-	(1, NULL, 6, 5, NULL),
-	(2, NULL, 6, 5, 8),
-	(3, 500, 2, 1, 1),
-	(4, 125, 4, 4, 4),
-	(5, 5, 5, 3, 2),
-    (6, NULL, 3, 2, 1);
+	(NULL, 6, 5, NULL),
+	(NULL, 6, 5, 8),
+	(500, 2, 1, 1),
+	(125, 4, 2, 4),
+	(5, 5, 3, 2),
+    (NULL, 3, 2, 1);
 
 
 INSERT
