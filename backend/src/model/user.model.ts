@@ -54,6 +54,6 @@ export default class User {
 
 export async function registerUser(params: any[]) {
     const res = await db.query(`INSERT INTO users(first_name, last_name, email_address, password, birthdate)
-    VALUES ($1, $2, $3, $4, $5) RETURNING *`, params).then(); 
+    VALUES ($1, $2, $3, $4, $5) RETURNING *`, params).then();  
     return parseInt(res.rows[0]['user_id']);
 }
