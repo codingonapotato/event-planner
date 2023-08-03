@@ -30,9 +30,11 @@ export default function Layout() {
                     <div className="flex-1 flex flex-col">
                         <div className='flex bg-white border-b-4 border-b-indigo-500'>
                             <div className='text-left text-2xl m-4 font-semibold'>{(userInfo.first_name) ? `Welcome back, ${userInfo.first_name}`: 'Welcome back'}</div>
-                            <Link to='/profile' replace={true} className="flex-1 flex justify-end top-0 right-0 m-4">
-                                <UserCircleIcon className='w-8 h-8 text-black'/>
-                            </Link>
+                            <span className="flex-1 flex justify-end top-0 right-0 m-4">
+                                <Link to='/profile' replace={true}>
+                                    <UserCircleIcon className='w-8 h-8 text-black'/>
+                                </Link>
+                            </span>
                         </div>
                         <Outlet context={[userInfo]}/>
                     </div>

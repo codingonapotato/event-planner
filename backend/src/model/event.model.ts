@@ -45,14 +45,16 @@ export async function createEvent(params: any[]) {
 
 export async function getUpcomingEvents(user_id: number) {
     const res = await db.query(`SELECT
+        name,
         start_time,
         end_time,
         street_num,
         street,
         postal_code,
         city,
-        province
-        FROM event NATURAL JOIN city NATURAL JOIN province NATURAL JOIN ticket 
+        province,
+        tier_description
+        FROM event NATURAL JOIN city NATURAL JOIN province NATURAL JOIN ticket NATURAL JOIN tier
         WHERE customer_id = $1`, [user_id]);
     return res.rows;
 }

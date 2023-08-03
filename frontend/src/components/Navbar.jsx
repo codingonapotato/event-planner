@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router-dom"
-import { HomeIcon, CalendarIcon, ArrowLeftOnRectangleIcon, ArrowLeftIcon } from "@heroicons/react/24/solid"
+import { HomeIcon, TicketIcon, ArrowLeftOnRectangleIcon, DocumentIcon, CubeTransparentIcon, SquaresPlusIcon } from "@heroicons/react/24/solid"
 
 const navLinks = [
     {
@@ -8,14 +8,19 @@ const navLinks = [
         icon: HomeIcon
     },
     {
+        text: 'My Events',
+        target: '/manageEvent',
+        icon: DocumentIcon
+    },
+    {
         text: 'Browse Events',
         target: '/events',
-        icon: CalendarIcon
+        icon: TicketIcon
     },
     {
         text: 'Browse Shifts',
         target: '/shifts',
-        icon: CalendarIcon
+        icon: SquaresPlusIcon
     },
     {
         text: 'Sign Out',
@@ -27,7 +32,9 @@ const navLinks = [
 export default function Navbar() {
     return (
         <nav className="flex flex-col  bg-gray-800 min-h-screen">
-            <div className="text-white flex-initial p-12 border-b-2 text-center border-dashed mb-4">WHITESPACE</div>
+            <div className="text-white flex-initial p-8 flex justify-center items-center text-center mb-2">
+                <CubeTransparentIcon className="w-13 h-13 text-indigo-500"/>
+            </div>
                 {navLinks.map((link) => {
                     return (
                         <NavigationLink 

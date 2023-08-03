@@ -155,12 +155,12 @@ CREATE TABLE volunteers_for_event (
 
 CREATE TABLE tier (
     tier_id             SERIAL PRIMARY KEY,
-    tier_description    TEXT,
-    tier_name           TEXT,
+    tier_description    TEXT DEFAULT 'General Admission',
+    tier_name           TEXT DEFAULT 'Tier 0',
     price               MONEY DEFAULT 0.0,
     event_id            INTEGER NOT NULL,
     organizer_id        INTEGER NOT NULL,
-    FOREIGN KEY (event_id) REFERENCES event (event_id)
+    FOREIGN KEY (event_id) REFERENCES event (event_id),
     FOREIGN KEY (organizer_id) REFERENCES organizer (organizer_id));
 
 CREATE TABLE ticket (
@@ -189,8 +189,6 @@ CREATE TABLE dependants (
 CREATE TABLE organizes_event (
     organizer_ID    INTEGER,
     event_id        INTEGER,
-    customer_id     INTEGER,
-    PRIMARY KEY (customer_id, event_id),
     FOREIGN KEY (organizer_id)
         REFERENCES organizer (organizer_ID)
         ON DELETE CASCADE
