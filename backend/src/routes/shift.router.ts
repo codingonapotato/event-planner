@@ -29,33 +29,35 @@ shiftRouter.get('/eventID/:id', async (req, res) => {
 
    Shift.get_using_eventID(id)
    .then((result) => {
-      let rows: any[] = [];
-      for (let i = 0; i < result.rowCount; i++) {
-         const row: any[] = [result.rows[i]['shift_id'],   result.rows[i]['role'],
-                              result.rows[i]['start_time'], result.rows[i]['end_time'], 
-                              result.rows[i]['station'],    result.rows[i]['volunteer_id']];
-         rows.push(row);
-      }
-      res.status(200).send(rows);
+      // let rows: any[] = [];
+      // for (let i = 0; i < result.rowCount; i++) {
+      //    const row: any[] = [result.rows[i]['shift_id'],   result.rows[i]['role'],
+      //                         result.rows[i]['start_time'], result.rows[i]['end_time'], 
+      //                         result.rows[i]['station'],    result.rows[i]['volunteer_id']];
+      //    rows.push(row);
+      // }
+      const temp: string = result.rows.toString();
+
+      res.status(200).send(result.rows);
    })
    .catch((err) => {
       res.status(404).json({message: 'Shift not found', error: err});
    });
 }); 
 
-shiftRouter.get('/volunteerID/:id', async (req, res) => {
+shiftRouter.post('/volunteerID/:id', async (req, res) => {
    const id = parseInt(req.params.id);
 
    Shift.get_using_volunteerID(id)
    .then((result) => {
-      let rows: any[] = [];
-      for (let i = 0; i < result.rowCount; i++) {
-         const row: any[] = [result.rows[0]['shift_id'],   result.rows[0]['role'],
-                           result.rows[0]['start_time'], result.rows[0]['end_time'], 
-                           result.rows[0]['station'],    result.rows[0]['event_id']];
-         rows.push(row);
-      }
-      res.status(200).send(rows);
+      // let rows: any[] = [];
+      // for (let i = 0; i < result.rowCount; i++) {
+      //    const row: any[] = [result.rows[0]['shift_id'],   result.rows[0]['role'],
+      //                      result.rows[0]['start_time'], result.rows[0]['end_time'], 
+      //                      result.rows[0]['station'],    result.rows[0]['event_id']];
+      //    rows.push(row);
+      // }
+      res.status(200).send(result.rows);
    })
    .catch((err) => {
       res.status(404).json({message: 'Shift not found', error: err});
@@ -67,7 +69,7 @@ shiftRouter.get('/volunteerID/:id', async (req, res) => {
  * Attributes to be changed are passed through req.body and they must 
  * include: role, start_time, end_time, station
  */
-shiftRouter.post('/:id', async (req, res) => {
+shiftRouter.post('/update/:id', async (req, res) => {
    const id = parseInt(req.params.id);
 
    const {new_id, role, start_time, end_time, station} = req.body;

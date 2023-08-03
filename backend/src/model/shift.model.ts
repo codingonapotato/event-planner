@@ -19,9 +19,8 @@ export function get_using_volunteerID(id: number) {
 }
 
 /**
- * Updates all attributes with the exception of foreign keys in Shift
+ * Updates attributes with the exception of foreign keys in Shift
  * @param id the shift_id of the shift we want to change
- * @param new_id the new id to replace the old shift_id
  * @param role 
  * @param startTime 
  * @param endTime 
@@ -47,7 +46,15 @@ export function updateShift(id: number, role: string, startTime: string,
  * @returns promise to a QueryResult
  */
 export function addShift(role: string, startTime: string, 
-    endTime: string, station: string, volunteer_id: number, event_id: number) {
+    endTime: string, station: string, volunteer_id: any, event_id: number) {
+    
+    if (volunteer_id === null || volunteer_id == '') {
+        return db.query(`INSERT INTO shift(role, start_time, end_time, station, volunteer_id, 
+            event_id) VALUES ($1::text, $2::timestamp, 
+            $3::timestamp, $4::text, null, $5::integer);`, 
+            [role, startTime, endTime, station, event_id]);
+    }
+
     return db.query(`INSERT INTO shift(role, start_time, end_time, station, volunteer_id, 
         event_id) VALUES ($1::text, $2::timestamp, 
         $3::timestamp, $4::text, $5::integer, $6::integer);`, 
