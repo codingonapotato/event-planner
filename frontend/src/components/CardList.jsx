@@ -6,9 +6,9 @@ export default function CardList({
     redirectTarget
 }) {
     return (
-        <div className="flex flex-col w-1/3">
+        <div className="flex flex-col w-1/3 px-3">
             <div className='border-b-2 border-b-slate-500/50 text-3xl self-start font-semibold mb-3'>Upcoming {type}</div>
-            <div className="flex flex-col space-y-2">
+            <div className="flex flex-col space-y-2.5">
                 {(items.length === 0) ? 
                 <>
                     <div className='font-semibold'>It looks like you don't have any upcoming {type}</div>
@@ -17,34 +17,34 @@ export default function CardList({
                     </Link>
                 </>
                 : items.map(item => {
-                    return <ListItem item={item}/>
+                    return <ListItem key={item.name} item={item} type={type}/>
                 })}
             </div>
         </div>
-
     )
 }
 
 const monthNames=["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 function ListItem({
-    item
+    item,
+    type
 }) {
     function getDateString(date) {
-        return monthNames[date.getMonth()] + ' ' + date.getDate() + ' '  + date.getFullYear() + ' ' + String(date.getUTCHours()).padStart(2,'0') + ":" + String(date.getUTCMinutes()).padStart(2,'0');
+        return monthNames[date.getMonth()] + ' ' + date.getUTCDate() + ' '  + date.getFullYear() + ' ' + String(date.getUTCHours()).padStart(2,'0') + ":" + String(date.getUTCMinutes()).padStart(2,'0');
     }
 
     const startDate = new Date(item.start_time);
     const endDate = new Date(item.end_time);
 
     return (
-        <div className='flex flex-col p-4 bg-white rounded-lg space-y-0.5 drop-shadow-md'>
+        <div className='flex flex-col p-4 bg-white rounded-lg space-y-0.5 drop-shadow-md min-w-fit'>
             <div className='flex'>
                 <span className='min-w-fit text-xl text-black font-semibold flex items-center'>
                     {item.name}
                 </span>
-                <span className='flex-1 text-black font-light flex items-center justify-end'>
-                    {item.tier_description}
+                <span className='hidden flex-1 min-w-min text-black font-light lg:flex flex-nowrap items-center justify-end'>
+                    {(type === 'Events') ? item.tier_description : item.role}
                 </span>
             </div>
             <div className='font-normal text-left'>

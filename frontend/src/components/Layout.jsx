@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import { Outlet, Link, Navigate } from "react-router-dom";
-import { Bars3Icon, UserCircleIcon } from "@heroicons/react/24/solid"
+import { UserCircleIcon } from "@heroicons/react/24/solid"
 import axios from 'axios';
 
 export default function Layout() {
@@ -29,7 +29,7 @@ export default function Layout() {
                     <Navbar />
                     <div className="flex-1 flex flex-col">
                         <div className='flex bg-white border-b-4 border-b-indigo-500'>
-                            <div className='text-left text-2xl m-4 font-semibold'>{(userInfo.first_name) ? `Welcome back, ${userInfo.first_name}`: 'Welcome back'}</div>
+                            <div className='text-left text-2xl m-4 font-bold'>{(userInfo.first_name) ? `Welcome back, ${userInfo.first_name}`: 'Welcome back'}</div>
                             <span className="flex-1 flex justify-end top-0 right-0 m-4">
                                 <Link to='/profile' replace={true}>
                                     <UserCircleIcon className='w-8 h-8 text-black'/>

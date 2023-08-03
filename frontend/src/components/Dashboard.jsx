@@ -20,10 +20,10 @@ export default function Dashboard() {
     }, [])
 
     return (
-        <div className='flex flex-row pt-6 space-x-8 mx-4'>
+        <div className='flex flex-row pt-6 space-x-10 mx-4'>
             <CardList items={events} type='Events' redirectTarget='/events'/>
-            <CardList items={dashMock.empty} type='Shifts' redirectTarget='/shifts'/>
-            <div className='flex flex-col flex-1 space-y-8'>
+            <CardList items={dashMock.mockShift} type='Shifts' redirectTarget='/shifts'/>
+            <div className='flex flex-col flex-1 space-y-5'>
                 <BalanceCard balance={userInfo.balance}/>
                 <DependantsList dependants={dashMock.mockDependants}/>
             </div>
@@ -35,9 +35,9 @@ function BalanceCard({
     balance
 }) {
     return (
-        <div className='drop-shadow-lg flex flex-col bg-white min-w-1/6 p-5 rounded-xl text-3xl'>
-            <b>Your Balance</b>
-            <p>{balance}</p>
+        <div className='drop-shadow-lg flex flex-col bg-white min-w-1/6 p-5 font-semibold rounded-xl text-3xl'>
+            Your Balance
+            <p className='font-normal'>{balance}</p>
         </div>
     )
 };
@@ -46,10 +46,10 @@ function DependantsList({
     dependants
 }) {
     return (
-        <div className="drop-shadow-lg flex flex-col bg-white rounded-xl p-5">
-            <div className='text-3xl mb-4'><b>Your Dependants</b></div>
+        <div className="drop-shadow-lg flex flex-col bg-white rounded-xl font-semibold p-5">
+            <div className='text-3xl mb-4'>Your Dependants</div>
             {dependants.map(dependant => {
-                return <DependantsItem dependant={dependant} />
+                return <DependantsItem key={dependant.first_name} dependant={dependant} />
             })}
         </div>
     )

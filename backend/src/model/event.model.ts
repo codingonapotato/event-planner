@@ -2,6 +2,7 @@ import * as db from "../../db";
 
 export function findEvent(id: number) {
     return db.query(`SELECT 
+    name,
     start_time,
     end_time,
     street_num,
@@ -12,6 +13,7 @@ export function findEvent(id: number) {
 
 export async function findEventByCity(city: string) {
     const res = await db.query(`SELECT
+        name,
         start_time,
         end_time,
         street_num,
@@ -26,6 +28,7 @@ export async function findEventByCity(city: string) {
 
 export async function findEventByProvince(province: string) {
     const res = await db.query(`SELECT
+        name,
         start_time,
         end_time,
         street_num,

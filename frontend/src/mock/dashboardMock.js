@@ -16,13 +16,16 @@ const empty = [];
 
 const mockShift = [
     {
-        "shift_id": 1,
+        "name": "Big Bird's Talk Show",
         "role": "Line Cook",
-        "start_time": "2023-08-10T10:00:00.000Z",
-        "end_time": "2023-08-13T17:00:00.000Z",
+        "start_time": "2023-08-20T10:00:00.000Z",
+        "end_time": "2023-08-20T16:00:00.000Z",
         "station": "Concession",
-        "volunteer_id": 2,
-        "event_id": 2
+        "street_num": 1234,
+        "street": "Sesame St",
+        "postal_code": "K8V2V3",
+        "city": "Trenton",
+        "province": "ON",
     }
 ]
 
