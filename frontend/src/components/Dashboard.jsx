@@ -59,7 +59,7 @@ function DependantsItem({
     dependant
 }) {
     return (
-        <div className='border-b-2 p-1 text-lg'>
+        <div className='border-b-2 p-1 text-lg font-medium'>
             {dependant.first_name + ' ' + dependant.last_name}
         </div>
     )
