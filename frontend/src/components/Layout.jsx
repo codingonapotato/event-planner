@@ -11,11 +11,11 @@ export default function Layout() {
     // Retrieve user information
     useEffect(() => {
         axios.get(`http://localhost:8000/user/${userID}`)
-        .then((res) => {
-            setUserInfo(res.data[0]);
-        }).catch((err) => {
-            console.log(err);
-        })
+            .then((res) => {
+                setUserInfo(res.data[0]);
+            }).catch((err) => {
+                console.log(err);
+            })
     }, []);
 
     if (userID === null || userID < 0) {
@@ -29,14 +29,18 @@ export default function Layout() {
                     <Navbar />
                     <div className="flex-1 flex flex-col">
                         <div className='flex bg-white border-b-4 border-b-indigo-500'>
-                            <div className='text-left text-2xl m-4 font-bold'>{(userInfo.first_name) ? `Welcome back, ${userInfo.first_name}`: 'Welcome back'}</div>
+                            <div className='text-left text-2xl m-4 font-bold'>{(userInfo.first_name) ? `Welcome back, ${userInfo.first_name}` : 'Welcome back'}</div>
                             <span className="flex-1 flex justify-end top-0 right-0 m-4">
                                 <Link to='/profile' replace={true}>
-                                    <UserCircleIcon className='w-8 h-8 text-black'/>
+                                    <UserCircleIcon className='w-8 h-8 text-black' />
                                 </Link>
                             </span>
                         </div>
+<<<<<<< HEAD
                         <Outlet context={[userInfo, setUserInfo]}/>
+=======
+                        <Outlet context={[userInfo]} />
+>>>>>>> origin/user-profile
                     </div>
                 </div>
             </>

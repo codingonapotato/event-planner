@@ -8,7 +8,7 @@ import RegisterPage from './components/RegisterPage'
 import EventBrowser from './components/EventBrowser'
 import NotFound from './components/NotFound'
 import ShiftBrowser from './components/ShiftBrowser'
-import UserProfile from './components/UserProfile'
+import UserProfilePage from './components/UserProfilePage'
 import EventManager from './components/EventManager'
 
 function App() {
@@ -16,15 +16,15 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Layout/>}>
-          <Route index element={<Dashboard/>}/>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Dashboard />} />
           <Route path="/events" element={<EventBrowser />} />
           <Route path="/shifts" element={<ShiftBrowser />} />
-          <Route path="/profile" element={<UserProfile />} />
           <Route path="/manageEvent" element={<EventManager />} />
-        </Route> 
-        <Route path="/login" element={<LoginPage/>} />
-        <Route path="/register" element={<RegisterPage/>} />
+          <Route path="/profile" element={<UserProfilePage />} />
+        </Route>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
     </Router>
