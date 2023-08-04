@@ -57,15 +57,17 @@ export async function createEvent(params: any[], locationInfo: any[]) {
     return res;
 }
 
-export async function createEventTickets(numTickets: number, tier_id: number, event_id: number) {
+export async function createEventTickets(numTickets: number, tier_id: number, event_id: number, seat_start: number) {
     const ret = [];
     for (let i = 0; i < numTickets; i++) {
-        // console.log('hit');
-        await Ticket.createTicket({tier_id: tier_id, event_id: event_id}).then(res => {
-            // console.log(res);
-            ret.push(res);
+        await Ticket.createTicket({seat_number: seat_start+i, tier_id: tier_id, event_id: event_id}).then(res => {
+            if (res === -1) {
+                ret.push({err: `Creation of ticket sent with request ${i} failed due to seat conflict on seat ${seat_start+i}`})
+            } else {
+                ret.push(res);
+            }
         }, err => {
-            ret.push({err: `Creation of ${i}th ticket failed with error ${err}`});
+            ret.push({err: `Creation of ticket sent with request ${i} failed with error ${err}`});
         });
     }
     return ret;

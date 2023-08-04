@@ -36,7 +36,11 @@ export async function buyTicket(customer: number, ticket_id: number) {
 
 export async function createTicket(params: any) {
     const { seat_number = null, tier_id, event_id, customer_id = null} = params;
-    const res = await db.query(`INSERT INTO ticket (seat_number, tier_id, event_id, customer_id) VALUES ($1, $2, $3, $4) RETURNING *`,
+    const res = await db.query(`
+        INSERT INTO ticket (seat_number, tier_id, event_id, customer_id) 
+        VALUES ($1, $2, $3, $4) 
+        ON CONFLICT DO NOTHING 
+        RETURNING *`,
         [seat_number, tier_id, event_id, customer_id]);
     // console.log(res);
     if (res.rows.length === 0) {

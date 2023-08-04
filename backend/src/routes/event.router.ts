@@ -70,8 +70,8 @@ eventRouter.put('/', async (req, response) => {
 });
 
 eventRouter.put('/ticket', async (req, response) => {
-   const {numTickets, tier_id, event_id } = req.body;
-   Event.createEventTickets(numTickets, tier_id, event_id).then(res => {
+   const {numTickets, tier_id, event_id, seat_start = null} = req.body;
+   Event.createEventTickets(numTickets, tier_id, event_id, seat_start).then(res => {
       response.status(200).send(res);
    }, err => {
       console.log(err);
