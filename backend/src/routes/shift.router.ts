@@ -11,11 +11,11 @@ shiftRouter.get('/shiftID/:id', async (req, res) => {
 
    Shift.get_using_shiftID(id)
    .then((result) => {
-      const info: any[] = [result.rows[0]['role'],          result.rows[0]['start_time'], 
-                           result.rows[0]['end_time'],      result.rows[0]['station'], 
-                           result.rows[0]['volunteer_id'],  result.rows[0]['event_id']];
+      // const info: any[] = [result.rows[0]['role'],          result.rows[0]['start_time'], 
+      //                      result.rows[0]['end_time'],      result.rows[0]['station'], 
+      //                      result.rows[0]['volunteer_id'],  result.rows[0]['event_id']];
 
-      res.status(200).send(info);
+      res.status(200).send(result.rows);
       
    })
    .catch((err) => {
@@ -36,7 +36,6 @@ shiftRouter.get('/eventID/:id', async (req, res) => {
       //                         result.rows[i]['station'],    result.rows[i]['volunteer_id']];
       //    rows.push(row);
       // }
-      const temp: string = result.rows.toString();
 
       res.status(200).send(result.rows);
    })
@@ -45,7 +44,7 @@ shiftRouter.get('/eventID/:id', async (req, res) => {
    });
 }); 
 
-shiftRouter.post('/volunteerID/:id', async (req, res) => {
+shiftRouter.get('/volunteerID/:id', async (req, res) => {
    const id = parseInt(req.params.id);
 
    Shift.get_using_volunteerID(id)
@@ -57,6 +56,19 @@ shiftRouter.post('/volunteerID/:id', async (req, res) => {
       //                      result.rows[0]['station'],    result.rows[0]['event_id']];
       //    rows.push(row);
       // }
+      res.status(200).send(result.rows);
+   })
+   .catch((err) => {
+      res.status(404).json({message: 'Shift not found', error: err});
+   });
+}); 
+
+/**
+ * Send tuple(s) containing shifts with no volunteer_id
+ */
+shiftRouter.get('/available', async (req, res) => {
+   Shift.get_using_noID()
+   .then((result) => {
       res.status(200).send(result.rows);
    })
    .catch((err) => {

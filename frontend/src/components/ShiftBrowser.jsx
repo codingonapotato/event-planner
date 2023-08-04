@@ -1,14 +1,31 @@
-import ShiftTable from "./ShiftCard"
+import ShiftTable from "./ShiftTable"
 
 export default function ShiftBrowser() {
     return (
         <>
+
         <div className="m-6">
-        <div className='text-left text-2xl m-4 font-semibold'>Your Shifts</div>
+
+            {/* Table of your shifts */}
+            <div className='text-left text-3xl m-4 font-semibold'>Your Shifts</div>
             <ShiftTable />
-            </div>
+            
+            {/* Table of available shifts*/}
+            <div className='text-left text-3xl m-4 font-semibold'>Available Shifts</div>
+
+
+            {/* Table of all shifts of event (if organizer)*/}
+            <div className='text-left text-3xl m-4 font-semibold'>Available Shifts</div>
+
+
+            {/* Create shift  (if organizer)*/}
+
+
+
+        </div>
         
         </>
+        
         
     )
 }

@@ -8,7 +8,7 @@ export default function ShiftTable() {
     const userID = localStorage.getItem('user_id');
 
     useEffect(() => {
-        axios.post(`http://localhost:8000/shift/volunteerID/${userID}`)
+        axios.get(`http://localhost:8000/shift/volunteerID/${userID}`)
         .then((response) => {
             const arr = [];
             // console.log(`length: ${res.data.length}`);
@@ -16,6 +16,7 @@ export default function ShiftTable() {
                 // console.log(res.data[i]);
                 arr.push(response.data[i]);
             }
+
             // console.log(`arr: ${arr}`);
             set_shifts(arr);     
         }).catch((error) => {
@@ -73,7 +74,7 @@ export default function ShiftTable() {
                                     {item.shift_id}
                                 </th>
                                 {/* <td className="px-6 py-4">  {item.shift_id}     </td> */}
-                                <td className="px-6 py-4">  {item.role}         </td>
+                                <td contenteditable="true" className="px-6 py-4">  {item.role}         </td>
                                 <td className="px-6 py-4">  {item.start_time}   </td>
                                 <td className="px-6 py-4">  {item.end_time}     </td>
                                 <td className="px-6 py-4">  {item.station}      </td>

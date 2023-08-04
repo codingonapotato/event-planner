@@ -18,6 +18,11 @@ export function get_using_volunteerID(id: number) {
     FROM shift WHERE volunteer_id = $1::integer`, [id]);
 }
 
+export function get_using_noID() {
+    return db.query(`SELECT shift_id, role, start_time, end_time, station, event_id 
+    FROM shift WHERE volunteer_id IS NULL`,[]);
+}
+
 /**
  * Updates attributes with the exception of foreign keys in Shift
  * @param id the shift_id of the shift we want to change
