@@ -10,10 +10,10 @@ CREATE TABLE users (
     birthdate       DATE,
     email_address   TEXT        UNIQUE,
     password        TEXT,
-    balance         MONEY);
+    balance         MONEY DEFAULT 0.00);
 
 CREATE TABLE items (
-    item_id         INTEGER     NOT NULL,
+    item_id         SERIAL,
     amount          INTEGER     NOT NULL,
     item_name       TEXT        NOT NULL,
     PRIMARY KEY (item_ID)
@@ -52,7 +52,7 @@ CREATE TABLE venue (
     street          TEXT,
     postal_code     CHAR(6),
     name            TEXT,
-    capacity        INTEGER,
+    capacity        INTEGER DEFAULT 0,
     PRIMARY KEY (street_num, street, postal_code));
 
 CREATE TABLE belongs (
@@ -81,9 +81,7 @@ CREATE TABLE city(
     postal_code CHAR(6),
     city TEXT,
     PRIMARY KEY (postal_code));
-
-CREATE TABLE customer (
-    customer_id INTEGER PRIMARY KEY,
+CREATE TABLE customer ( customer_id INTEGER PRIMARY KEY,
     FOREIGN KEY (customer_id) REFERENCES Users(user_id)
     ON DELETE CASCADE
     ON UPDATE CASCADE);
@@ -102,12 +100,13 @@ CREATE TABLE volunteer (
         ON UPDATE CASCADE);
 
 CREATE TABLE event (
-    event_id        INTEGER     PRIMARY KEY,
+    -- event_id        INTEGER     PRIMARY KEY,
+    event_id        SERIAL PRIMARY KEY,
     name            TEXT,
-    start_time      TIMESTAMP,
-    end_time        TIMESTAMP,
-    visibility      TEXT,
-    budget          MONEY,
+    start_time      TIMESTAMP DEFAULT LOCALTIMESTAMP,
+    end_time        TIMESTAMP DEFAULT LOCALTIMESTAMP,
+    visibility      TEXT DEFAULT 'public',
+    budget          MONEY DEFAULT 0.00,
     organizer_id    INTEGER     NOT NULL,
     street_num      INTEGER     NOT NULL,
     street          TEXT        NOT NULL,
@@ -125,7 +124,7 @@ FROM event e, users u
 WHERE e.organizer_id = u.user_id;
 
 CREATE TABLE special_guest (
-    id          INTEGER PRIMARY KEY,
+    id          SERIAL PRIMARY KEY,
     first_name  TEXT,
     last_name   TEXT);
 
@@ -134,13 +133,13 @@ CREATE TABLE performs (
     event_id    INTEGER,
     start_time  TIMESTAMP,
     end_time    TIMESTAMP,
-    location    TEXT,
+   location    TEXT,
     PRIMARY KEY (guest_id, event_id),
     FOREIGN KEY (guest_id) REFERENCES special_guest,
     FOREIGN KEY (event_id) REFERENCES event);
 
 CREATE TABLE shift (
-    shift_id        INTEGER     PRIMARY KEY,
+    shift_id        SERIAL     PRIMARY KEY,
     role            TEXT,
     start_time      TIMESTAMP,
     end_time        TIMESTAMP,
@@ -183,6 +182,8 @@ CREATE TABLE ticket (
     FOREIGN KEY (tier_id)   REFERENCES tier (tier_id),
     FOREIGN KEY (event_id)  REFERENCES event (event_id));
 
+
+
 CREATE TABLE dependants (
     first_name  TEXT,
     last_name   TEXT,
@@ -198,8 +199,6 @@ CREATE TABLE dependants (
 CREATE TABLE organizes_event (
     organizer_ID    INTEGER,
     event_id        INTEGER,
-    customer_id     INTEGER,
-    PRIMARY KEY (customer_id, event_id),
     FOREIGN KEY (organizer_id)
         REFERENCES organizer (organizer_ID)
         ON DELETE CASCADE
@@ -261,20 +260,33 @@ VALUES
 INSERT INTO 
 province (postal_code, province)
 VALUES
-	('K7S9E2', 'ON'),
-	('V3A3R2', 'BC'),
-	('M6K3L3', 'ON'),
-	('M4W34K', 'ON'),
-	('V5L4S1', 'BC');
+	('K8V2V3', 'ON'),
+	('V6B6G1', 'BC'),
+	('V6T1Z3', 'BC'),
+	('M6K3C3', 'ON'),
+	('V6B6B1', 'BC'),
+    ('T4E0N7', 'AB'),
+    ('K8V0A9', 'BC'),
+    ('M6S0A1', 'ON'),
+    ('V6P1S8', 'BC'),
+    ('V6E1H3', 'BC'),
+    ('V5N1M1', 'BC');
 
 INSERT INTO 
 city (postal_code, city)
 VALUES
-	('V6B6G1', 'Vancouver'),
-    ('V3A3R2', 'Langley City'),
-    ('M6K3L3', 'Toronto'),
-    ('M4W34K', 'Toronto'),
-	('V5L4S1', 'Vancouver');
+    ('K8V2V3', 'Trenton'),
+    ('V6B6G1', 'Vancouver'),
+    ('V6T1Z3', 'Vancouver'),
+    ('M6K3C3', 'Toronto'),
+    ('V6B6B1', 'Vancouver'),
+    ('T4E0N7', 'Red Deer County'),
+    ('K8V0A9', 'Vancouver'),
+    ('M6S0A1', 'Hamilton'),
+    ('V6P1S8', 'Vancouver'),
+    ('V6E1H3', 'Vancouver'),
+    ('V5L2V7', 'Vancouver'),
+    ('V5N1M1', 'Vancouver');
 
 INSERT INTO 
 venue (street_num, street, postal_code, name, capacity)
@@ -309,14 +321,14 @@ VALUES
 INSERT INTO 
 users (phone_num, first_name, last_name, street, street_num, postal_code, birthdate, email_address, password, balance)
 VALUES
-	('1111111111', 'John', 'Smith', 'Johnson Street', 1111, 'V1R68B', '1990-05-08', 'john@gmail.com', 'pass1', 1.00),
-	('2222222222', 'Jon', 'Smythe', 'Jonson Avenue', 2222, 'T4E0N7', '1991-06-27', 'jon@gmail.com', 'pass2', 2.00),
-	('3333333333', 'Jonathon', 'Smiff', 'Jonathon Court', 3333, 'J0T8X6', '1993-03-03', 'jonathon3@gmail.com', 'pass3', 3.00),
-	('4444444444', 'Johnnefer', 'Smith', 'Johnson Street', 1111, 'V1R68B', '1990-08-05', 'johnnefer85@gmail.com', 'pass4', 4.00),
-	('5555555555', 'Johnson', 'Smyff', 'John Avenue', 5555, 'V3H7E1', '2003-08-15', 'jonsmyff@outlook.com', 'pass5', 5.00),
-	('6666666666', 'Vawlin', 'Tear', 'Main Street', 50, 'P9N3R6', '2000-02-05', 'vawlintear@gmail.com', 'pass6', 1000.00),
-	('7777777777', 'Ore', 'Guhnaiser', 'Pender Street', 30, 'E8L8L4', '1985-11-30', 'oreguhaniser@outlook.com', 'pass7', 50.00),
-	('8888888888', 'Kaw', 'Stoomer', 'North Road', 3048, 'J0E4H0', '1992-12-01', 'kawstoomer@gmail.com', 'pass8', 35.00);
+	('1111111111', 'John',      'Smith',    'Johnson Street',   1111,   'K8V0A9',   '1990-05-08',   'john@gmail.com',           'pass1', 1.00),
+	('2222222222', 'Jon',       'Smythe',   'Jonson Avenue',    2222,   'T4E0N7',   '1991-06-27',   'jon@gmail.com',            'pass2', 2.00),
+	('3333333333', 'Jonathon',  'Smiff',    'Jonathon Court',   3333,   'M6S0A1',   '1993-03-03',   'jonathon3@gmail.com',      'pass3', 3.00),
+	('4444444444', 'Johnnefer', 'Smith',    'Johnson Street',   1111,   'K8V0A9',   '1990-08-05',   'johnnefer85@gmail.com',    'pass4', 4.00),
+	('5555555555', 'Johnson',   'Smyff',    'John Avenue',      5555,   'V6P1S8',   '2003-08-15',   'jonsmyff@outlook.com',     'pass5', 5.00),
+	('6666666666', 'Vawlin',    'Tear',     'Main Street',      50,     'V6E1H3',   '2000-02-05',   'vawlintear@gmail.com',     'pass6', 1000.00),
+	('7777777777', 'Ore',       'Guhnaiser','Pender Street',    30,     'V5L2V7',   '1985-11-30',   'oreguhaniser@outlook.com', 'pass7', 50.00),
+	('8888888888', 'Kaw',       'Stoomer',  'North Road',       3048,   'V5N1M1',   '1992-12-01',   'kawstoomer@gmail.com',     'pass8', 35.00);
 
 
 INSERT INTO 
@@ -333,7 +345,8 @@ VALUES (6, 500), (2, 4), (4, 8), (1, 5), (5, 10);
 
 
 INSERT 
-INTO contributes (contrib_user_id, item_id, contrib_start_time, contrib_end_time, contrib_amt) VALUES
+INTO contributes (contrib_user_id, item_id, contrib_start_time, contrib_end_time, contrib_amt) 
+VALUES
 	(1,  1, '2023-07-25 9:00:00',	'2023-07-25 16:00:00',  5),
 	(2,  1, '2023-07-25 9:00:00',	'2023-07-25 16:00:00',  10),
 	(4,  3, '2023-07-25 9:00:00',	'2023-07-25 16:00:00',  20),
@@ -353,22 +366,23 @@ VALUES
 INSERT INTO 
 event (event_id, name, start_time, end_time, visibility, budget, organizer_id, street_num, street, postal_code)
 VALUES
-	(1, 'Sesame Street and Friends', '2023-08-20 10:00:00', '2023-08-20 16:00:00', 'public', 1000.00, 7, 1234, 'Sesame St', 'K8V2V3'),
-	(2, 'Polnareff Land', '2023-09-17 18:00:00', '2023-09-18 00:00:00', 'private', 500.00, 3, 1234, 'Sesame St', 'K8V2V3'),
-	(3, 'The Wild West', '2023-05-18 12:00:00', '2023-05-18 16:00:00', 'public', 0.00, 4, 350, 'W Georgia St', 'V6B6B1'),
-	(4, 'Oppenheimer', '2023-12-31 23:00:00', '2024-01-01 02:00:00', 'public', 10000.00, 1, 800, 'Griffiths Way', 'V6B6G1'),
-	(5, 'Barbie', '2023-08-17 12:00:00', '2023-08-20 12:00:00', 'public', 1000.00, 2, 350, 'W Georgia St', 'V6B6B1');
+	(1, 'Big Bird''s Talk Show',    '2023-08-20 10:00:00', '2023-08-20 16:00:00', 'public', 1000.00, 7, 1234, 'Sesame St', 'K8V2V3'),
+	(2, 'Big Bird''s Seminar',      '2023-09-17 18:00:00', '2023-09-18 00:00:00', 'private', 500.00, 3, 1234, 'Sesame St', 'K8V2V3'),
+	(3, 'Family Storytime',         '2023-05-18 12:00:00', '2023-05-18 16:00:00', 'public', 0.00, 4, 350, 'W Georgia St', 'V6B6B1'),
+	(4, 'Hockey Match',             '2023-12-31 23:00:00', '2024-01-01 02:00:00', 'public', 10000.00, 1, 800, 'Griffiths Way', 'V6B6G1'),
+	(5, 'Summer Storytime',         '2023-08-17 12:00:00', '2023-08-20 12:00:00', 'public', 1000.00, 2, 350, 'W Georgia St', 'V6B6B1');
 
 
 INSERT
-INTO tier (event_id, organizer_id, tier_description, tier_name, price)
+INTO tier (tier_id, tier_description, tier_name, price, event_id, organizer_id)
 VALUES
-	(1, 1,  'Balcony Seating', 	'Tier 1',   49),
-	(2, 7,   'Standard Seating',	'Tier 2',   79),
-	(3, 3,  'Rear Standing',		'Tier 3',   99),
-	(4, 4,  'Front Standing',		'Tier 4',   129),
-	(5, 2,  'VIP Box',				'VIP',  	550),
-	(1, 1, 'General Admission',	'Tier 0', 	5);
+	(1,  'Balcony Seating', 	'Tier 1',   49, 1, 7),
+	(2,  'Standard Seating',	'Tier 2',   79, 1, 7),
+	(3,  'Rear Standing',		'Tier 3',   99, 2, 3),
+	(4,  'Front Standing',		'Tier 4',   129, 2, 3),
+	(5,  'VIP Box',				'VIP',  	550, 4, 1),
+	(6,  'General Admission',	'Tier 0', 	5, 5, 2),
+	(7,  'General Admission',	'Tier 0', 	5, 3, 4);
 
 
 INSERT INTO 
@@ -377,8 +391,9 @@ VALUES
 	(NULL, 6, 5, NULL),
 	(NULL, 6, 5, 8),
 	(500, 2, 1, 1),
-	(125, 4, 4, 4),
-	(5, 5, 3, 2);
+	(125, 4, 2, 4),
+	(5, 5, 3, 2),
+    (NULL, 3, 2, 1);
 
 
 INSERT
@@ -391,13 +406,13 @@ VALUES
 ('Jack',	'Black',	8,	'2016-12-25');
 
 INSERT
-INTO organizes_event(organizer_id, event_id, customer_id)
+INTO organizes_event(organizer_id, event_id)
 VALUES
-	(7, 1, 8),
-	(3, 2, 1),
-	(4, 3, 2),
-	(1, 4, 4),
-	(2, 5, 5);
+	(7, 1),
+	(3, 2),
+	(4, 3),
+	(1, 4),
+	(2, 5);
 
 INSERT
 INTO customer_invite(customer_id, event_id, date_sent, date_accepted)

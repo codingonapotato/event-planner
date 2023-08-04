@@ -1,5 +1,4 @@
 import UserDetailCard from './UserDetailCard'
-import axios from 'axios'
 
 export default function UserProfilePage() {
     return (
