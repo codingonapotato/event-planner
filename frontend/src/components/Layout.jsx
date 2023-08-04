@@ -36,11 +36,7 @@ export default function Layout() {
                                 </Link>
                             </span>
                         </div>
-<<<<<<< HEAD
                         <Outlet context={[userInfo, setUserInfo]}/>
-=======
-                        <Outlet context={[userInfo]} />
->>>>>>> origin/user-profile
                     </div>
                 </div>
             </>

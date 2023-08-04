@@ -43,7 +43,7 @@ ticketRouter.post('/modify/:id', (req, res) => {
 })
 
 ticketRouter.put('/create', (req, res) => {
-    Ticket.createTicket(req).then((result) => {
+    Ticket.createTicket(req.body).then((result) => {
         if (result === - 1) {
             res.status(404).send(`Could not create a new ticket :(`);
         } else {

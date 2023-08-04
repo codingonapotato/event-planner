@@ -13,7 +13,6 @@ export async function findTicket(id: number) {
 export async function modifyTicket(id: number, req) {
     const { seat_number: seatNumber, tier_id: tierId, event_id: eventId, customer_id: customerId } = req.body
     const res = await db.query(`UPDATE ticket SET 
-    ticket_id = $1,
     seat_number = $2,
     tier_id = $3,
     event_id = $4,
@@ -27,14 +26,24 @@ export async function modifyTicket(id: number, req) {
     }
 }
 
-export async function createTicket(req) {
-    const { seat_number: seatNumber, tier_id: tierId, event_id: eventId, customer_id: customerId } = req.body;
+export async function buyTicket(customer: number, ticket_id: number) {
+    const res = await db.query(`UPDATE ticket SET
+    customer_id = $1
+    WHERE ticket_id = $2
+    RETURNING *`, [customer, ticket_id]);
+    return res.rows;
+}
+
+export async function createTicket(params: any) {
+    const { seat_number = null, tier_id, event_id, customer_id = null} = params;
     const res = await db.query(`INSERT INTO ticket (seat_number, tier_id, event_id, customer_id) VALUES ($1, $2, $3, $4) RETURNING *`,
-        [seatNumber, tierId, eventId, customerId]);
+        [seat_number, tier_id, event_id, customer_id]);
+    // console.log(res);
     if (res.rows.length === 0) {
         return -1;
     } else {
-        return res.rows;
+        // console.log(res.rows[0]);
+        return res.rows[0];
     }
 }
 

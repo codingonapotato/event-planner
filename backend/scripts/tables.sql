@@ -162,26 +162,12 @@ CREATE TABLE volunteers_for_event (
 
 CREATE TABLE tier (
     tier_id             SERIAL PRIMARY KEY,
-<<<<<<< HEAD
     tier_description    TEXT DEFAULT 'Unreserved Seating',
     tier_name           TEXT DEFAULT 'General Admission',
     price               MONEY DEFAULT 0.0,
     organizer_id        INTEGER NOT NULL,
     FOREIGN KEY (organizer_id) REFERENCES organizer (organizer_id)
         ON DELETE CASCADE);
-=======
-    event_id            INTEGER,
-    organizer_id        INTEGER,
-    tier_description    TEXT,
-    tier_name           TEXT,
-    price               MONEY,
-    FOREIGN KEY (event_id) REFERENCES event
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-    FOREIGN KEY (organizer_id) REFERENCES organizer
-    ON UPDATE CASCADE
-    ON DELETE CASCADE);
->>>>>>> origin/user-profile
 
 CREATE TABLE ticket (
     ticket_id   SERIAL     PRIMARY KEY,
@@ -389,15 +375,15 @@ VALUES
 
 
 INSERT
-INTO tier (tier_id, tier_name, tier_description, price, organizer_id)
+INTO tier (tier_name, tier_description, price, organizer_id)
 VALUES
-	(1,  'Balcony Seating', 	'Reserved Seating',   49, 7),
-	(2,  'Standard Seating',	'Reserved Seating',   79, 7),
-	(3,  'Rear Standing',		'Seating not provided',   99, 3),
-	(4,  'Front Standing',		'Expedited Check-in',   129, 3),
-	(5,  'VIP Box',				'Complimentary Refreshments;Expedited Check-in', 550, 1),
-	(6,  'General Admission',	'Unreserved Seating', 	5, 2),
-	(7,  'General Admission',	'Unreserved Seating', 	5, 4);
+	('Balcony Seating', 	'Reserved Seating',   49, 7),
+	('Standard Seating',	'Reserved Seating',   79, 7),
+	('Rear Standing',		'Seating not provided',   99, 3),
+	('Front Standing',		'Expedited Check-in',   129, 3),
+	('VIP Box',				'Complimentary Refreshments;Expedited Check-in', 550, 1),
+	('General Admission',	'Unreserved Seating', 	5, 2),
+	('General Admission',	'Unreserved Seating', 	5, 4);
 
 
 INSERT INTO 

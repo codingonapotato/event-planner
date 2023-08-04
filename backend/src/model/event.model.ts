@@ -1,5 +1,6 @@
 import * as db from "../../db";
 import * as Venue from "./venue.model"
+import * as Ticket from "./ticket.model"
 
 export function findEvent(id: number) {
     return db.query(`SELECT 
@@ -54,6 +55,20 @@ export async function createEvent(params: any[], locationInfo: any[]) {
     `, params.slice(0,9));
 
     return res;
+}
+
+export async function createEventTickets(numTickets: number, tier_id: number, event_id: number) {
+    const ret = [];
+    for (let i = 0; i < numTickets; i++) {
+        // console.log('hit');
+        await Ticket.createTicket({tier_id: tier_id, event_id: event_id}).then(res => {
+            // console.log(res);
+            ret.push(res);
+        }, err => {
+            ret.push({err: `Creation of ${i}th ticket failed with error ${err}`});
+        });
+    }
+    return ret;
 }
 
 

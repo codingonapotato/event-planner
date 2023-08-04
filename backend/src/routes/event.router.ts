@@ -61,13 +61,23 @@ eventRouter.get('/user/:id', async (req, response) => {
 eventRouter.put('/', async (req, response) => {
     const params = Object.values(req.body);
     const { street, street_num, postal_code, city, province } = req.body;
-    Event.createEvent(params, [street, street_num, postal_code, city, province]).then(res => {
+    Event.createEvent(params, [street_num, street, postal_code, city, province]).then(res => {
         response.status(200).send(res.rows);
     }, (err) => {
         console.log(err);
         response.status(500).json(err);
     });
 });
+
+eventRouter.put('/ticket', async (req, response) => {
+   const {numTickets, tier_id, event_id } = req.body;
+   Event.createEventTickets(numTickets, tier_id, event_id).then(res => {
+      response.status(200).send(res);
+   }, err => {
+      console.log(err);
+      response.status(500).json(err);
+   })
+})
 
 eventRouter.delete('/:id', async (req, response) => {
    const event_id = parseInt(req.params.id);
