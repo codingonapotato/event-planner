@@ -81,14 +81,16 @@ CREATE TABLE city(
     postal_code CHAR(6),
     city TEXT,
     PRIMARY KEY (postal_code));
-CREATE TABLE customer ( customer_id INTEGER PRIMARY KEY,
-    FOREIGN KEY (customer_id) REFERENCES Users(user_id)
+
+CREATE TABLE customer ( 
+    customer_id INTEGER PRIMARY KEY,
+    FOREIGN KEY (customer_id) REFERENCES users(user_id)
     ON DELETE CASCADE
     ON UPDATE CASCADE);
 
 CREATE TABLE organizer (
     organizer_id INTEGER PRIMARY KEY,
-    FOREIGN KEY (organizer_id) REFERENCES Users(user_id)
+    FOREIGN KEY (organizer_id) REFERENCES users(user_id)
         ON DELETE CASCADE
         ON UPDATE CASCADE);
 
@@ -155,13 +157,12 @@ CREATE TABLE volunteers_for_event (
 
 CREATE TABLE tier (
     tier_id             SERIAL PRIMARY KEY,
-    tier_description    TEXT DEFAULT 'General Admission',
-    tier_name           TEXT DEFAULT 'Tier 0',
+    tier_description    TEXT DEFAULT 'Unreserved Seating',
+    tier_name           TEXT DEFAULT 'General Admission',
     price               MONEY DEFAULT 0.0,
-    event_id            INTEGER NOT NULL,
     organizer_id        INTEGER NOT NULL,
-    FOREIGN KEY (event_id) REFERENCES event (event_id),
-    FOREIGN KEY (organizer_id) REFERENCES organizer (organizer_id));
+    FOREIGN KEY (organizer_id) REFERENCES organizer (organizer_id)
+        ON DELETE CASCADE);
 
 CREATE TABLE ticket (
     ticket_id   SERIAL     PRIMARY KEY,
@@ -170,8 +171,12 @@ CREATE TABLE ticket (
     event_id    INTEGER     NOT NULL,
     customer_id INTEGER,
     UNIQUE (seat_number, event_id),
-    FOREIGN KEY (tier_id)   REFERENCES tier (tier_id),
-    FOREIGN KEY (event_id)  REFERENCES event (event_id));
+    FOREIGN KEY (tier_id)   REFERENCES tier (tier_id)
+        ON DELETE CASCADE,
+    FOREIGN KEY (event_id)  REFERENCES event (event_id)
+        ON DELETE CASCADE,
+    FOREIGN KEY (customer_id) REFERENCES customer (customer_id)
+        ON DELETE SET NULL);
 
 
 CREATE TABLE dependants (
@@ -190,7 +195,7 @@ CREATE TABLE organizes_event (
     organizer_ID    INTEGER,
     event_id        INTEGER,
     FOREIGN KEY (organizer_id)
-        REFERENCES organizer (organizer_ID)
+        REFERENCES organizer (organizer_id)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
     FOREIGN KEY (event_id)
@@ -354,25 +359,25 @@ VALUES
 
 
 INSERT INTO 
-event (event_id, name, start_time, end_time, visibility, budget, organizer_id, street_num, street, postal_code)
+event (name, start_time, end_time, visibility, budget, organizer_id, street_num, street, postal_code)
 VALUES
-	(1, 'Big Bird''s Talk Show',    '2023-08-20 10:00:00', '2023-08-20 16:00:00', 'public', 1000.00, 7, 1234, 'Sesame St', 'K8V2V3'),
-	(2, 'Big Bird''s Seminar',      '2023-09-17 18:00:00', '2023-09-18 00:00:00', 'private', 500.00, 3, 1234, 'Sesame St', 'K8V2V3'),
-	(3, 'Family Storytime',         '2023-05-18 12:00:00', '2023-05-18 16:00:00', 'public', 0.00, 4, 350, 'W Georgia St', 'V6B6B1'),
-	(4, 'Hockey Match',             '2023-12-31 23:00:00', '2024-01-01 02:00:00', 'public', 10000.00, 1, 800, 'Griffiths Way', 'V6B6G1'),
-	(5, 'Summer Storytime',         '2023-08-17 12:00:00', '2023-08-20 12:00:00', 'public', 1000.00, 2, 350, 'W Georgia St', 'V6B6B1');
+	('Big Bird''s Talk Show',    '2023-08-20 10:00:00', '2023-08-20 16:00:00', 'public', 1000.00, 7, 1234, 'Sesame St', 'K8V2V3'),
+	('Big Bird''s Seminar',      '2023-09-17 18:00:00', '2023-09-18 00:00:00', 'private', 500.00, 3, 1234, 'Sesame St', 'K8V2V3'),
+	('Family Storytime',         '2023-05-18 12:00:00', '2023-05-18 16:00:00', 'public', 0.00, 4, 350, 'W Georgia St', 'V6B6B1'),
+	('Hockey Match',             '2023-12-31 23:00:00', '2024-01-01 02:00:00', 'public', 10000.00, 1, 800, 'Griffiths Way', 'V6B6G1'),
+	('Summer Storytime',         '2023-08-17 12:00:00', '2023-08-20 12:00:00', 'public', 1000.00, 2, 350, 'W Georgia St', 'V6B6B1');
 
 
 INSERT
-INTO tier (tier_id, tier_description, tier_name, price, event_id, organizer_id)
+INTO tier (tier_id, tier_name, tier_description, price, organizer_id)
 VALUES
-	(1,  'Balcony Seating', 	'Tier 1',   49, 1, 7),
-	(2,  'Standard Seating',	'Tier 2',   79, 1, 7),
-	(3,  'Rear Standing',		'Tier 3',   99, 2, 3),
-	(4,  'Front Standing',		'Tier 4',   129, 2, 3),
-	(5,  'VIP Box',				'VIP',  	550, 4, 1),
-	(6,  'General Admission',	'Tier 0', 	5, 5, 2),
-	(7,  'General Admission',	'Tier 0', 	5, 3, 4);
+	(1,  'Balcony Seating', 	'Reserved Seating',   49, 7),
+	(2,  'Standard Seating',	'Reserved Seating',   79, 7),
+	(3,  'Rear Standing',		'Seating not provided',   99, 3),
+	(4,  'Front Standing',		'Expedited Check-in',   129, 3),
+	(5,  'VIP Box',				'Complimentary Refreshments;Expedited Check-in', 550, 1),
+	(6,  'General Admission',	'Unreserved Seating', 	5, 2),
+	(7,  'General Admission',	'Unreserved Seating', 	5, 4);
 
 
 INSERT INTO 
@@ -382,7 +387,7 @@ VALUES
 	(NULL, 6, 5, 8),
 	(500, 2, 1, 1),
 	(125, 4, 2, 4),
-	(5, 5, 3, 2),
+	(5, 5, 4, 2),
     (NULL, 3, 2, 1);
 
 

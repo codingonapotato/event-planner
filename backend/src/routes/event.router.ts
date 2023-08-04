@@ -11,8 +11,9 @@ eventRouter.get('/:id', async (req, res) => {
    .then((result) => {
       if (result.rows.length === 0) {
          res.status(404).send('event not found') 
+      } else {
+        res.status(200).send(result.rows);
       }
-      res.status(200).send(result.rows);
    })
    .catch((err) => {
       console.log(err);
@@ -23,7 +24,6 @@ eventRouter.get('/:id', async (req, res) => {
 // TODO: add search functionality (search by name)
 eventRouter.get('/', async (req, response) => {
    if (req.query.city) {
-      console.log(req.query.city);
       const city: string = req.query.city as string;
       Event.findEventByCity(city).then(res => {
          response.status(200).send(res);
@@ -48,18 +48,25 @@ eventRouter.get('/', async (req, response) => {
 
 // Retrieve upcoming events for user with given id
 eventRouter.get('/user/:id', async (req, response) => {
-   const user_id = parseInt(req.params.id);
-   Event.getUpcomingEvents(user_id).then(res => {
-      response.status(200).send(res);
-   }).catch(err => {
-      console.log(err);
-      response.status(500).send('Database error');
-   });
+    const user_id = parseInt(req.params.id);
+    Event.getUpcomingEvents(user_id).then(res => {
+       response.status(200).send(res);
+    }).catch(err => {
+       console.log(err);
+       response.status(500).send('Database error');
+    });
 
 });
 
-eventRouter.post('/', async (req, response) => {
-
+eventRouter.put('/', async (req, response) => {
+    const params = Object.values(req.body);
+    const { street, street_num, postal_code, city, province } = req.body;
+    Event.createEvent(params, [street, street_num, postal_code, city, province]).then(res => {
+        response.status(200).send(res.rows);
+    }, (err) => {
+        console.log(err);
+        response.status(500).json(err);
+    });
 });
 
 eventRouter.delete('/:id', async (req, response) => {

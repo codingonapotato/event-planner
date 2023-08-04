@@ -11,6 +11,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         console.log(userInfo);
+        // Retrieve upcoming events
         if (Object.keys(userInfo).length != 0) {
             axios.get(`http://localhost:8000/event/user/${userInfo.user_id}`)
             .then(res => {
@@ -19,8 +20,7 @@ export default function Dashboard() {
                 console.log(err);
             });
         }
-        // Retrieve upcoming events
-    }, [userInfo])
+    }, [userInfo]);
 
     return (
         <div className='flex flex-row pt-6 space-x-10 mx-4'>

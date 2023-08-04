@@ -1,4 +1,5 @@
 import * as db from "../../db";
+import * as Venue from "./venue.model"
 
 export function findEvent(id: number) {
     return db.query(`SELECT 
@@ -41,10 +42,20 @@ export async function findEventByProvince(province: string) {
     return res.rows;
 }
 
-export async function createEvent(params: any[]) {
+export async function createEvent(params: any[], locationInfo: any[]) {
+    console.log(params);
 
 
+    await Venue.addVenue(locationInfo);
+    const res = await db.query(`
+        INSERT INTO event(name, start_time, end_time, visibility, budget, organizer_id, street_num, street, postal_code)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) 
+        RETURNING *
+    `, params.slice(0,9));
+
+    return res;
 }
+
 
 export async function getUpcomingEvents(user_id: number) {
     const res = await db.query(`SELECT
@@ -63,6 +74,6 @@ export async function getUpcomingEvents(user_id: number) {
 }
 
 export async function deleteEvent(event_id: number): Promise<boolean> {
-    const res = await db.query(`DELETE FROM events WHERE event_id = $1`, [event_id])
+    const res = await db.query(`DELETE FROM event WHERE event_id = $1 RETURNING *`, [event_id])
     return (res.rows.length === 1);
 };

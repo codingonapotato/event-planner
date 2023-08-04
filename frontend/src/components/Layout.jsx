@@ -36,7 +36,7 @@ export default function Layout() {
                                 </Link>
                             </span>
                         </div>
-                        <Outlet context={[userInfo]}/>
+                        <Outlet context={[userInfo, setUserInfo]}/>
                     </div>
                 </div>
             </>
