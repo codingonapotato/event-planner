@@ -94,3 +94,10 @@ export async function deleteEvent(event_id: number): Promise<boolean> {
     const res = await db.query(`DELETE FROM event WHERE event_id = $1 RETURNING *`, [event_id])
     return (res.rows.length === 1);
 };
+
+// Retrieve revenue for each event organized by given organizer
+export async function getAllRevenue(organizer_id: number) {
+    const res = await db.query(`
+    
+    `, [organizer_id])
+}
