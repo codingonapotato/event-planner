@@ -103,7 +103,7 @@ export async function deleteEvent(event_id: number): Promise<boolean> {
 // Retrieve revenue for each event organized by given organizer; retrieves result only if event has revenue
 export async function getAllRevenue(organizer_id: number) {
     const res = await db.query(`
-        SELECT name, sum(tiersum)
+        SELECT name AS event_name, sum(tiersum) AS event_revenue
         FROM event NATURAL JOIN (
         	SELECT event_id, SUM(price) AS tiersum
         	FROM ticket NATURAL JOIN tier
@@ -115,4 +115,15 @@ export async function getAllRevenue(organizer_id: number) {
     `, [organizer_id]);
 
     return res.rows;
+}
+
+// Retrieves total revenue for all events that the organizer has organized 
+export async function getTotalRevenue(organizer_id: number) {
+    const res = await db.query(`
+        SELECT SUM(price) AS total_revenue
+        FROM ticket NATURAL JOIN tier
+        WHERE customer_id IS NOT NULL AND organizer_id=$1
+    `, [organizer_id]);
+
+    return res.rows[0];
 }
