@@ -29,4 +29,14 @@ organizerRouter.get('/events/:id', (req, res) => {
     });
 })
 
+organizerRouter.get('/:id/stats', async (req, response) => {
+    const id = parseInt(req.params.id);
+    Organizer.getOrganizerStats(id).then(res => {
+        response.status(400).json(res);
+    }, err => {
+        console.log(err);
+        response.status(500).json(err);
+    })
+})
+
 export default organizerRouter;

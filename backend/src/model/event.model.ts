@@ -47,7 +47,6 @@ export async function findEventByProvince(province: string) {
 export async function createEvent(params: any[], locationInfo: any[]) {
     console.log(params);
 
-
     await Venue.addVenue(locationInfo);
     const res = await db.query(`
         INSERT INTO event(name, start_time, end_time, visibility, budget, organizer_id, street_num, street, postal_code)
@@ -90,7 +89,7 @@ export async function getUpcomingEvents(user_id: number) {
         COUNT(*) AS count
         FROM event NATURAL JOIN city NATURAL JOIN province NATURAL JOIN ticket NATURAL JOIN tier
         WHERE customer_id = $1
-        GROUP BY name, start_time, end_time, street_num, street, postal_code, city, province
+        GROUP BY event_id, name, start_time, end_time, street_num, street, postal_code, city, province
         ORDER BY start_time`, [user_id]);
     return res.rows;
 }
@@ -128,6 +127,44 @@ export async function getTotalRevenue(organizer_id: number) {
     return res.rows[0];
 }
 
+export async function getTotalTickets(organizer_id: number) {
+    const res = await db.query(`
+        SELECT COUNT(*) AS ticket_count
+        FROM ticket NATURAL JOIN event
+        WHERE customer_id IS NOT NULL AND organizer_id = $1 
+    `, [organizer_id]);
+
+    return res.rows[0];
+}
+
+export async function getManagedEventCount(organizer_id: number) {
+    const res = await db.query(`
+        SELECT COUNT(*) AS event_count
+        FROM event
+        WHERE organizer_id = $1
+    `, [organizer_id]);
+
+    return res.rows[0];
+}
+
+export async function getHighestRevenue(organizer_id: number) { 
+    const res = await db.query(`
+        SELECT MAX(event_revenue::numeric)::money AS max_revenue
+        FROM (
+        	SELECT event_id, SUM(tier_revenue) AS event_revenue
+        	FROM (
+        		SELECT tier_id, event_id, SUM(price) AS tier_revenue
+        		FROM ticket NATURAL JOIN tier NATURAL JOIN event
+        		WHERE customer_id IS NOT NULL AND organizer_id = $1
+        		GROUP BY tier_id, event_id
+        	) AS tier_revenues
+        	GROUP BY event_id
+        ) event_revenues
+    `, [organizer_id])
+
+    return res.rows[0];
+ }
+
 // Retrieves ticket information for a given evnet
 export async function getEventTicketInfo(event_id: number) {
     const res = await db.query(`
@@ -140,4 +177,23 @@ export async function getEventTicketInfo(event_id: number) {
     `, [event_id]);
 
     return res.rows;
+}
+
+export async function getManagedEvents(organizer_id: number) {
+    const res = await db.query(`
+        SELECT 
+        name,
+        start_time,
+        end_time,
+        budget,
+        street_num,
+        street,
+        postal_code,
+        city,
+        province
+        FROM event NATURAL JOIN organizer NATURAL JOIN city NATURAL JOIN province
+        WHERE organizer_id = $1
+    `, [organizer_id]);
+
+    return res;
 }

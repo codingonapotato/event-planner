@@ -70,7 +70,11 @@ ticketRouter.delete('/remove/:id', (req, res) => {
 ticketRouter.post('/purchase', async (req, response) => {
     const { customer_id, event_id, tier_id } = req.body;
     Ticket.buyTicket(customer_id, event_id, tier_id).then(res => {
-        response.status(200).send(res);
+        if (res === undefined) {
+            response.status(406).send('No tickets left to purchase')
+        } else {
+            response.status(200).send(res);
+        }
     }, err => {
         console.log(err);
         response.status(500).json(err);
