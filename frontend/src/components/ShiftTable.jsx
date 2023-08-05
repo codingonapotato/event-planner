@@ -3,12 +3,15 @@ import axios from 'axios';
 
 
 
-export default function ShiftTable() {
+export default function ShiftTable({type}) {
     const [shifts, set_shifts] = useState([]);
     const userID = localStorage.getItem('user_id');
+    const preUrl = `http://localhost:8000/shift/` + type + '/';
+    const url = (type === 'available') ? preUrl : preUrl + userID; 
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/shift/volunteerID/${userID}`)
+        console.log(url);
+        axios.get(url)
         .then((response) => {
             const arr = [];
             // console.log(`length: ${res.data.length}`);
@@ -24,35 +27,20 @@ export default function ShiftTable() {
 
         })
     }, []);
-
-   // async function getShifts() {
-    //     const userID = localStorage.getItem('user_id');
-        
-    //     console.log('test');
-    //     await axios.post(`http://localhost:8000/shift/volunteerID/${userID}`)
-    //     .then((response) => {
-    //         // console.log(response);
-    //         // console.log(response.data[0].shift_id);
-    //         // console.log(response.data[1].shift_id);
-
-    //         set_shifts(response.data);
-    //         return response.data;
-    //         // console.log(JSON.parse(response.data));
-    //         // response.data.map( item => {
-    //         //     console.log(item);
-    //         // })
-    //         // return response.data;
-            
-    //     })
-    //     .catch(function (error) {
-    //         console.log(error);
-    //     });
-    // };
-    
+   
 
     return (
         
+        
+        /**
+         * Table design and styling comes from https://flowbite.com/docs/components/tables
+         */
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+            {(shifts.length <= 0) ? 
+            <div className='text-left text-2xl m-4 pl-5 font-semibold'>No Shifts Available</div>
+            :
+            
+
             <table className="w-full text-sm text-left text-blue-100 dark:bg-gray-800">
                 <thead className="text-xs text-white uppercase bg-gray-800 border-b border-blue-400 dark:bg-gray-800">
                     <tr>
@@ -61,6 +49,8 @@ export default function ShiftTable() {
                         <th scope="col" className="px-6 py-3">  Start Time  </th>
                         <th scope="col" className="px-6 py-3">  End Time    </th>
                         <th scope="col" className="px-6 py-3">  Station     </th>
+                        {console.log(`test: ${type}`)}
+                        {(type == 'organizerID') ? <th scope="col" className="px-6 py-3">Volunteer ID</th>:<></>}
                         <th scope="col" className="px-6 py-3">  Event ID    </th>
                     </tr>
                 </thead>
@@ -73,22 +63,30 @@ export default function ShiftTable() {
                                 <th scope="row" className="px-6 py-4 font-medium text-blue-50 whitespace-nowrap dark:text-blue-100">
                                     {item.shift_id}
                                 </th>
-                                {/* <td className="px-6 py-4">  {item.shift_id}     </td> */}
-                                <td contenteditable="true" className="px-6 py-4">  {item.role}         </td>
+                                <td contentEditable="true" className="px-6 py-4">  {item.role}         </td>
                                 <td className="px-6 py-4">  {item.start_time}   </td>
                                 <td className="px-6 py-4">  {item.end_time}     </td>
                                 <td className="px-6 py-4">  {item.station}      </td>
+                                {(type == 'organizerID') ? <td className="px-6 py-4">{item.volunteer_id}</td>:<></>}
                                 <td className="px-6 py-4">  {item.event_id}     </td>
                                 <td className="px-6 py-4">
+                                    {(type === 'available') ? 
+                                    <a href="#" className="font-medium text-green-600 dark:text-green-500 hover:underline">Accept</a>
+                                    :
+                                    <>
                                     <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                                     <br className="py-1"></br>
                                     <a href="#" className="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</a>
+                                    </>
+                                    }
+                                    
                                 </td>
                             </tr>
                         );
                     })}
                 </tbody>
             </table>
+            }
         </div>
 
     )
