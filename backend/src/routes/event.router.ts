@@ -93,6 +93,16 @@ eventRouter.delete('/:id', async (req, response) => {
    })
 })
 
+eventRouter.get('/revenue/:id', async (req, response) => {
+   const organizer_id = parseInt(req.params.id);
+   Event.getAllRevenue(organizer_id).then(res => {
+      response.status(200).send(res);
+   }, err => {
+      console.log(err);
+      response.status(500).json(err);
+   })
+})
+
 export default eventRouter;
 
 

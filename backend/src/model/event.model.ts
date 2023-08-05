@@ -30,6 +30,7 @@ export async function findEventByCity(city: string) {
 
 export async function findEventByProvince(province: string) {
     const res = await db.query(`SELECT
+        event_id,
         name,
         start_time,
         end_time,
@@ -75,7 +76,9 @@ export async function createEventTickets(numTickets: number, tier_id: number, ev
 
 
 export async function getUpcomingEvents(user_id: number) {
-    const res = await db.query(`SELECT
+    const res = await db.query(`
+        SELECT 
+        event_id,
         name,
         start_time,
         end_time,
@@ -84,9 +87,11 @@ export async function getUpcomingEvents(user_id: number) {
         postal_code,
         city,
         province,
-        tier_description
+        COUNT(*) AS count
         FROM event NATURAL JOIN city NATURAL JOIN province NATURAL JOIN ticket NATURAL JOIN tier
-        WHERE customer_id = $1`, [user_id]);
+        WHERE customer_id = $1
+        GROUP BY name, start_time, end_time, street_num, street, postal_code, city, province
+        ORDER BY start_time`, [user_id]);
     return res.rows;
 }
 
@@ -95,9 +100,19 @@ export async function deleteEvent(event_id: number): Promise<boolean> {
     return (res.rows.length === 1);
 };
 
-// Retrieve revenue for each event organized by given organizer
+// Retrieve revenue for each event organized by given organizer; retrieves result only if event has revenue
 export async function getAllRevenue(organizer_id: number) {
     const res = await db.query(`
-    
-    `, [organizer_id])
+        SELECT name, sum(tiersum)
+        FROM event NATURAL JOIN (
+        	SELECT event_id, SUM(price) AS tiersum
+        	FROM ticket NATURAL JOIN tier
+        	WHERE customer_id IS NOT NULL AND organizer_id=$1
+        	GROUP BY event_id
+        ) AS tiersumtable
+        GROUP BY event_id
+        HAVING organizer_id=$1
+    `, [organizer_id]);
+
+    return res.rows;
 }
