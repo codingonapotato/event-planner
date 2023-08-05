@@ -138,7 +138,8 @@ CREATE TABLE performs (
    location    TEXT,
     PRIMARY KEY (guest_id, event_id),
     FOREIGN KEY (guest_id) REFERENCES special_guest,
-    FOREIGN KEY (event_id) REFERENCES event);
+    FOREIGN KEY (event_id) REFERENCES event
+        ON DELETE CASCADE);
 
 CREATE TABLE shift (
     shift_id        SERIAL     PRIMARY KEY,
@@ -158,7 +159,8 @@ CREATE TABLE volunteers_for_event (
     event_id        INTEGER,
     PRIMARY KEY (volunteer_id, event_id),
     FOREIGN KEY (volunteer_id) REFERENCES volunteer,
-    FOREIGN KEY (event_id) REFERENCES event);
+    FOREIGN KEY (event_id) REFERENCES event
+        ON DELETE CASCADE);
 
 CREATE TABLE tier (
     tier_id             SERIAL PRIMARY KEY,

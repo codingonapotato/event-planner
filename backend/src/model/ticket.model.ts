@@ -29,11 +29,11 @@ export async function modifyTicket(id: number, req) {
 export async function buyTicket(customer_id: number, event_id: number, tier_id: number) {
     const res = await db.query(`
     UPDATE ticket SET
-    customer_id = $1
-    WHERE ticket_id IN (
+    customer_id = $1 WHERE ticket_id IN (
         SELECT ticket_id
         FROM ticket NATURAL JOIN tier
         WHERE customer_id IS NULL AND event_id = $2 AND tier_id = $3
+        ORDER BY ticket_id LIMIT 1
     ) 
     RETURNING *`, [customer_id, event_id, tier_id]);
     return res.rows;
