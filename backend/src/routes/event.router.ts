@@ -69,8 +69,9 @@ eventRouter.put('/', async (req, response) => {
     });
 });
 
-eventRouter.put('/ticket', async (req, response) => {
-   const {numTickets, tier_id, event_id, seat_start = null} = req.body;
+eventRouter.put('/:id/ticket', async (req, response) => {
+   const {numTickets, tier_id, seat_start = null} = req.body;
+   const event_id = parseInt(req.params.id);
    Event.createEventTickets(numTickets, tier_id, event_id, seat_start).then(res => {
       response.status(200).send(res);
    }, err => {
@@ -112,6 +113,16 @@ eventRouter.get('/totalRevenue/:id', async (req, response) => {
       response.status(500).json(err);
    })
 })
+
+eventRouter.get('/:id/tickets', async (req, response) => {
+   const event_id = parseInt(req.params.id);
+   Event.getEventTicketInfo(event_id).then(res => {
+      response.status(200).send(res);
+   }, err => {
+      console.log(err);
+      response.status(500).json(err);
+   });
+});
 
 export default eventRouter;
 
