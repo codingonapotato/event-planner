@@ -12,6 +12,25 @@ export function get_using_eventID(id: number) {
     return db.query(`SELECT shift_id, role, start_time, end_time, station, volunteer_id 
     FROM shift WHERE event_id = $1::integer`, [id]);
 }
+ 
+
+
+ 
+ 
+ 
+
+
+export function get_using_organizerID(id: number) {
+    return db.query(
+        `SELECT * 
+        FROM shift 
+        WHERE event_id IN (
+        SELECT event_id 
+        FROM organizes_event 
+        WHERE organizer_id = $1::integer
+        )`
+    , [id]);
+}
 
 export function get_using_volunteerID(id: number) {
     return db.query(`SELECT shift_id, role, start_time, end_time, station, event_id 

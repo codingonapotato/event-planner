@@ -44,6 +44,18 @@ shiftRouter.get('/eventID/:id', async (req, res) => {
    });
 }); 
 
+shiftRouter.get('/organizerID/:id', async (req, res) => {
+   const id = parseInt(req.params.id);
+
+   Shift.get_using_organizerID(id)
+   .then((result) => {
+      res.status(200).send(result.rows);
+   })
+   .catch((err) => {
+      res.status(404).json({message: 'Shift not found', error: err});
+   });
+}); 
+
 shiftRouter.get('/volunteerID/:id', async (req, res) => {
    const id = parseInt(req.params.id);
 
