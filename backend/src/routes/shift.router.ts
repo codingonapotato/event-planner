@@ -96,23 +96,42 @@ shiftRouter.get('/available', async (req, res) => {
 shiftRouter.post('/update/:id', async (req, res) => {
    const id = parseInt(req.params.id);
 
-   const {new_id, role, start_time, end_time, station} = req.body;
+   const {role, start_time, end_time, volunteer_id, station} = req.body;
 
-   Shift.updateShift(id,role, start_time, end_time, station)
+   Shift.updateShift(id,role, start_time, end_time, station, volunteer_id)
    .then((result) => {
-
-      // console.log(`command:: ${result.command}`);
-      // console.log(`fields: ${result.fields}`);
-      // console.log(`oid: ${result.oid}`);
-      // console.log(`rowCount: ${result.rowCount}`);
-      // console.log(`rows: ${result.rows}`);
-
       res.status(200).send(result.rows);
    })
    .catch((err) => {
       res.status(404).json({message: 'Shift not found', error: err});
    });
 }); 
+
+shiftRouter.post('/accept/:id', async (req, res) => {
+   const id = parseInt(req.params.id);
+   const {volunteer_id} = req.body;
+   Shift.acceptShift(id,volunteer_id)
+   .then((result) => {
+      res.status(200).send(result.rows);
+   })
+   .catch((err) => {
+      res.status(404).json({message: 'Shift not found', error: err});
+   });
+}); 
+
+shiftRouter.post('/drop/:id', async (req, res) => {
+   const id = parseInt(req.params.id);
+   Shift.dropShift(id)
+   .then((result) => {
+      res.status(200).send(result.rows);
+   })
+   .catch((err) => {
+      res.status(404).json({message: 'Shift not found', error: err});
+   });
+}); 
+
+
+
 
 /**
  * Creates a new shift using info from request body

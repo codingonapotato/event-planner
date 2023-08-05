@@ -52,11 +52,26 @@ export function get_using_noID() {
  * @returns promise to a query result
  */
 export function updateShift(id: number, role: string, startTime: string, 
-    endTime: string, station: string) {
-        
+    endTime: string, station: string, volunteer_id: any) {
+    if (volunteer_id === null || volunteer_id == '') {
+        return db.query(`UPDATE shift SET role = $2::text, start_time = $3::timestamp, 
+        end_time = $4::timestamp, station = $5::text, volunteer_id = null WHERE shift_id = $1::integer;`, 
+        [id, role, startTime, endTime, station]);    
+    }
     return db.query(`UPDATE shift SET role = $2::text, start_time = $3::timestamp, 
-        end_time = $4::timestamp, station = $5::text WHERE shift_id = $1::integer;`, 
-        [id, role, startTime, endTime, station]);
+        end_time = $4::timestamp, station = $5::text, volunteer_id = $6::integer WHERE shift_id = $1::integer;`, 
+        [id, role, startTime, endTime, station, volunteer_id]);
+}
+
+export function acceptShift(id: number, volunteer_id: number) {
+    return db.query(`UPDATE shift SET volunteer_id = $1::integer WHERE shift_id = $2::integer;`, 
+        [volunteer_id, id]);
+}
+
+
+export function dropShift(id: number) {
+    return db.query(`UPDATE shift SET volunteer_id = null WHERE shift_id = $1::integer;`, 
+        [id]);
 }
 
 /**
