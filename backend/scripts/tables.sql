@@ -421,7 +421,8 @@ VALUES
 ('Cashier', '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Concession', 4, 3),
 ('Greeter', '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Front of House', 1, 4),
 ('Cashier', '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Ticket Booth', 5, 4),
-('Security', '2023-08-10 12:30:00', '2023-08-13 17:00:00', 'Security', 1, 5);
+('Security', '2023-08-10 12:30:00', '2023-08-13 17:00:00', 'Security', 1, 5),
+('Valet',   '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Parking Lot', null, 4);
 
 INSERT
 INTO volunteers_for_event(volunteer_id, event_id)
