@@ -44,7 +44,7 @@ function ListItem({
                     {item.name}
                 </span>
                 <span className='hidden flex-1 min-w-min text-black font-light lg:flex flex-nowrap items-center justify-end'>
-                    {(type === 'Events') ? item.tier_description : item.role}
+                    {(type === 'Events') ? `${item.count} ticket(s) held` : item.role}
                 </span>
             </div>
             <div className='font-normal text-left'>
