@@ -35,6 +35,30 @@ export async function addDependant(id: number, req) {
     }
 }
 
+/** EFFECTS: Handles logic of deducting balance of customer with @param id for @param amt
+ * returns @returns remaining balance regardless of sign
+*/
+export async function deductBalance(id: number, amt: number) {
+    const res = await db.query(`SELECT balance FROM users WHERE user_id = $1`, [id]);
+    const balance = parseFloat(res.rows[0]);
+    const remaining = balance - amt;
+
+    if (remaining < 0) {
+        console.error('You broke af');
+    } else {
+        await db.query(`UPDATE users SET balance = $2 WHERE user_id = $1`, [id, remaining]);
+    }
+    return remaining;
+}
+
+/** EFFECTS: Handles logic of adding balance to customer with  @param id for @param amt*/
+export async function addBalance(id: number, amt: number) {
+    const res = await db.query(`SELECT balance FROM users WHERE user_id = $1`, [id]);
+    const balance = parseFloat(res.rows[0]);
+    const remaining = balance + amt;
+    db.query(`UPDATE users SET balance = $2 WHERE user_id = $1`, [id, remaining]);
+}
+
 /** EFFECTS: Modifies a new dependant associated to a customer with id=@param id */
 export async function modifyDependant(id: number, req) {
     const { first_name: firstName, last_name: lastName } = req.params;

@@ -1,4 +1,5 @@
 import * as db from "../../db";
+import * as Customer from './customer.model'
 
 // Might need joins here to get all the infromation about the tier and event the ticket is for mmm
 export async function findTicket(id: number) {
@@ -26,6 +27,19 @@ export async function modifyTicket(id: number, req) {
         return res.rows;
     }
 }
+
+/**  EFFECTs: If there is ticket w/o a customer_id = @param cid, and supposing the customer has a non-negative balance after purchase,
+ * this function handles the ticket purchase associated 
+*/
+// export async function handlePurchase(cid: number) {
+//     const res = await db.query(`SELECT * FROM ticket WHERE customer_id IS NULL`, []);
+//     if (res.rows.length === 0) {
+//         console.error('Sold out')
+//     } else {
+//         Customer.deductBalance();
+//     }
+
+// }
 
 export async function createTicket(req) {
     const { seat_number: seatNumber, tier_id: tierId, event_id: eventId, customer_id: customerId } = req.body;
