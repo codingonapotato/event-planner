@@ -10,6 +10,8 @@ import NotFound from './components/NotFound'
 import ShiftBrowser from './components/ShiftBrowser'
 import UserProfilePage from './components/UserProfilePage'
 import EventManager from './components/EventManager'
+import EventCreator from './components/EventCreator'
+import EventEditor from './components/EventEditor'
 
 function App() {
 
@@ -22,6 +24,8 @@ function App() {
           <Route path="/shifts" element={<ShiftBrowser />} />
           <Route path="/manageEvent" element={<EventManager />} />
           <Route path="/profile" element={<UserProfilePage />} />
+          <Route path="/createEvent" element={<EventCreator/>} />
+          <Route path="/editEvent" element={<EventEditor />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />

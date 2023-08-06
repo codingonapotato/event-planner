@@ -10,7 +10,6 @@ export default function Dashboard() {
     const [events, setEvents] = useState([]);
 
     useEffect(() => {
-        console.log(userInfo);
         // Retrieve upcoming events
         if (Object.keys(userInfo).length != 0) {
             axios.get(`http://localhost:8000/event/user/${userInfo.user_id}`)

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { getDateString } from "../assets/constants";
 
 export default function CardList({
     items,
@@ -7,7 +8,7 @@ export default function CardList({
 }) {
     return (
         <div className="flex flex-col w-1/3 px-3">
-            <div className='border-b-2 border-b-slate-500/50 text-3xl self-start font-semibold mb-3'>Upcoming {type}</div>
+            <div className='border-b-2 border-b-slate-400/50 text-3xl self-start font-semibold mb-3'>Upcoming {type}</div>
             <div className="flex flex-col space-y-2.5">
                 {(items.length === 0) ? 
                 <>
@@ -24,16 +25,11 @@ export default function CardList({
     )
 }
 
-const monthNames=["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 function ListItem({
     item,
     type
 }) {
-    function getDateString(date) {
-        return monthNames[date.getMonth()] + ' ' + date.getUTCDate() + ' '  + date.getFullYear() + ' ' + String(date.getUTCHours()).padStart(2,'0') + ":" + String(date.getUTCMinutes()).padStart(2,'0');
-    }
-
     const startDate = new Date(item.start_time);
     const endDate = new Date(item.end_time);
 

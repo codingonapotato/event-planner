@@ -16,7 +16,7 @@ organizerRouter.get('/:id', (req, res) => {
     });
 })
 
-organizerRouter.get('/events/:id', (req, res) => {
+organizerRouter.get('/:id/events', (req, res) => {
     const id = parseInt(req.params.id);
     Organizer.findEvents(id).then((result) => {
         if (result === - 1) {
@@ -32,7 +32,7 @@ organizerRouter.get('/events/:id', (req, res) => {
 organizerRouter.get('/:id/stats', async (req, response) => {
     const id = parseInt(req.params.id);
     Organizer.getOrganizerStats(id).then(res => {
-        response.status(400).json(res);
+        response.status(200).json(res);
     }, err => {
         console.log(err);
         response.status(500).json(err);
