@@ -1,10 +1,11 @@
-import { ClockIcon, BanknotesIcon, CalendarDaysIcon, PlusIcon, SparklesIcon, TicketIcon } from "@heroicons/react/24/outline";
-import { MapPinIcon, ArrowsPointingOutIcon } from "@heroicons/react/24/solid";
+import { PencilSquareIcon, ClockIcon, BanknotesIcon, CalendarDaysIcon, PlusIcon, SparklesIcon, TicketIcon } from "@heroicons/react/24/outline";
+import { MapPinIcon } from "@heroicons/react/24/solid";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useOutletContext } from "react-router-dom";
 import { dateColors, itemColors, monthNames } from "../assets/constants";
 import { mockEvents } from "../mock/eventManagerMock";
+
 
 const statNames = ['Total Revenue', 'Ticket(s) Sold', 'Most Revenue Gained', 'Event(s) Managed']
 const statIcons = [BanknotesIcon, TicketIcon, SparklesIcon, CalendarDaysIcon]
@@ -48,8 +49,8 @@ export default function EventManager() {
                     })}
                 </div>
             </div>
-            <div className='flex-1  h-1/2 flex flex-col space-y-4'>
-                <div className='flex flex-col h-fit px-6 py-5 bg-white w-full rounded-lg drop-shadow-md'>
+            <div className='flex-1 h-screen flex flex-col space-y-4'>
+                <div className='flex flex-col max-h-96 px-6 py-5 bg-white w-full rounded-lg drop-shadow-md'>
                     <div className='flex items-center justify-end w-full pb-2 border-b border-gray-400/50'>
                         <span className='font-bold text-3xl text-left flex-1'>Your Events</span>
                         <span className='p-2 flex items-end justify-end hover:bg-gray-100 rounded-full'>
@@ -58,9 +59,9 @@ export default function EventManager() {
                             </Link>
                         </span>
                     </div>
-                    <div className="flex flex-col mt-2 w-full space-y-1">
+                    <div className="scrollbar overflow-auto overscroll-auto flex flex-col mt-2 w-full space-y-1">
                         {
-                            mockEvents.map((event, i) => {
+                            events.map((event, i) => {
                                 return <EventItem key={`event`+i} item={event} index={i} />
                             })
                         }
@@ -84,7 +85,7 @@ function StatCard({
                 <Icon className={'w-12 h-12 ' + color}/>
             </span>
             <div className='flex flex-col'>
-                <span className='text-3xl font-bold'>{value}</span>
+                <span className='text-3xl font-bold'>{(value === undefined) ? '$0.00' : value}</span>
                 <span className='text-sm font-semilight'>{name}</span>
             </div>
         </div>
@@ -124,7 +125,7 @@ function EventItem({
                 </div>
             </div>
             <Link className='self-center pr-2' to='/editEvent'>
-                <ArrowsPointingOutIcon className='w-8 h-8 text-black' />
+                <PencilSquareIcon className='w-6 h-6 text-black' />
             </Link>
         </div>
     )
