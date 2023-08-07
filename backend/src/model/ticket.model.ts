@@ -1,4 +1,5 @@
 import * as db from "../../db";
+import * as Customer from './customer.model'
 import { makeCustomer } from "./user.model";
 
 // Might need joins here to get all the infromation about the tier and event the ticket is for mmm

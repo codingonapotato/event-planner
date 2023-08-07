@@ -13,6 +13,11 @@ export function findEvent(id: number) {
     FROM event WHERE event_id = $1`, [id]);
 }
 
+export async function findAllPublicEvents() {
+    const res = await db.query(`SELECT * FROM event`, []);
+    return res;
+}
+
 export async function findEventByCity(city: string) {
     const res = await db.query(`SELECT
         name,
@@ -26,7 +31,6 @@ export async function findEventByCity(city: string) {
         FROM event NATURAL JOIN city NATURAL JOIN province
         WHERE city ILIKE $1 || '%'`, [city]);
         return res.rows;
-
 }
 
 export async function findEventByProvince(province: string) {

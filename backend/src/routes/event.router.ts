@@ -29,7 +29,6 @@ eventRouter.get('/', async (req, response) => {
          response.status(200).send(res);
       }).catch((err) => {
          console.log(err);
-         response.status(500).send('Database error')   
       });
    } else if (req.query.province) {
       console.log(req.query.province);
@@ -38,12 +37,19 @@ eventRouter.get('/', async (req, response) => {
          response.status(200).send(res);
       }).catch((err) => {
          console.log(err);
-         response.status(500).send('Database error')   
+         response.status(500).send('Database error')
       });
    } else {
       response.status(404).send('No query specified');
    }
 });
+
+
+eventRouter.get('/public/all', (req, response) => {
+   Event.findAllPublicEvents().then((res) => {
+      response.status(200).send(res.rows)
+   })
+})
 
 
 // Retrieve upcoming events for user with given id

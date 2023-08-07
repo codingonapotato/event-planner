@@ -56,12 +56,12 @@ customerRouter.put('/dependant-add/:id/', (req, res) => {
     })
 })
 
-customerRouter.delete('/dependant-remove/:id/:first_name/:last_name', (req, res) => {
+customerRouter.delete('/dependant-remove/:id', (req, res) => {
     const id = parseInt(req.params.id);
     Customer.removeDependant(id, req).then((result) => {
         if (result === -1) {
             res.status(404).send(`Something unexpected has occured while trying to remove dependant 
-            ${req.params.first_name}, ${req.params.last_name}`);
+            ${req.body['first_name']}, ${req.body['last_name']}`);
         } else {
             res.status(200).send(result);
         }
