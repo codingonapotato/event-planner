@@ -5,6 +5,7 @@ import organizers from './organizer.router'
 import volunteers from './volunteer.router'
 import events from './event.router';
 import shift from './shift.router';
+import items from './items.router';
 
 const mountRoutes = (app: Application) => {
     app.use('/user', users);
@@ -13,6 +14,7 @@ const mountRoutes = (app: Application) => {
     app.use('/volunteer', volunteers)
     app.use('/event', events);
     app.use('/shift', shift);
+    app.use('/items', items);
 }
 
 export default mountRoutes;
