@@ -26,6 +26,7 @@ export async function findEventByCity(city: string) {
         FROM event NATURAL JOIN city NATURAL JOIN province
         WHERE city ILIKE $1 || '%'`, [city]);
         return res.rows;
+
 }
 
 export async function findEventByProvince(province: string) {
@@ -168,12 +169,12 @@ export async function getHighestRevenue(organizer_id: number) {
 // Retrieves ticket information for a given evnet
 export async function getEventTicketInfo(event_id: number) {
     const res = await db.query(`
-        SELECT tier_id, name, 
+        SELECT tier_id, name, tier_name, 
         COUNT(*) FILTER (WHERE customer_id IS NULL) AS tickets_for_sale,
         COUNT(*) FILTER (WHERE customer_id IS NOT NULL) AS sold_tickets
         FROM ticket NATURAL JOIN tier NATURAL JOIN event
-        WHERE event_id = 2
-        GROUP BY tier_id, name
+        WHERE event_id = $1
+        GROUP BY tier_id, name, tier_name
     `, [event_id]);
 
     return res.rows;

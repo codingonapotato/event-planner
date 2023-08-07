@@ -49,7 +49,7 @@ export default function EventManager() {
                     })}
                 </div>
             </div>
-            <div className='flex-1 h-screen flex flex-col space-y-4'>
+            <div className='flex-1 h-full flex flex-col space-y-4'>
                 <div className='flex flex-col max-h-96 px-6 py-5 bg-white w-full rounded-lg drop-shadow-md'>
                     <div className='flex items-center justify-end w-full pb-2 border-b border-gray-400/50'>
                         <span className='font-bold text-3xl text-left flex-1'>Your Events</span>
@@ -61,7 +61,7 @@ export default function EventManager() {
                     </div>
                     <div className="scrollbar overflow-auto overscroll-auto flex flex-col mt-2 w-full space-y-1">
                         {
-                            events.map((event, i) => {
+                            mockEvents.map((event, i) => {
                                 return <EventItem key={`event`+i} item={event} index={i} />
                             })
                         }

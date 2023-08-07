@@ -41,7 +41,7 @@ eventRouter.get('/', async (req, response) => {
          response.status(500).send('Database error')   
       });
    } else {
-      response.send(404).send('No query specified');
+      response.status(404).send('No query specified');
    }
 });
 
