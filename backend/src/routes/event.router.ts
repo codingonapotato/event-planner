@@ -8,17 +8,17 @@ eventRouter.get('/:id', async (req, res) => {
    const id = parseInt(req.params.id);
 
    Event.findEvent(id)
-   .then((result) => {
-      if (result.rows.length === 0) {
-         res.status(404).send('event not found') 
-      }
-      res.status(200).send(result.rows);
-   })
-   .catch((err) => {
-      console.log(err);
-      res.status(500).send('Database query failed');
-   });
-}); 
+      .then((result) => {
+         if (result.rows.length === 0) {
+            res.status(404).send('event not found')
+         }
+         res.status(200).send(result.rows);
+      })
+      .catch((err) => {
+         console.log(err);
+         res.status(500).send('Database query failed');
+      });
+});
 
 // TODO: add search functionality (search by name)
 eventRouter.get('/', async (req, response) => {
@@ -29,7 +29,6 @@ eventRouter.get('/', async (req, response) => {
          response.status(200).send(res);
       }).catch((err) => {
          console.log(err);
-         response.status(500).send('Database error')   
       });
    } else if (req.query.province) {
       console.log(req.query.province);
@@ -38,12 +37,19 @@ eventRouter.get('/', async (req, response) => {
          response.status(200).send(res);
       }).catch((err) => {
          console.log(err);
-         response.status(500).send('Database error')   
+         response.status(500).send('Database error')
       });
    } else {
-      response.send(404).send('No query specified');
+      response.status(404).send('Not epic');
    }
 });
+
+
+eventRouter.get('/public/all', (req, response) => {
+   Event.findAllPublicEvents().then((res) => {
+      response.status(200).send(res.rows)
+   })
+})
 
 
 // Retrieve upcoming events for user with given id

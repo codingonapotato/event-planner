@@ -79,7 +79,7 @@ export async function modifyDependant(id: number, req) {
 
 /** EFFECTS: Rempoves a new dependant associated to a customer with id=@param id */
 export async function removeDependant(id: number, req) {
-    const { first_name: firstName, last_name: lastName } = req.params;
+    const { first_name: firstName, last_name: lastName } = req.body;
     const res = await db.query(`DELETE FROM dependants 
         WHERE customer_id = $1 AND first_name = $2 AND last_name = $3
         RETURNING *`, [id, firstName, lastName]);
