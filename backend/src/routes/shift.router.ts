@@ -67,14 +67,31 @@ shiftRouter.get('/volunteerID/:id', async (req, res) => {
  * Send tuple(s) containing shifts with no volunteer_id
  */
 shiftRouter.get('/available', async (req, res) => {
-   Shift.get_using_noID()
-   .then((result) => {
-      res.status(200).send(result.rows);
-   })
-   .catch((err) => {
-      res.status(404).json({message: 'Shift not found', error: err});
-   });
-}); 
+   if (req.query.city) {
+      const city: string = req.query.city as string;
+      Shift.get_using_noID_city(city)
+      .then((result) => {
+         res.status(200).send(result.rows);
+      })
+      .catch((err) => {
+         res.status(404).json({message: 'Shift not found', error: err});
+      });
+      
+   } else {
+      Shift.get_using_noID()
+      .then((result) => {
+         res.status(200).send(result.rows);
+      })
+      .catch((err) => {
+         res.status(404).json({message: 'Shift not found', error: err});
+      });
+   }
+   
+});
+
+
+
+
 
 /**
  * updates all attributes in shift given the initial shift_id in the URI

@@ -53,7 +53,6 @@ export default function ShiftAlert({item}) {
                                     document.getElementById("dialogEdit"+item.shift_id).classList.add('hidden');
                                     document.getElementById('overlayEdit'+item.shift_id).classList.add('hidden');
                                     location.reload();
-                                    // organizer(res.data);
                                     
                                 }, reason => {
                                     console.log(reason);
@@ -145,7 +144,6 @@ export default function ShiftAlert({item}) {
                             </Form>
                         )}
                     </Formik>
-            {/* <div className="flex justify-end"> */}
             <div className="pl-20">
             <button id={"close" + item.shift_id} onClick={()=> {
                 document.getElementById("dialogEdit"+item.shift_id).classList.add('hidden');
@@ -154,8 +152,6 @@ export default function ShiftAlert({item}) {
                     Close
             </button>
             </div>
-            
-            {/* </div> */}
         </div>
 
         <button id={"open"+item.shift_id} onClick={()=> {

@@ -1,8 +1,10 @@
 import {useEffect, useState } from "react";
 import axios from 'axios';
-import ShiftAlert from "./ShiftAlert";
-import { Formik, Form } from 'formik';
+import ShiftAlert from "./ShiftEdit";
+import { Formik, Form, Field } from 'formik';
 import Input from "./Input"
+import React from 'react';
+import ShiftCreate from "./ShiftCreate";
 
 export default function ShiftTable({type}) {
     const [shifts, set_shifts] = useState([]);
@@ -27,6 +29,87 @@ export default function ShiftTable({type}) {
 
     return (
         <>
+
+
+            <div className="flex items-center justify-between">
+                {
+                    (type==='organizerID')?
+                    <ShiftCreate/>
+                    :
+                    <div className='text-left text-3xl m-4 font-semibold'>{(type==='available')?'Available Shifts':<></>}{(type==='volunteerID')?'Your Shifts':<></>}</div>
+                }
+            
+                
+            <Formik
+                initialValues={{
+                    filter: '',
+                    field:''
+                }}
+                onSubmit={async (values) => {
+                        // console.log(values);
+                        const queryURL = url +'?'+values.filter+'='+ values.field;
+                        // console.log(queryURL);
+                        await axios.get(queryURL, {
+
+                        }, {
+                            headers: {'content-type': 'application/json'}
+                        })
+                        .then((response) => {                                    
+                            const arr = [];
+                            for(let i = 0; i < response.data.length; i++) {
+                                arr.push(response.data[i]);
+                            }
+                            set_shifts(arr);     
+
+                        }, reason => {
+                            console.log(reason);
+                        });
+                }}
+            >
+                {props => (
+                    <Form>
+                        
+                        <div className='flex flex-row'>
+                            <div className='flex flex-row space-x-2'>
+                                <div className='text-left mt-4 font-semibold'>Filter: </div>
+                                <Field as="select" name="filter" id="filter" onChange={props.handleChange} className="space-x-10 mt-2 pr-10 max-h-11 rounded-lg bg-gray-50 border-white-300 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 text-white">
+                                    <option >Please Select</option>
+                                    <option value="city">City</option>
+                                    <option value="province">Province</option>
+                                </Field>
+                                
+                                <Input
+                                    id={'field'}
+                                    type={'text'}
+                                    onChange={props.handleChange}
+                                    value={props.values.field||''} 
+                                />
+                            </div>
+                            <Input 
+                                id={'submit'}
+                                type={'submit'}
+                                // customClass={'mt-9'}
+                                customColor={'bg-green-50 dark:bg-green-600 hover:bg-green-700 text-white cursor-pointer'}
+                                value={'Go'} 
+                            />
+                        </div>
+                    
+                        
+                    </Form>
+                )}
+            </Formik>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
         {/**Table styling from https://flowbite.com/docs/components/tables*/}
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             {(shifts.length <= 0) ? 
@@ -57,7 +140,6 @@ export default function ShiftTable({type}) {
                                 <th scope="row" className="px-6 py-4 font-medium text-blue-50 whitespace-nowrap dark:text-blue-100">
                                     {item.event_id}
                                 </th>
-                                {/* <td className="px-6 py-4">  {item.event_id}     </td> */}
                                 <td className="px-6 py-4">  {item.role}         </td>
                                 <td className="px-6 py-4">  {item.start_time}   </td>
                                 <td className="px-6 py-4">  {item.end_time}     </td>
@@ -75,7 +157,6 @@ export default function ShiftTable({type}) {
                                         <div id={"dialogAccept" + item.shift_id} className="hidden fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 bg-white rounded-lg shadow dark:border dark:bg-gray-800 dark:border-gray-700 rounded-md px-8 py-6 space-y-5 drop-shadow-lg">
                                             <h1 className="text-2xl font-semibold text-white">Accept Shift?</h1>
                                             <div className="border-t border-white-500 text-black"></div>
-                                            {/* {console.log(`volunteerId: ${item.volunteer_id}`)} */}
 
                                             <Formik
                                                 initialValues={{

@@ -14,12 +14,6 @@ export function get_using_eventID(id: number) {
 }
  
 
-
- 
- 
- 
-
-
 export function get_using_organizerID(id: number) {
     return db.query(
         `SELECT * 
@@ -36,6 +30,16 @@ export function get_using_volunteerID(id: number) {
 export function get_using_noID() {
     return db.query(`SELECT shift_id, role, start_time, end_time, station, event_id, organizer_id 
     FROM shift WHERE volunteer_id IS NULL`,[]);
+}
+
+export async function get_using_noID_city(city: string) {
+    return db.query(`
+    SELECT shift_id, role, start_time, end_time, station, event_id, organizer_id 
+    FROM shift s 
+    WHERE volunteer_id IS null AND event_id IN 
+        (SELECT event_id 
+        FROM event NATURAL JOIN city NATURAL JOIN province 
+        WHERE city ILIKE $1 || '%')`, [city]);
 }
 
 /**
