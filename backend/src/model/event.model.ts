@@ -12,7 +12,7 @@ export function findEvent(id: number) {
 }
 
 export async function findAllPublicEvents() {
-    const res = await db.query(`SELECT * FROM event`, []);
+    const res = await db.query(`SELECT * FROM event NATURAL JOIN city NATURAL JOIN province`, []);
     return res;
 }
 
