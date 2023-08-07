@@ -9,36 +9,25 @@ import Input from "./Input"
 export default function ShiftBrowser() {
     const userID = localStorage.getItem('user_id');
     const [organizer, set_organizer] = useState();
-    const [modify, set_modify] = useState(0);
     useEffect(() => {
         axios.get(`http://localhost:8000/organizer/${userID}`)
         .then((response) => {
-            // console.log(response.status);                
                 set_organizer(true);
-                // console.log(`set_organizer:${organizer}`);
-
         }).catch((error) => {
                 set_organizer(false);
-                console.error(error);
-
         })
     },);
-    // set_modify(0);
 
 
     return (
         <>
         <div className="m-6">
-
             {/* Table of your shifts */}
             <div className='text-left text-3xl m-4 font-semibold'>Your Shifts</div>
             <ShiftTable type={'volunteerID'}/>
-            
             {/* Table of available shifts*/}
             <div className='text-left text-3xl m-4 pt-8 font-semibold'>Available Shifts</div>
             <ShiftTable type={'available'}/>
-            
-
             {/* Table of all shifts of event (if organizer)*/}
             <div className='text-left text-3xl ml-4 mt-4 pt-8 font-semibold'>Shifts At Your Event</div>
             {(organizer === true) ?
@@ -50,7 +39,12 @@ export default function ShiftBrowser() {
                 
                         <Formik
                             initialValues={{
-
+                                start_time: '',
+                                end_time: '',
+                                role: '',
+                                station: '',
+                                volunteer_id: '',
+                                event_id: ''
                             }}
                             onSubmit={async (values) => {
                                     await axios.put(`http://localhost:8000/shift/`, {
@@ -59,21 +53,17 @@ export default function ShiftBrowser() {
                                         'end_time': values.end_time,
                                         'station': values.station,
                                         'volunteer_id': values.volunteer_id,
-                                        'event_id': values.event_id
+                                        'event_id': values.event_id,
+                                        'organizer_id': userID
                                     }, {
                                         headers: {'content-type': 'application/json'}
                                     })
                                     .then((res) => {
-
-                                        // console.log(res);
                                         document.getElementById("dialogCreate").classList.add('hidden');
                                         document.getElementById('overlayCreate').classList.add('hidden');
                                         location.reload();
-                                        // organizer(res.data);
-
                                     }, reason => {
                                         console.log(reason);
-                                        // setServerError('User with this email already exists')
                                     });
                             }}
                         >
@@ -149,8 +139,6 @@ export default function ShiftBrowser() {
                                     Close
                             </button>
                         </div>
-
-                        {/* </div> */}
                     </div>
 
                     <button id="createEvent" type="button" onClick={() => {
@@ -162,14 +150,9 @@ export default function ShiftBrowser() {
             
                     <ShiftTable type={'organizerID'}/>
                 </>
-                        :
-                        <div className='text-left text-2xl m-4 pl-5 font-semibold'>You are not an organizer</div>
-                    }
-
-            {/* Create shift  (if organizer)*/}
-
-
-
+                :
+                <div className='text-left text-2xl m-4 pl-5 font-semibold'>You are not an organizer</div>
+            }
         </div>
         </>
         

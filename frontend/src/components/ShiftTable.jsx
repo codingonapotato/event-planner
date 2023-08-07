@@ -11,17 +11,12 @@ export default function ShiftTable({type}) {
     const url = (type === 'available') ? preUrl : preUrl + userID;
 
     useEffect(() => {
-        // console.log(url);
         axios.get(url)
         .then((response) => {
             const arr = [];
-            // console.log(`length: ${res.data.length}`);
             for(let i = 0; i < response.data.length; i++) {
-                // console.log(res.data[i]);
                 arr.push(response.data[i]);
             }
-
-            // console.log(`arr: ${arr}`);
             set_shifts(arr);     
         }).catch((error) => {
                 console.error(error);
@@ -31,15 +26,12 @@ export default function ShiftTable({type}) {
    
 
     return (
-        
         <>
-        {/**Table design and styling from https://flowbite.com/docs/components/tables*/}
+        {/**Table styling from https://flowbite.com/docs/components/tables*/}
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             {(shifts.length <= 0) ? 
             <div className='text-left text-2xl m-4 pl-5 font-semibold'>No Shifts Available</div>
             :
-            
-
             <table className="w-full text-sm text-left text-blue-100 dark:bg-gray-800">
                 <thead className="text-xs text-white uppercase bg-gray-800 border-b border-blue-400 dark:bg-gray-800">
                     <tr>
@@ -49,14 +41,13 @@ export default function ShiftTable({type}) {
                         <th scope="col" className="px-6 py-3">  Start Time  </th>
                         <th scope="col" className="px-6 py-3">  End Time    </th>
                         <th scope="col" className="px-6 py-3">  Station     </th>
-                        {/* {console.log(`test: ${type}`)} */}
                         {(type == 'organizerID') ? <th scope="col" className="px-6 py-3">Volunteer ID</th>:<></>}
                         
                     </tr>
                 </thead>
                 <tbody>
+                    {/* {Table Body} */}
                     {shifts.map((item) => {
-                        // {console.log(`role: ${item}`)}
                         return (
                             
                             <tr key ={"table"+item.shift_id}className="bg-gray-700 border-b border-gray-400 hover:bg-gray-600">
@@ -74,9 +65,10 @@ export default function ShiftTable({type}) {
                                 {(type == 'organizerID') ? <td className="px-6 py-4">{item.volunteer_id}</td>:<></>}
                                 
                                 <td className="px-6 py-4">
-                                    {
-                                        (type === 'organizerID') ? <><ShiftAlert item={item}/></>:<></>                                    
-                                    }
+                                    {/* Create Edit Form for Organizers*/}
+                                    {(type === 'organizerID') ? <><ShiftAlert item={item}/></>:<></>}
+
+                                    {/* {Create confirmation alert for Accepting shifts} */}
                                     {
                                         (type === 'available') ? <>
                                         <div id={"overlayAccept"+item.shift_id} className="fixed hidden z-40 w-screen h-screen inset-0 bg-gray-900 bg-opacity-60"></div>
@@ -96,8 +88,7 @@ export default function ShiftTable({type}) {
                                                             headers: {'content-type': 'application/json'}
                                                         })
                                                         .then((res) => {
-                                                            console.log(res);
-                                                            console.log(item.volunteer_id);
+
                                                             document.getElementById("dialogAccept"+item.shift_id).classList.add('hidden');
                                                             document.getElementById('overlayAccept'+item.shift_id).classList.add('hidden');
                                                             location.reload();
@@ -138,6 +129,8 @@ export default function ShiftTable({type}) {
                                             Accept
                                         </button></>:<></>
                                     }
+
+                                    {/* {Create drop confirmation alert for shifts} */}
                                     {
                                         (type === 'volunteerID') ? <>
                                         <div id={"overlay"+item.shift_id} className="fixed hidden z-40 w-screen h-screen inset-0 bg-gray-900 bg-opacity-60"></div>

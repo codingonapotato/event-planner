@@ -29,7 +29,6 @@ export default function ShiftAlert({item}) {
                 </button>
             </div>
             <div className="border-t border-white-500 text-black"></div>
-                
                 <Formik
                         initialValues={{
                             role: item.role, 
@@ -50,9 +49,7 @@ export default function ShiftAlert({item}) {
                                 }, {
                                     headers: {'content-type': 'application/json'}
                                 })
-                                .then((res) => {
-                                    
-                                    // console.log(res);
+                                .then((res) => {                                    
                                     document.getElementById("dialogEdit"+item.shift_id).classList.add('hidden');
                                     document.getElementById('overlayEdit'+item.shift_id).classList.add('hidden');
                                     location.reload();
@@ -60,7 +57,6 @@ export default function ShiftAlert({item}) {
                                     
                                 }, reason => {
                                     console.log(reason);
-                                    // setServerError('User with this email already exists')
                                 });
                         }}
                         // validate={(values) => {
@@ -124,7 +120,7 @@ export default function ShiftAlert({item}) {
                                     // placeholder={'name@email.com'}
                                     labelText={'Volunteer ID'}
                                     onChange={props.handleChange}
-                                    value={props.values.volunteer_id} 
+                                    value={props.values.volunteer_id || ''} 
                                 />
                                 {/* {(serverError) ? <div className="text-sm dark:text-red-400">{serverError}</div> : */}
                                 {/* // (props.errors.email && props.touched.email) ? <div className="text-sm dark:text-red-400">{props.errors.email}</div> : null} */}
@@ -149,7 +145,6 @@ export default function ShiftAlert({item}) {
                             </Form>
                         )}
                     </Formik>
-                    
             {/* <div className="flex justify-end"> */}
             <div className="pl-20">
             <button id={"close" + item.shift_id} onClick={()=> {
@@ -169,7 +164,8 @@ export default function ShiftAlert({item}) {
         }} className="font-medium text-green-600 dark:text-blue-500 hover:underline" type="button">
             Edit
         </button>
-
         </>
+        
     )
+    
 }

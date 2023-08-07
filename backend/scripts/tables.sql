@@ -141,10 +141,23 @@ CREATE TABLE shift (
     station         TEXT,
     volunteer_id    INTEGER,
     event_id        INTEGER     NOT NULL,
+    organizer_id    INTEGER     ,
     FOREIGN KEY (volunteer_id) REFERENCES volunteer
         ON UPDATE CASCADE,
     FOREIGN KEY (event_id) REFERENCES event
+        ON UPDATE CASCADE,
+    FOREIGN KEY (organizer_id) REFERENCES organizer
         ON UPDATE CASCADE);
+
+CREATE TABLE creates_shift (
+    organizer_id INTEGER,
+    shift_id INTEGER,
+    date_created TIMESTAMP,
+    PRIMARY KEY (organizer_id, shift_id),
+    FOREIGN KEY (organizer_id) REFERENCES organizer,
+    FOREIGN KEY (shift_id) REFERENCES shift
+
+);
 
 CREATE TABLE volunteers_for_event (
     volunteer_id    INTEGER,
@@ -414,15 +427,26 @@ VALUES
 	(5,  5,   '2023-07-01',   NULL);
 
 INSERT
-INTO Shift(role, start_time, end_time, station, volunteer_id, event_id)
+INTO Shift(role, start_time, end_time, station, volunteer_id, event_id, organizer_id)
 VALUES 
-('Barista', '2023-08-10 10:00:00', '2023-08-13 12:00:00', 'Concession', 6, 1),
-('Line Cook', '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Concession', 2, 2),
-('Cashier', '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Concession', 4, 3),
-('Greeter', '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Front of House', 1, 4),
-('Cashier', '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Ticket Booth', 5, 4),
-('Security', '2023-08-10 12:30:00', '2023-08-13 17:00:00', 'Security', 1, 5),
-('Valet',   '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Parking Lot', null, 4);
+('Barista',     '2023-08-10 10:00:00', '2023-08-13 12:00:00', 'Concession',     6,      1,      7),
+('Line Cook',   '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Concession',     2,      2,      3),
+('Cashier',     '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Concession',     4,      3,      4),
+('Greeter',     '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Front of House', 1,      4,      1),
+('Cashier',     '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Ticket Booth',   5,      4,      1),
+('Security',    '2023-08-10 12:30:00', '2023-08-13 17:00:00', 'Security',       1,      5,      2),
+('Valet',       '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Parking Lot',    null,   4,      1);
+
+INSERT
+INTO creates_shift(organizer_id, shift_id, date_created)
+VALUES
+(7, 1, '2023-08-09 10:00:00'),
+(3, 2, '2023-08-09 10:00:00'),
+(4, 3, '2023-08-09 10:00:00'),
+(1, 4, '2023-08-09 10:00:00'),
+(1, 5, '2023-08-09 10:00:00'),
+(2, 6, '2023-08-09 12:30:00'),
+(1, 7, '2023-08-09 10:00:00');
 
 INSERT
 INTO volunteers_for_event(volunteer_id, event_id)

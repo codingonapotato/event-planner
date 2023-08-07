@@ -11,10 +11,6 @@ shiftRouter.get('/shiftID/:id', async (req, res) => {
 
    Shift.get_using_shiftID(id)
    .then((result) => {
-      // const info: any[] = [result.rows[0]['role'],          result.rows[0]['start_time'], 
-      //                      result.rows[0]['end_time'],      result.rows[0]['station'], 
-      //                      result.rows[0]['volunteer_id'],  result.rows[0]['event_id']];
-
       res.status(200).send(result.rows);
       
    })
@@ -36,7 +32,6 @@ shiftRouter.get('/eventID/:id', async (req, res) => {
       //                         result.rows[i]['station'],    result.rows[i]['volunteer_id']];
       //    rows.push(row);
       // }
-
       res.status(200).send(result.rows);
    })
    .catch((err) => {
@@ -61,13 +56,6 @@ shiftRouter.get('/volunteerID/:id', async (req, res) => {
 
    Shift.get_using_volunteerID(id)
    .then((result) => {
-      // let rows: any[] = [];
-      // for (let i = 0; i < result.rowCount; i++) {
-      //    const row: any[] = [result.rows[0]['shift_id'],   result.rows[0]['role'],
-      //                      result.rows[0]['start_time'], result.rows[0]['end_time'], 
-      //                      result.rows[0]['station'],    result.rows[0]['event_id']];
-      //    rows.push(row);
-      // }
       res.status(200).send(result.rows);
    })
    .catch((err) => {
@@ -140,9 +128,9 @@ shiftRouter.post('/drop/:id', async (req, res) => {
  */
 shiftRouter.put('', async (req, res) => {
 
-   const {role, start_time, end_time, station, volunteer_id, event_id} = req.body;
+   const {role, start_time, end_time, station, volunteer_id, event_id, organizer_id} = req.body;
 
-   Shift.addShift(role, start_time, end_time, station, volunteer_id, event_id)
+   Shift.addShift(role, start_time, end_time, station, volunteer_id, event_id, organizer_id)
    .then((result) => {
       res.status(200).send(result.rows);
    })
