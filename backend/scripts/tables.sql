@@ -439,6 +439,7 @@ VALUES
 ('Security',    '2023-08-10 12:30:00', '2023-08-13 17:00:00', 'Security',       null,   1,      7),
 ('Cashier',     '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Concession',     null,   1,      7);
 
+
 INSERT
 INTO creates_shift(organizer_id, shift_id, date_created)
 VALUES
