@@ -21,7 +21,7 @@ CREATE TABLE items (
 
 CREATE TABLE contributes (
     contrib_user_id     INTEGER,
-    item_id             INTEGER,
+    item_id             SERIAL,
     contrib_start_time  TIMESTAMP,
     contrib_end_time    TIMESTAMP,
     contrib_amt         INTEGER,
@@ -36,7 +36,7 @@ CREATE TABLE contributes (
 
 CREATE TABLE requests (
     req_user_id INTEGER,
-    item_id     INTEGER,
+    item_id     SERIAL,
     req_amt     INTEGER,
     PRIMARY KEY (req_user_id, item_id),
     FOREIGN KEY (req_user_id)
@@ -59,7 +59,7 @@ CREATE TABLE belongs (
     street_num      INTEGER,
     street          TEXT,
     postal_code     CHAR(6),
-    item_id         INTEGER,
+    item_id         SERIAL,
     venue_location  TEXT,
     PRIMARY KEY (street_num, street, postal_code, item_id),
     FOREIGN KEY (street_num, street, postal_code)
@@ -146,10 +146,23 @@ CREATE TABLE shift (
     station         TEXT,
     volunteer_id    INTEGER,
     event_id        INTEGER     NOT NULL,
+    organizer_id    INTEGER     ,
     FOREIGN KEY (volunteer_id) REFERENCES volunteer
         ON UPDATE CASCADE,
     FOREIGN KEY (event_id) REFERENCES event
+        ON UPDATE CASCADE,
+    FOREIGN KEY (organizer_id) REFERENCES organizer
         ON UPDATE CASCADE);
+
+CREATE TABLE creates_shift (
+    organizer_id INTEGER,
+    shift_id INTEGER,
+    date_created TIMESTAMP,
+    PRIMARY KEY (organizer_id, shift_id),
+    FOREIGN KEY (organizer_id) REFERENCES organizer,
+    FOREIGN KEY (shift_id) REFERENCES shift
+
+);
 
 CREATE TABLE volunteers_for_event (
     volunteer_id    INTEGER,
@@ -248,14 +261,14 @@ CREATE TABLE contracts_event_organizer (
         ON UPDATE CASCADE);
 
 INSERT 
-INTO items (item_id, amount, item_name) 
+INTO items (amount, item_name) 
 VALUES
-	(1, 50, 'chair'),
-	(2, 20, 'table'),
-	(3, 100,'bottled water'),
-	(4, 10, 'canopy'),
-	(5, 10, 'radio'),
-	(6, 1,  'microphone');
+	(50, 'chair'),
+	(20, 'table'),
+	(100,'bottled water'),
+	(10, 'canopy'),
+	(10, 'radio'),
+	(1,  'microphone');
 
 INSERT INTO 
 province (postal_code, province)
@@ -424,14 +437,26 @@ VALUES
 	(5,  5,   '2023-07-01',   NULL);
 
 INSERT
-INTO Shift(shift_id, role, start_time, end_time, station, volunteer_id, event_id)
+INTO Shift(role, start_time, end_time, station, volunteer_id, event_id, organizer_id)
 VALUES 
-('0','Barista', '2023-08-10 10:00:00', '2023-08-13 12:00:00', 'Concession', 6, 1),
-('1','Line Cook', '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Concession', 2, 2),
-('2','Cashier', '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Concession', 4, 3),
-('3','Greeter', '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Front of House', 1, 4),
-('4','Cashier', '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Ticket Booth', 5, 4),
-('5','Security', '2023-08-10 12:30:00', '2023-08-13 17:00:00', 'Security', 1, 5);
+('Barista',     '2023-08-10 10:00:00', '2023-08-13 12:00:00', 'Concession',     6,      1,      7),
+('Line Cook',   '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Concession',     2,      2,      3),
+('Cashier',     '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Concession',     4,      3,      4),
+('Greeter',     '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Front of House', 1,      4,      1),
+('Cashier',     '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Ticket Booth',   5,      4,      1),
+('Security',    '2023-08-10 12:30:00', '2023-08-13 17:00:00', 'Security',       1,      5,      2),
+('Valet',       '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Parking Lot',    null,   4,      1);
+
+INSERT
+INTO creates_shift(organizer_id, shift_id, date_created)
+VALUES
+(7, 1, '2023-08-09 10:00:00'),
+(3, 2, '2023-08-09 10:00:00'),
+(4, 3, '2023-08-09 10:00:00'),
+(1, 4, '2023-08-09 10:00:00'),
+(1, 5, '2023-08-09 10:00:00'),
+(2, 6, '2023-08-09 12:30:00'),
+(1, 7, '2023-08-09 10:00:00');
 
 INSERT
 INTO volunteers_for_event(volunteer_id, event_id)
