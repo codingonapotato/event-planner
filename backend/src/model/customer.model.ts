@@ -1,75 +1,103 @@
 import * as db from "../../db";
-import User from "./user.model"
+import * as User from "./user.model"
 
-export default class Customer extends User {
-    /**EFFECTS: Checks for existence of customer with @param id and if the user is a customer, then retrieve
-     * their data. Otherwise, return 'Customer not found' or handle errors.
-     */
-    async findUser(id: number, res) {
-        db.query(`SELECT * FROM customer WHERE customer_id = $1`, [id]).then((result) => {
-            if (result.rows.length === 0) {
-                res.status(404).send(`Customer not found`);
-            } else {
-                super.findUser(id, res);
-            }
-        })
-            .catch((err) => {
-                res.status(500).send('Database query failed');
-            });
+/**EFFECTS: Checks for existence of customer with @param id and if the user is a customer, then retrieve
+ * their data. Otherwise, return 'Customer not found' or handle errors.
+ */
+export async function findUser(id: number) {
+    const res = await db.query(`SELECT * FROM customer WHERE customer_id = $1`, [id]);
+    if (res.rows.length === 0) {
+        return -1;
+    } else {
+        return User.findUser(id);
     }
+}
 
-    /** EFFECTS: Retrieves all dependants associated to a customer with id=@param id */
-    async getDependant(id: number, res) {
-        db.query(`SELECT * FROM dependants WHERE customer_id = $1`, [id]).then((result) => {
-            if (result.rows.length === 0) {
-                res.status(404).send(`Dependant not found`);
-            } else {
-                res.status(200).send(result.rows);
-            }
-        }).catch((err) => {
-            res.status(500).send('Database query failed');
-        });
+/** EFFECTS: Retrieves all dependants associated to a customer with id=@param id */
+export async function getDependant(id: number) {
+    const res = await db.query(`SELECT * FROM dependants WHERE customer_id = $1`, [id]);
+    if (res.rows.length === 0) {
+        return -1;
+    } else {
+        return res.rows;
     }
+}
 
-    /** EFFECTS: Adds a new dependant associated to a customer with id=@param id */
-    async addDependant(id: number, req, res) {
-        const { first_name: firstName, last_name: lastName, birthdate } = req.params;
-        db.query(`INSERT INTO dependants VALUES ($1, $2, $3, $4) RETURNING *`, [firstName, lastName, id, birthdate]).then((result) => {
-            res.status(200).send(result.rows);
-        }).catch((err) => {
-            res.status(500).send('Database query failed');
-        });
+/** EFFECTS: Adds a new dependant associated to a customer with id=@param id */
+export async function addDependant(id: number, req) {
+    const { first_name: firstName, last_name: lastName, birthdate } = req.body;
+    const res = await db.query(`INSERT INTO dependants VALUES ($1, $2, $3, $4) RETURNING *`,
+        [firstName, lastName, id, birthdate]);
+    if (res.rows.length === 0) {
+        return -1;
+    } else {
+        return res.rows;
     }
+}
 
-    /** EFFECTS: Modifies a new dependant associated to a customer with id=@param id */
-    async modifyDependant(id: number, req, res) {
-        const { first_name: firstName, last_name: lastName, new_first_name: newFirstName, new_last_name: newLastName, birthdate } = req.params;
-        db.query(`UPDATE dependants SET 
+/** EFFECTS: Handles logic of deducting balance of customer with @param id for @param amt
+ * returns @returns remaining balance regardless of sign
+*/
+export async function deductBalance(id: number, amt: number) {
+    const res = await db.query(`SELECT balance FROM users WHERE user_id = $1`, [id]);
+    const balance = parseFloat(res.rows[0]);
+    const remaining = balance - amt;
+
+    if (remaining < 0) {
+        console.error('You broke af');
+    } else {
+        await db.query(`UPDATE users SET balance = $2 WHERE user_id = $1`, [id, remaining]);
+    }
+    return remaining;
+}
+
+/** EFFECTS: Handles logic of adding balance to customer with  @param id for @param amt*/
+export async function addBalance(id: number, amt: number) {
+    const res = await db.query(`SELECT balance FROM users WHERE user_id = $1`, [id]);
+    const balance = parseFloat(res.rows[0]);
+    const remaining = balance + amt;
+    db.query(`UPDATE users SET balance = $2 WHERE user_id = $1`, [id, remaining]);
+}
+
+/** EFFECTS: Modifies a new dependant associated to a customer with id=@param id */
+export async function modifyDependant(id: number, req) {
+    const { first_name: firstName, last_name: lastName } = req.params;
+    const { first_name: newFirstName, last_name: newLastName, birthdate } = req.body;
+    const res = await db.query(`UPDATE dependants SET 
         first_name = $1,
         last_name = $2,
         customer_id = $3,
         birthdate = $4 
         WHERE customer_id = $3 AND first_name = $5 AND last_name = $6 
-        RETURNING *`, [newFirstName, newLastName, id, birthdate, firstName, lastName]).then((result) => {
-            res.status(200).send(result.rows);
-        }).catch((err) => {
-            res.status(500).send('Database query failed');
-        });
+        RETURNING *`, [newFirstName, newLastName, id, birthdate, firstName, lastName]);
+    if (res.rows.length === 0) {
+        return -1;
+    } else {
+        return res.rows;
     }
+}
 
-    /** EFFECTS: Rempoves a new dependant associated to a customer with id=@param id */
-    async removeDependant(id: number, req, res) {
-        const { first_name: firstName, last_name: lastName } = req.params;
-        db.query(`DELETE FROM dependants 
+/** EFFECTS: Rempoves a new dependant associated to a customer with id=@param id */
+export async function removeDependant(id: number, req) {
+    const { first_name: firstName, last_name: lastName } = req.body;
+    const res = await db.query(`DELETE FROM dependants 
         WHERE customer_id = $1 AND first_name = $2 AND last_name = $3
-        RETURNING *`, [id, firstName, lastName]).then((result) => {
-            res.status(200).send(result.rows);
-        }).catch((err) => {
-            res.status(500).send('Database query failed');
-        });
+        RETURNING *`, [id, firstName, lastName]);
+    if (res.rows.length === 0) {
+        return -1;
+    } else {
+        return res.rows;
     }
+}
 
-    async getTickets(id: number, req, res) {
-        return 0; // stub
+/** EFFECTS: Retrieves all tickets that a customer holds (including information on the event the ticket is for) */
+export async function findTickets(id: number) {
+    const res = await db.query(`SELECT DISTINCT *
+    FROM ticket t, event e, organizer o, tier ti
+    WHERE t.customer_id = $1 AND t.event_id = e.event_id AND t.tier_id = ti.tier_id AND e.organizer_id = o.organizer_id`, [id]);
+    if (res.rows.length === 0) {
+        return -1;
+    } else {
+        return res.rows;
     }
 }

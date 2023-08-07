@@ -13,22 +13,22 @@ export default function Dashboard() {
         console.log(userInfo);
         if (Object.keys(userInfo).length != 0) {
             axios.get(`http://localhost:8000/event/user/${userInfo.user_id}`)
-            .then(res => {
-                setEvents(res.data);
-            }).catch(err => {
-                console.log(err);
-            });
+                .then(res => {
+                    setEvents(res.data);
+                }).catch(err => {
+                    console.log(err);
+                });
         }
         // Retrieve upcoming events
     }, [userInfo])
 
     return (
         <div className='flex flex-row pt-6 space-x-10 mx-4'>
-            <CardList items={events} type='Events' redirectTarget='/events'/>
-            <CardList items={dashMock.mockShift} type='Shifts' redirectTarget='/shifts'/>
+            <CardList items={events} type='Events' redirectTarget='/events' />
+            <CardList items={dashMock.mockShift} type='Shifts' redirectTarget='/shifts' />
             <div className='flex flex-col flex-1 space-y-5'>
-                <BalanceCard balance={userInfo.balance}/>
-                <DependantsList dependants={dashMock.mockDependants}/>
+                <BalanceCard balance={userInfo.balance} />
+                <DependantsList dependants={dashMock.mockDependants} />
             </div>
         </div>
     )

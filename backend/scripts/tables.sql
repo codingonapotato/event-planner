@@ -118,6 +118,11 @@ CREATE TABLE event (
     street, postal_code)
         ON DELETE CASCADE);
 
+CREATE VIEW volunteer_event (event_id, name, start_time, end_time, organizer_first_name, organizer_last_name, street_num, street, postal_code) AS
+SELECT e.event_id, e.name, e.start_time, e.end_time, u.first_name, u.last_name, e.street_num, e.street, e.postal_code
+FROM event e, users u 
+WHERE e.organizer_id = u.user_id;
+
 CREATE TABLE special_guest (
     id          SERIAL PRIMARY KEY,
     first_name  TEXT,
@@ -168,13 +173,17 @@ CREATE TABLE volunteers_for_event (
 
 CREATE TABLE tier (
     tier_id             SERIAL PRIMARY KEY,
-    tier_description    TEXT DEFAULT 'General Admission',
-    tier_name           TEXT DEFAULT 'Tier 0',
-    price               MONEY DEFAULT 0.0,
-    event_id            INTEGER NOT NULL,
-    organizer_id        INTEGER NOT NULL,
-    FOREIGN KEY (event_id) REFERENCES event (event_id),
-    FOREIGN KEY (organizer_id) REFERENCES organizer (organizer_id));
+    event_id            INTEGER,
+    organizer_id        INTEGER,
+    tier_description    TEXT,
+    tier_name           TEXT,
+    price               MONEY,
+    FOREIGN KEY (event_id) REFERENCES event
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+    FOREIGN KEY (organizer_id) REFERENCES organizer
+    ON UPDATE CASCADE
+    ON DELETE CASCADE);
 
 CREATE TABLE ticket (
     ticket_id   SERIAL     PRIMARY KEY,
@@ -185,6 +194,7 @@ CREATE TABLE ticket (
     UNIQUE (seat_number, event_id),
     FOREIGN KEY (tier_id)   REFERENCES tier (tier_id),
     FOREIGN KEY (event_id)  REFERENCES event (event_id));
+
 
 
 CREATE TABLE dependants (

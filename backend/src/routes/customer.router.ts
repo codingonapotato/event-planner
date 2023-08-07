@@ -1,31 +1,85 @@
 import { Router } from 'express';
-import Customer from '../model/customer.model';
+import * as Customer from '../model/customer.model';
 
 export const customerRouter = Router();
-const customer = new Customer;
 
 customerRouter.get('/:id', (req, res) => {
     const id = parseInt(req.params.id);
-    customer.findUser(id, res);
+    Customer.findUser(id).then((result) => {
+        if (result === - 1) {
+            res.status(404).send('Customer not found');
+        } else {
+            res.status(200).send(result);
+        }
+    }).catch((err) => {
+        res.status(500).send('Database query failed');
+    });
 })
 
 customerRouter.get('/dependant/:id', (req, res) => {
     const id = parseInt(req.params.id);
-    customer.getDependant(id, res);
+    Customer.getDependant(id).then((result) => {
+        if (result === -1) {
+            res.status(404).send(`User with id: ${id} does not have any dependants`);
+        } else {
+            res.status(200).send(result);
+        }
+    }).catch((err) => {
+        res.status(500).send('Database query failed');
+    })
 })
 
-customerRouter.post('/dependant-modify/:id/:first_name/:last_name/:new_first_name/:new_last_name/:birthdate', (req, res) => {
+customerRouter.post('/dependant-modify/:id/:first_name/:last_name/', (req, res) => {
     const id = parseInt(req.params.id);
-    customer.modifyDependant(id, req, res);
+    Customer.modifyDependant(id, req).then((result) => {
+        if (result === -1) {
+            res.status(404).send(`Something unexpected has occured while modifying information of dependant 
+            ${req.params.first_name}, ${req.params.last_name}`);
+        } else {
+            res.status(200).send(result);
+        }
+    }).catch((err) => {
+        res.status(500).send('Database query failed');
+    });
 })
 
-customerRouter.put('/dependant-add/:id/:first_name/:last_name/:birthdate', (req, res) => {
+customerRouter.put('/dependant-add/:id/', (req, res) => {
     const id = parseInt(req.params.id);
-    customer.addDependant(id, req, res);
+    Customer.addDependant(id, req).then((result) => {
+        if (result === -1) {
+            res.status(404).send(`Dependant Creation for User with id: ${id} failed :(`);
+        } else {
+            res.status(200).send(result);
+        }
+    }).catch((err) => {
+        res.status(500).send('Database query failed');
+    })
 })
 
-customerRouter.delete('/dependant-remove/:id/:first_name/:last_name', (req, res) => {
+customerRouter.delete('/dependant-remove/:id', (req, res) => {
     const id = parseInt(req.params.id);
-    customer.removeDependant(id, req, res);
+    Customer.removeDependant(id, req).then((result) => {
+        if (result === -1) {
+            res.status(404).send(`Something unexpected has occured while trying to remove dependant 
+            ${req.body['first_name']}, ${req.body['last_name']}`);
+        } else {
+            res.status(200).send(result);
+        }
+    }).catch((err) => {
+        res.status(500).send('Database query failed');
+    });
 })
 export default customerRouter;
+
+customerRouter.get('/tickets/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    Customer.findTickets(id).then((result) => {
+        if (result === -1) {
+            res.status(404).send(`Could not retrieve tickets for customer with id = ${id}`);
+        } else {
+            res.status(200).send(result);
+        }
+    }).catch((err) => {
+        res.status(500).send('Database query failed');
+    });
+});

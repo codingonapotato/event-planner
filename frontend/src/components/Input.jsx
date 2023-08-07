@@ -6,8 +6,8 @@ export default function Input({
     type,
     placeholder,
     customClass,
-    customColor='',
-    isRequired=false,
+    customColor = '',
+    isRequired = false,
     onChange,
     labelText,
     value,
@@ -16,13 +16,13 @@ export default function Input({
     return (
         <div>
             <label htmlFor={id} className="block mb-2 mt-2 text-sm font-medium text-gray-900 dark:text-white">{labelText}</label>
-            <input 
+            <input
                 id={id}
                 type={type}
                 placeholder={placeholder}
                 required={isRequired}
                 onChange={onChange}
-                className={inputStyle+' '+customClass+' '+ ((customColor === '') ? inputColor : customColor)}
+                className={inputStyle + ' ' + customClass + ' ' + ((customColor === '') ? inputColor : customColor)}
                 value={value}
                 pattern={pattern}
             />

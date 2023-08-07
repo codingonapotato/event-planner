@@ -1,12 +1,8 @@
 version: '3.8'
 
 services:
-<<<<<<< Updated upstream
-  db: 
-=======
   db:
     container_name: postgres_db
->>>>>>> Stashed changes
     image: postgres:latest
     volumes:
       - ./data:/var/lib/postgresql/data

@@ -22,14 +22,14 @@ export default function LoginCard() {
                     <h1 className="text-2xl font-bold leading-tight tracking-tight text-center text-white">Sign in to your account</h1>
                 </div>
                 <Formik
-                    initialValues={{email: '', password: ''}}
+                    initialValues={{ email: '', password: '' }}
                     onSubmit={async (values) => {
-                            await axios.post('http://localhost:8000/user/login', {
-                                'email': values.email,
-                                'password': values.password
-                            }, {
-                                headers: {'content-type': 'application/json'}
-                            })
+                        await axios.post('http://localhost:8000/user/login', {
+                            'email': values.email,
+                            'password': values.password
+                        }, {
+                            headers: { 'content-type': 'application/json' }
+                        })
                             .then((res) => {
                                 localStorage.setItem('user_id', res.data.user_id);
                                 setAuth(res.data.user_id);
@@ -41,8 +41,8 @@ export default function LoginCard() {
                     validate={(values) => {
                         setServerError('');
                         const errors = {};
-                        if (!values.email) { 
-                            errors.email = "Email is required" 
+                        if (!values.email) {
+                            errors.email = "Email is required"
                         } else if (!/.*@.*/.test(values.email)) {
                             errors.email = 'Invalid email';
                         }
@@ -57,7 +57,7 @@ export default function LoginCard() {
                 >
                     {props => (
                         <Form>
-                            <Input 
+                            <Input
                                 id={'email'}
                                 type={'email'}
                                 placeholder={'name@email.com'}
@@ -66,8 +66,8 @@ export default function LoginCard() {
                                 value={props.values.email}
                             />
                             {(serverError) ? <div className="text-sm dark:text-red-400">{serverError}</div> :
-                            (props.errors.email && props.touched.email) ? <div className="text-sm dark:text-red-400">{props.errors.email}</div> : null}
-                            <Input 
+                                (props.errors.email && props.touched.email) ? <div className="text-sm dark:text-red-400">{props.errors.email}</div> : null}
+                            <Input
                                 id={'password'}
                                 type={'password'}
                                 placeholder={'•••••••••'}
@@ -76,8 +76,8 @@ export default function LoginCard() {
                                 value={props.values.password}
                             />
                             {(serverError) ? <div className="text-sm dark:text-red-400">{serverError}</div> :
-                            (props.errors.password && props.touched.password) ? <div className="text-sm dark:text-red-400">{props.errors.password}</div> : null}
-                            <Input 
+                                (props.errors.password && props.touched.password) ? <div className="text-sm dark:text-red-400">{props.errors.password}</div> : null}
+                            <Input
                                 id={'submit'}
                                 type={"submit"}
                                 value={'Sign in'}
