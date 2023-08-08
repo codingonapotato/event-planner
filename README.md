@@ -10,3 +10,6 @@ To see the database in pgAdmin, go to `localhost:5050` and login using the crede
 Choose an arbitrary name for the server and in the connection tab, fill in the following:
 - `postgres_db` in `Host name/address`
 - `mypassword` in `Password`
+
+To execute a .sql script to drop all tables and recreate the database, run
+`docker exec -u postgres postgres_db psql test_db admin -f /docker-entrypoint-initdb.d/seed_db.sql`
