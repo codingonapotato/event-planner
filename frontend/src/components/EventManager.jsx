@@ -1,9 +1,8 @@
-import { PencilSquareIcon, ClockIcon, BanknotesIcon, CalendarDaysIcon, PlusIcon, SparklesIcon, TicketIcon } from "@heroicons/react/24/outline";
-import { MapPinIcon, StarIcon } from "@heroicons/react/24/solid";
+import { BanknotesIcon, CalendarDaysIcon, PlusIcon, SparklesIcon, TicketIcon } from "@heroicons/react/24/outline";
+import { StarIcon } from "@heroicons/react/24/solid";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useOutletContext } from "react-router-dom";
-import { dateColors, itemColors, monthNames } from "../assets/constants";
+import { Link, useOutletContext, Outlet, NavLink } from "react-router-dom";
 
 
 const statNames = ['Total Revenue', 'Ticket(s) Sold', 'Most Revenue Gained', 'Event(s) Managed']
@@ -93,21 +92,34 @@ export default function EventManager() {
             </div>
             <div className='flex-1 h-full flex flex-col space-y-4'>
                 <div className='flex flex-col max-h-96 px-6 py-5 bg-white w-full rounded-lg drop-shadow-md'>
-                    <div className='flex items-center justify-end w-full pb-2 border-b border-gray-400/50'>
-                        <span className='font-bold text-3xl text-left flex-1'>Your Events</span>
-                        <span className='p-2 flex items-end justify-end hover:bg-gray-100 rounded-full'>
-                            <Link to='/createEvent'>
-                                <PlusIcon className='w-6 h-6'/>
-                            </Link>
+                    <div className='flex items-center justify-start w-full pb-2 border-b border-gray-400/50'>
+                        <span className='font-bold text-3xl text-left mr-6'>Your Events</span>
+                        <NavLink 
+                            to=''
+                            end
+                            replace={true}
+                            className={({isActive}) => 
+                                (isActive) ? "bg-indigo-500 text-white px-2 py-1 rounded-l-lg" : "px-2 py-1 rounded-l-lg hover:bg-gray-200 bg-gray-100 text-black"}
+                        >
+                            General
+                        </NavLink>
+                        <NavLink 
+                            to='revenue'
+                            replace={true}
+                            className={({isActive}) => 
+                                (isActive) ? "bg-indigo-500 text-white px-2 py-1 rounded-r-lg" : "rounded-r-lg px-2 py-1 bg-gray-100 hover:bg-gray-200 text-black"}
+                        >
+                            Revenue
+                        </NavLink>
+                        <span className='flex flex-1 items-end justify-end'>
+                            <div className="p-2 hover:bg-gray-100 rounded-full">
+                                <Link to='/createEvent'>
+                                    <PlusIcon className='w-6 h-6'/>
+                                </Link>
+                            </div>
                         </span>
                     </div>
-                    <div className="scrollbar overflow-auto overscroll-auto flex flex-col mt-2 w-full space-y-1">
-                        {
-                            events.map((event, i) => {
-                                return <EventItem key={`event`+i} item={event} index={i} />
-                            })
-                        }
-                    </div>
+                    <Outlet context={[events, userInfo.user_id]}/>
                 </div>
             </div>
         </div>
@@ -150,57 +162,4 @@ function StatCard({
     )
 }
 
-function EventItem({
-    item,
-    index
-}) {
-    const startDate = new Date(item.start_time);
-    const endDate = new Date(item.end_time);
-    const startTime = String(startDate.getUTCHours()).padStart(2,'0') + ':' + String(startDate.getUTCMinutes()).padStart(2,'0'); 
-    const endTime = String(endDate.getUTCHours()).padStart(2,'0') + ':' + String(endDate.getUTCMinutes()).padStart(2,'0'); 
 
-    return (
-        <div className={`flex flex-row rounded-lg p-3 py-3 space-x-4 ${itemColors[index % 2]}`}>
-            <DateBox date={startDate} index={index} />
-            <div className='flex-1 flex flex-col'>
-                <div className='font-semibold text-xl'>{item.name}</div>
-                <div className='flex-1 flex items-center space-x-8'>
-                    <div className='flex flex-row space-x-1 items-center'>
-                        <MapPinIcon className='w-5 h-5 text-black' />
-                        <span className='font-semilight'>
-                            {item.street_num + ' ' + item.street + ', ' + item.city + ' ' + item.province + ' ' + item.postal_code}
-                        </span>
-                    </div>
-                    <div className='flex flex-row space-x-1 items-center'>
-                        <ClockIcon className='w-5 h-5 text-black' />
-                        <span className='font-semilight'>
-                            {(endDate.getUTCDate() != startDate.getUTCDate()) ? 
-                            startTime + ' - ' + monthNames[endDate.getUTCMonth()] + ' ' + endDate.getUTCDate() + ' ' + endTime : 
-                            startTime + ' - ' + endTime 
-                            }
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <Link className='self-center pr-2' to={`/editEvent/${item.event_id}`}>
-                <div className={`hover:bg-gray-200 p-2 rounded-full`}>
-                    <PencilSquareIcon className='w-6 h-6 text-black' />
-                </div>
-            </Link>
-        </div>
-    )
-
-}
-
-function DateBox({
-    date,
-    index
-}) {
-    return (
-        <div className={`flex flex-start -space-y-1.5 flex-col py-0.5 px-3 rounded-md justify-center items-center ${dateColors[index % dateColors.length]}`}>
-            <span className='text-white font-semibold text-md'>{date.getUTCDate()}</span>
-            <span className='text-white font-semibold text-md align-top'>{monthNames[date.getUTCMonth()].toUpperCase()}</span>
-            <span className='text-white font-semibold text-md align-top'>{date.getUTCFullYear()}</span>
-        </div>
-    )
-}

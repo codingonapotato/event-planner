@@ -12,6 +12,8 @@ import UserProfilePage from './components/UserProfilePage'
 import EventManager from './components/EventManager'
 import EventCreator from './components/EventCreator'
 import EventEditor from './components/EventEditor'
+import GeneralEventList from './components/EventViews/GeneralEventList'
+import RevenueEventList from './components/EventViews/RevenueEventList'
 
 function App() {
 
@@ -22,7 +24,10 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="/events" element={<EventBrowser />} />
           <Route path="/shifts" element={<ShiftBrowser />} />
-          <Route path="/manageEvent" element={<EventManager />} />
+          <Route path="/manageEvent" element={<EventManager />}>
+            <Route index element={<GeneralEventList />}/>
+            <Route path='revenue' element={<RevenueEventList />}/>
+          </Route>
           <Route path="/profile" element={<UserProfilePage />} />
           <Route path="/createEvent" element={<EventCreator/>} />
           <Route path="/editEvent/:event_id" element={<EventEditor />} />

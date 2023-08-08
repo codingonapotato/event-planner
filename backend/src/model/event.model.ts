@@ -103,7 +103,6 @@ export async function createEventTickets(numTickets: number, tier_id: number, ev
     return ret;
 }
 
-
 export async function getUpcomingEvents(user_id: number) {
     const res = await db.query(`
         SELECT 
