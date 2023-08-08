@@ -42,6 +42,26 @@ export async function get_using_noID_city(city: string) {
         WHERE city ILIKE $1 || '%')`, [city]);
 }
 
+
+export async function get_browser(selection: string[], from: string) {
+    let s:string="";
+    for(let i=0;i<selection.length;i++) {
+        if (selection[i] === 'undefined') {
+            s = s.substring(0,s.length-2);
+            break;
+        } else {
+            s = s + selection[i];
+            ((i + 1 < selection.length)) ? s = s + ', ' : s = s + ' '
+            // console.log(`i:${i}, length:${selection.length}, s:${s}`);
+        }
+        
+    }
+    const res = await db.query(`
+                        SELECT ${s} 
+                        FROM ${from}`,[]);
+    return res.rows;
+}
+
 /**
  * Updates attributes with the exception of foreign keys in Shift
  * @param id the shift_id of the shift we want to change

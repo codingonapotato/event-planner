@@ -9,28 +9,18 @@ import Select from "react-select";
 
 
 export default function Browser () {
-    const [selected, setSelected] = useState({});
+    const [type, setType] = useState('test');
+    const [shifts, set_shifts] = useState([]);
+    const [selected, setSelected] = useState([]);
+    const [select_attr, set_select_attr] = useState([]);
 
-
-    const handleChange = event => {
-        console.log(event.target.value);
-        if (event.target.value === 'shift') {
-            setSelected(shiftOptions);
-        } else if (event.target.value === 'event') {
-            setSelected(eventOptions);
-        } else {
-            setSelected([]);
-        }
-        console.log(selected);
-        
-    };
 
     const shiftOptions = [
         {value: "event_id", label: "Event ID"},
         {value: "role", label: "Role"},
         {value: "start_time", label: "Start Time"},
         {value: "end_time", label: "End Time"},
-        {value: "Station", label: "Station"}
+        {value: "station", label: "Station"}
     ];
 
     const eventOptions = [
@@ -45,65 +35,120 @@ export default function Browser () {
 
     return (
         <>
-
             <div >
-
                 <div className='text-left text-3xl m-4 font-semibold'>Browser</div>
+                <div className='mx-5'>
+                <div className='mt-2 ml-2 font-semibold'>Select: </div>
+                <select className="mx-2 rounded-lg" onChange={
+                    (event)=>{
+                        set_select_attr('');
+                        setType(event.target.value);
+                        if (event.target.value === 'shift') {
+                            setSelected(shiftOptions);
+                        } else if (event.target.value === 'event') {
+                            setSelected(eventOptions);
+                        } else {
+                            setSelected([]);
+                        }
+                    }}>
+                    <option >Please Select</option>
+                    <option value="shift">Shift</option>
+                    <option value="event">Event</option>
+                    </select>
+                
+                <Select 
+                    name="attributes"
+                    id="attributes"
+                    isMulti
+                    options = {selected}
+                    className="max-w-xs mx-2 my-2"
+                    onChange={set_select_attr}
+                    value={select_attr}
+                />
+                </div>
             
-            <Formik
-                initialValues={{
-                    // filter: '',
-                    // field:''
-                }}
-                onSubmit={async (values) => {
-                        // console.log(values);
-                        // const queryURL = url +'?'+values.filter+'='+ values.field;
-                        // console.log(queryURL);
-                        // await axios.get(queryURL, {
-                        // }, {
-                        //     headers: {'content-type': 'application/json'}
-                        // })
-                        // .then((response) => {                                    
-                        //     const arr = [];
-                        //     for(let i = 0; i < response.data.length; i++) {
-                        //         arr.push(response.data[i]);
-                        //     }
-                        //     set_shifts(arr);     
-                        // }, reason => {
-                        //     console.log(reason);
-                        // });
-                }}
-            >
-                {props => (
-                    <Form>    
-                        <div className="space-x-2 mx-8">
-                            <div className='mt-2 ml-2 font-semibold'>Filter: </div>
-                            <Field as="select" name="from" id="from" className="mx-2 rounded-lg" onChange={handleChange}>
-                                <option >Please Select</option>
-                                <option value="shift">Shift</option>
-                                <option value="event">Event</option>
-                            </Field>
-                            
-                            <Select 
-                                name="filter2"
-                                id="filter2"
-                                isMulti
-                                options = {selected||''}
-                                className="max-w-xs"
-                            />
+                <Formik
+                    initialValues={{}}
+                    onSubmit={async (values) => {
+                        let arr = [];
+                        if (select_attr.length !== 0) {
+                            select_attr.map(attribute => {
+                                arr.push(attribute.value);
+                            })
+                        }
+                        console.log(`arr: ${arr}`);
+                        await axios.get(`http://localhost:8000/shift/browser/${type}/${arr.pop()}/
+                        ${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}`, {
+                        }, {
+                            headers: {'content-type': 'application/json'}
+                        })
+                        .then((response) => {
+                            console.log(response);
+                            set_shifts(response.data);
+                        }, reason => {
+                            console.log(reason);
+                        });
+                    }}
+                >
+                    {props => (
+                        <Form >
                             <Input 
                                 id={'submit'}
                                 type={'submit'}
-                                customClass={'max-w-xs'}
-                                customColor={'bg-green-50 dark:bg-green-600 hover:bg-green-700 text-white cursor-pointer'}
+                                customClass={'width:50'}
+                                customColor={' mx-7 max-w-xs bg-green-50 dark:bg-green-700 hover:bg-green-800 text-white cursor-pointer'}
                                 value={'Search'} 
                             />
-                        </div>
-                    </Form>
-                )}
-            </Formik>
+                        </Form>
+                    )}
+                </Formik>
+            </div>
+            
+            
+
+
+            <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+            {(shifts.length <= 0) ? <>
+            {/* <div className='text-left text-2xl m-4 pl-5 font-semibold'>No {type}s available</div> */}
+            </>
+            :
+            <table className="w-full text-sm text-left text-blue-100 dark:bg-gray-800">
+                <thead className="text-xs text-white uppercase bg-gray-800 border-b border-blue-400 dark:bg-gray-800">
+                    <tr>
+                        {
+                            select_attr.map((columnName)=> {
+                                return (
+                                    <>
+                                    <th scope="col" className="px-6 py-3">  {columnName.label}    </th>
+                                    </>
+                                )
+                            })
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    {/* {Table Body} */}
+                    {shifts.map((item) => {
+                        return (
+                            <tr className="bg-gray-700 border-b border-gray-400 hover:bg-gray-600">
+                                {select_attr.map((rows)=> {
+                                    const test =rows.value;
+                                    console.log(test);
+                                    return (
+                                        <td className="px-6 py-4">  {item[test]}  </td>        
+                                    )
+                                    
+                                })}
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table>
+            }
         </div>
-        
+
+
+
         
         </>
     )

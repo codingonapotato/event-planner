@@ -49,11 +49,10 @@ export default function ShiftAlert({item}) {
                                 }, {
                                     headers: {'content-type': 'application/json'}
                                 })
-                                .then((res) => {      
-                                    console.log(res);
+                                .then((res) => {                                    
                                     document.getElementById("dialogEdit"+item.shift_id).classList.add('hidden');
                                     document.getElementById('overlayEdit'+item.shift_id).classList.add('hidden');
-                                    // location.reload();
+                                    location.reload();
                                     
                                 }, reason => {
                                     console.log(reason);
