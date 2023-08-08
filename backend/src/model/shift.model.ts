@@ -9,34 +9,40 @@ export function get_using_shiftID(id: number) {
 
 // returns a query containing the row of the shift specified by [id: number]
 export function get_using_eventID(id: number) {
-    return db.query(`SELECT shift_id, role, start_time, end_time, station, volunteer_id, organizer_id
-    FROM shift WHERE event_id = $1::integer`, [id]);
+    return db.query(`
+    SELECT shift_id, role, start_time, end_time, station, volunteer_id 
+    FROM shift S
+    WHERE event_id = $1::integer`, [id]);
 }
  
 
 export function get_using_organizerID(id: number) {
-    return db.query(
-        `SELECT * 
-        FROM shift 
-        WHERE organizer_id = $1::integer`
+    return db.query(`
+    SELECT S.* 
+    FROM shift S, event E 
+    WHERE S.event_id = E.event_id AND E.organizer_id = $1::integer`
     , [id]);
 }
 
 export function get_using_volunteerID(id: number) {
-    return db.query(`SELECT shift_id, role, start_time, end_time, station, event_id, organizer_id 
-    FROM shift WHERE volunteer_id = $1::integer`, [id]);
+    return db.query(`
+    SELECT E.name, shift_id, role, S.start_time, S.end_time, station, S.event_id, E.organizer_id, E.street_num, E.street, E.postal_code, city, province
+    FROM shift S, event E NATURAL JOIN city NATURAL JOIN province
+    WHERE S.event_id = E.event_id AND volunteer_id = $1::integer`, [id]);
 }
 
 export function get_using_noID() {
-    return db.query(`SELECT shift_id, role, start_time, end_time, station, event_id, organizer_id 
-    FROM shift WHERE volunteer_id IS NULL`,[]);
+    return db.query(`
+    SELECT shift_id, role, S.start_time, S.end_time, station, S.event_id, organizer_id 
+    FROM shift S, event E 
+    WHERE S.event_id = E.event_id AND volunteer_id IS NULL`,[]);
 }
 
 export async function get_using_noID_city(city: string) {
     return db.query(`
-    SELECT shift_id, role, start_time, end_time, station, event_id, organizer_id 
-    FROM shift s 
-    WHERE volunteer_id IS null AND event_id IN 
+    SELECT shift_id, role, S.start_time, S.end_time, station, S.event_id, organizer_id 
+    FROM shift S, event E 
+    WHERE volunteer_id IS NULL AND S.event_id = E.event_id AND S.event_id IN 
         (SELECT event_id 
         FROM event NATURAL JOIN city NATURAL JOIN province 
         WHERE city ILIKE $1 || '%')`, [city]);
@@ -54,24 +60,39 @@ export async function get_using_noID_city(city: string) {
 export function updateShift(id: number, role: string, startTime: string, 
     endTime: string, station: string, volunteer_id: any) {
     if (volunteer_id === null || volunteer_id == '') {
-        return db.query(`UPDATE shift SET role = $2::text, start_time = $3::timestamp, 
-        end_time = $4::timestamp, station = $5::text, volunteer_id = null WHERE shift_id = $1::integer;`, 
-        [id, role, startTime, endTime, station]);    
+        return db.query(`
+        UPDATE shift 
+        SET role = $2::text, 
+            start_time = $3::timestamp, 
+            end_time = $4::timestamp, 
+            station = $5::text, 
+            volunteer_id = NULL 
+        WHERE shift_id = $1::integer;`, [id, role, startTime, endTime, station]);    
     }
-    return db.query(`UPDATE shift SET role = $2::text, start_time = $3::timestamp, 
-        end_time = $4::timestamp, station = $5::text, volunteer_id = $6::integer WHERE shift_id = $1::integer;`, 
-        [id, role, startTime, endTime, station, volunteer_id]);
+    return db.query(`
+    UPDATE shift 
+    SET role = $2::text, 
+        start_time = $3::timestamp, 
+        end_time = $4::timestamp, 
+        station = $5::text, 
+        volunteer_id = $6::integer 
+    WHERE shift_id = $1::integer;`, [id, role, startTime, endTime, station, volunteer_id]);
 }
 
 export function acceptShift(id: number, volunteer_id: number) {
-    return db.query(`UPDATE shift SET volunteer_id = $1::integer WHERE shift_id = $2::integer;`, 
+    return db.query(`
+    UPDATE shift 
+    SET volunteer_id = $1::integer 
+    WHERE shift_id = $2::integer;`, 
         [volunteer_id, id]);
 }
 
 
 export function dropShift(id: number) {
-    return db.query(`UPDATE shift SET volunteer_id = null WHERE shift_id = $1::integer;`, 
-        [id]);
+    return db.query(`
+    UPDATE shift 
+    SET volunteer_id = null 
+    WHERE shift_id = $1::integer;`, [id]);
 }
 
 /**

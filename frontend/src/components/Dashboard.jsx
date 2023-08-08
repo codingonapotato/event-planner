@@ -8,26 +8,44 @@ import * as dashMock from '../mock/dashboardMock'
 export default function Dashboard() {
     const [userInfo] = useOutletContext();
     const [events, setEvents] = useState([]);
+    const [dependants, setDependants] = useState([]);
+    const [shifts, setShifts] = useState([]);
 
     useEffect(() => {
         // Retrieve upcoming events
         if (Object.keys(userInfo).length != 0) {
             axios.get(`http://localhost:8000/event/user/${userInfo.user_id}`)
-                .then(res => {
-                    setEvents(res.data);
-                }).catch(err => {
-                    console.log(err);
-                });
+            .then(res => {
+                setEvents(res.data);
+            }).catch(err => {
+                console.log(err);
+            });
+
+            axios.get(`http://localhost:8000/shift/volunteerID/${userInfo.user_id}`)
+            .then(res => {
+                setShifts(res.data);
+                console.log(shifts);
+            }).catch(err => {
+                console.log(err);
+            });
+
+            axios.get(`http://localhost:8000/customer/dependant/${userInfo.user_id}`)
+            .then(res => {
+                setDependants(res.data);
+                console.log(dependants);
+            }).catch(err => {
+                console.log(err)
+            });
         }
     }, [userInfo]);
 
     return (
         <div className='flex flex-row pt-6 space-x-10 mx-4'>
             <CardList items={events} type='Events' redirectTarget='/events' />
-            <CardList items={dashMock.mockShift} type='Shifts' redirectTarget='/shifts' />
+            <CardList items={shifts} type='Shifts' redirectTarget='/shifts' />
             <div className='flex flex-col flex-1 space-y-5'>
                 <BalanceCard balance={userInfo.balance} />
-                <DependantsList dependants={dashMock.mockDependants} />
+                <DependantsList dependants={dependants} />
             </div>
         </div>
     )

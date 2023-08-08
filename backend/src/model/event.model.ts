@@ -118,7 +118,7 @@ export async function getUpcomingEvents(user_id: number) {
         province,
         COUNT(*) AS count
         FROM event NATURAL JOIN city NATURAL JOIN province NATURAL JOIN ticket NATURAL JOIN tier
-        WHERE customer_id = $1
+        WHERE customer_id = $1 AND start_time >= (SELECT NOW())
         GROUP BY event_id, name, start_time, end_time, street_num, street, postal_code, city, province
         ORDER BY start_time`, [user_id]);
     return res.rows;

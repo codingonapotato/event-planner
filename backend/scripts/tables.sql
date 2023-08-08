@@ -135,12 +135,9 @@ CREATE TABLE shift (
     station         TEXT,
     volunteer_id    INTEGER,
     event_id        INTEGER     NOT NULL,
-    organizer_id    INTEGER     ,
     FOREIGN KEY (volunteer_id) REFERENCES volunteer
         ON UPDATE CASCADE,
     FOREIGN KEY (event_id) REFERENCES event
-        ON UPDATE CASCADE,
-    FOREIGN KEY (organizer_id) REFERENCES organizer
         ON UPDATE CASCADE);
 
 CREATE TABLE items (
@@ -301,7 +298,7 @@ VALUES
 
 INSERT INTO 
 customer (customer_id)
-VALUES (8), (1), (2), (4), (5);
+VALUES (8), (1), (2), (4), (5), (7);
 
 INSERT
 INTO dependants(first_name, last_name, customer_id, birthdate)
@@ -310,7 +307,8 @@ VALUES
 ('Jane',	'Austen',	2,	'2013-09-04'),
 ('Jackie',	'Chan',		4,	'2014-10-09'),
 ('Julia',	'Roberts',	5,	'2015-11-11'),
-('Jack',	'Black',	8,	'2016-12-25');
+('Jack',	'Black',	8,	'2016-12-25'),
+('Dee',     'Pendant',  7,  '2014-08-24');
 
 INSERT INTO 
 organizer (organizer_id) 
@@ -318,7 +316,7 @@ VALUES (7), (3), (4), (1), (2);
 
 INSERT INTO 
 volunteer (volunteer_id, hours_volunteered)
-VALUES (6, 500), (2, 4), (4, 8), (1, 5), (5, 10);
+VALUES (6, 500), (2, 4), (4, 8), (1, 5), (5, 10), (7, 10);
 
 INSERT INTO 
 venue (street_num, street, postal_code, name, capacity)
@@ -367,8 +365,8 @@ VALUES
 	('Ore''s Spectacular Event', '2023-08-20 10:00:00', '2023-08-20 16:00:00', 'public', 1000.00, 7, 1234, 'Event St', 'K8V2V3'),
 	('Ore''s Amazing Event',     '2023-09-17 18:00:00', '2023-09-18 00:00:00', 'public', 500.00, 7, 4321, 'Planning St', 'K8V2V3'),
 	('Family Storytime',         '2023-05-18 12:00:00', '2023-05-18 16:00:00', 'public', 0.00, 4, 350, 'W Georgia St', 'V6B6B1'),
-	('Hockey Match',             '2023-12-31 23:00:00', '2024-01-01 02:00:00', 'public', 10000.00, 1, 800, 'Griffiths Way', 'V6B6G1'),
-	('Summer Storytime',         '2023-08-17 12:00:00', '2023-08-20 12:00:00', 'public', 1000.00, 2, 350, 'W Georgia St', 'V6B6B1');
+	('New Years'' Fireworks',    '2023-12-31 23:00:00', '2024-01-01 02:00:00', 'public', 10000.00, 1, 800, 'Griffiths Way', 'V6B6G1'),
+	('Summer Storytime',         '2023-08-17 12:00:00', '2023-08-17 13:00:00', 'public', 1000.00, 2, 350, 'W Georgia St', 'V6B6B1');
 
 
 INSERT
@@ -389,25 +387,33 @@ VALUES
     (50, 1, 1, 8),
     (50, 1, 2, 8),
 	(NULL, 6, 5, NULL),
-	(NULL, 6, 5, 8),
+	(NULL, 6, 5, 7),
 	(500, 2, 1, 1),
-	(125, 4, 2, 4),
-	(5, 5, 4, 2),
+	(125, 4, 2, 8),
+	(5, 5, 4, 7),
     (NULL, 3, 2, 1);
 
 INSERT
-INTO shift(role, start_time, end_time, station, volunteer_id, event_id, organizer_id)
+INTO shift(role, start_time, end_time, station, volunteer_id, event_id)
 VALUES 
-('Barista',     '2023-08-20 10:00:00', '2023-08-20 16:00:00', 'Concession',     6,      1,      7),
-('Line Cook',   '2023-09-17 18:00:00', '2023-09-17 23:00:00', 'Concession',     6,      2,      7),
-('Cashier',     '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Concession',     4,      3,      4),
-('Greeter',     '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Front of House', 1,      4,      1),
-('Cashier',     '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Ticket Booth',   5,      4,      1),
-('Security',    '2023-08-10 12:30:00', '2023-08-13 17:00:00', 'Security',       1,      5,      2),
-('Valet',       '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Parking Lot',    null,   4,      1),
-('Security',    '2023-08-10 12:30:00', '2023-08-13 17:00:00', 'Security',       null,   1,      7),
-('Cashier',     '2023-08-10 10:00:00', '2023-08-13 17:00:00', 'Concession',     null,   1,      7);
+('Barista',     '2023-08-20 10:00:00', '2023-08-20 16:00:00', 'Concession',     6,      1),
+('Line Cook',   '2023-09-17 18:00:00', '2023-09-17 23:00:00', 'Concession',     6,      2),
+('Cashier',     '2023-05-18 12:00:00', '2023-05-18 16:00:00', 'Concession',     4,      3),
+('Greeter',     '2023-12-31 23:00:00', '2024-01-01 00:00:00', 'Front of House', 1,      4),
+('Cashier',     '2023-12-31 23:00:00', '2024-01-01 00:00:00', 'Ticket Booth',   7,      4),
+('Security',    '2023-08-17 12:00:00', '2023-08-17 13:00:00', 'Security',       1,      5),
+('Valet',       '2023-12-31 23:00:00', '2024-01-01 02:00:00', 'Parking Lot',    null,   4),
+('Security',    '2023-08-20 10:00:00', '2023-08-20 16:00:00', 'Security',       null,   1),
+('Cashier',     '2023-08-20 10:00:00', '2023-08-10 16:00:00', 'Concession',     null,   1);
 
+INSERT
+INTO organizes_event(organizer_id, event_id)
+VALUES
+	(7, 1),
+	(3, 2),
+	(4, 3),
+	(1, 4),
+	(2, 5);
 
 INSERT
 INTO creates_shift(organizer_id, shift_id, date_created)
@@ -480,14 +486,6 @@ VALUES
 	(3,  4,   5),
 	(7,  5,   2);
 
-INSERT
-INTO organizes_event(organizer_id, event_id)
-VALUES
-	(7, 1),
-	(3, 2),
-	(4, 3),
-	(1, 4),
-	(2, 5);
 
 INSERT
 INTO customer_invite(customer_id, event_id, date_sent, date_accepted)

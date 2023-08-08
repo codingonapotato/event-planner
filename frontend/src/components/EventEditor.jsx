@@ -73,7 +73,7 @@ export default function EventEditor() {
                             <EventForm errors={errors} touched={touched} userInfo={userInfo}/>
                         )}
                 </Formik>
-                <div className='text-4xl font-bold mt-6'>Create Tickets</div>
+                {/* <div className='text-4xl font-bold mt-6'>Create Tickets</div> */}
             </div>
 
         </div>
