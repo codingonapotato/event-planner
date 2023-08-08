@@ -63,6 +63,7 @@ export default function EventManager() {
                         </select>
                         <span>who have attended all of your events!</span>
                     </div>
+                    {starCustomers.length != 0 || starVolunteers.length != 0 ? 
                     <ul className='flex flex-col justify-end items-center text-lg font-semibold m-2 mb-3'>
                         {
                             (starCustomers.length != 0 ? 
@@ -81,7 +82,7 @@ export default function EventManager() {
                                 )
                             }) : null))
                         }
-                    </ul>
+                    </ul> : null}
                     <button 
                         className='font-semibold py-3 px-4 bg-indigo-500 w-1/2 border rounded-full text-white mt-1 focus:border-black'
                         onClick={getStarStats}
