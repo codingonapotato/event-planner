@@ -31,7 +31,6 @@ export default function ShiftCreate() {
                                         'station': values.station,
                                         'volunteer_id': values.volunteer_id,
                                         'event_id': values.event_id,
-                                        'organizer_id': userID
                                     }, {
                                         headers: {'content-type': 'application/json'}
                                     })
