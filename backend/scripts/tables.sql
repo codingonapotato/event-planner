@@ -364,7 +364,7 @@ event (name, start_time, end_time, visibility, budget, organizer_id, street_num,
 VALUES
 	('Ore''s Spectacular Event', '2023-08-20 10:00:00', '2023-08-20 16:00:00', 'public', 1000.00, 7, 1234, 'Event St', 'K8V2V3'),
 	('Ore''s Amazing Event',     '2023-09-17 18:00:00', '2023-09-18 00:00:00', 'public', 500.00, 7, 4321, 'Planning St', 'K8V2V3'),
-	('Family Storytime',         '2023-05-18 12:00:00', '2023-05-18 16:00:00', 'public', 0.00, 4, 350, 'W Georgia St', 'V6B6B1'),
+	('Family Storytime',         '2023-10-18 12:00:00', '2023-10-18 16:00:00', 'public', 0.00, 4, 350, 'W Georgia St', 'V6B6B1'),
 	('New Years'' Fireworks',    '2023-12-31 23:00:00', '2024-01-01 02:00:00', 'public', 10000.00, 1, 800, 'Griffiths Way', 'V6B6G1'),
 	('Summer Storytime',         '2023-08-17 12:00:00', '2023-08-17 13:00:00', 'public', 1000.00, 2, 350, 'W Georgia St', 'V6B6B1'),
     ('BMO Concert',              '2023-08-25 17:00:00', '2023-08-25 21:00:00', 'public', 3000.00, 3, 170, 'Princes'' Blvd', 'M6K3C3');
@@ -403,9 +403,9 @@ INTO shift(role, start_time, end_time, station, volunteer_id, event_id)
 VALUES 
 ('Barista',     '2023-08-20 10:00:00', '2023-08-20 16:00:00', 'Concession',     6,      1),
 ('Line Cook',   '2023-09-17 18:00:00', '2023-09-17 23:00:00', 'Concession',     6,      2),
-('Cashier',     '2023-05-18 12:00:00', '2023-05-18 16:00:00', 'Concession',     4,      3),
+('Cashier',     '2023-10-18 12:00:00', '2023-10-18 16:00:00', 'Concession',     7,      3),
 ('Greeter',     '2023-12-31 23:00:00', '2024-01-01 00:00:00', 'Front of House', 1,      4),
-('Cashier',     '2023-12-31 23:00:00', '2024-01-01 00:00:00', 'Ticket Booth',   7,      4),
+('Cashier',     '2023-12-31 23:00:00', '2024-01-01 00:00:00', 'Ticket Booth',   4,      4),
 ('Security',    '2023-08-17 12:00:00', '2023-08-17 13:00:00', 'Security',       1,      5),
 ('Valet',       '2023-12-31 23:00:00', '2024-01-01 02:00:00', 'Parking Lot',    null,   4),
 ('Security',    '2023-08-20 10:00:00', '2023-08-20 16:00:00', 'Security',       null,   1),
