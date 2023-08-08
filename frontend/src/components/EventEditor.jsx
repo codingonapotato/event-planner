@@ -33,7 +33,7 @@ export default function EventEditor() {
             <button className='absolute z-10 m-2 top-5 left-6 max-w-fit rounded-full p-1 hover:bg-gray-100'>
                 <ArrowLeftIcon className='w-6 h-6' onClick={(e) => navigate(-1)}/>
             </button>
-            <div className="flex flex-col flex-1 bg-white drop-shadow-md rounded-lg mx-6 my-5 pt-4 px-10">
+            <div className="flex flex-col flex-1 bg-white drop-shadow-md rounded-lg mx-6 my-5 pt-4 px-10 overflow-y-scroll">
                 <div className='text-4xl font-bold mt-5'>Edit Your Event</div>
                 <Formik
                     initialValues={{
@@ -73,6 +73,7 @@ export default function EventEditor() {
                             <EventForm errors={errors} touched={touched} userInfo={userInfo}/>
                         )}
                 </Formik>
+                <div className='text-4xl font-bold mt-6'>Create Tickets</div>
             </div>
 
         </div>

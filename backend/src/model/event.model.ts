@@ -21,7 +21,7 @@ export async function findEvent(id: number) {
 }
 
 export async function findAllPublicEvents() {
-    const res = await db.query(`SELECT * FROM event WHERE visibility="private"`, []);
+    const res = await db.query(`SELECT * FROM event WHERE visibility='public'`, []);
     return res;
 }
 
