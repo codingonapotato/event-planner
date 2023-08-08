@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { getDateString } from "../assets/constants";
+import { getFullDateString } from "../assets/constants";
 
 export default function CardList({
     items,
@@ -47,7 +47,7 @@ function ListItem({
                 {item.street_num + ' ' + item.street + ', ' + item.city + ' ' + item.province + ' ' + item.postal_code}
             </div>
             <div className='font-light text-left'>
-                {getDateString(startDate) + ' - ' + getDateString(endDate)}
+                {getFullDateString(startDate) + ' - ' + getFullDateString(endDate)}
             </div>
         </div>
     )

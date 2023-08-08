@@ -21,11 +21,29 @@ export async function findEvent(id: number) {
 }
 
 export async function findAllPublicEvents() {
-    const res = await db.query(`SELECT * FROM event`, []);
+    const res = await db.query(`SELECT * FROM event WHERE visibility="private"`, []);
     return res;
 }
 
-export async function findEventByCity(city: string) {
+export async function updateEvent(params: any[], locationInfo: any[]) {
+    await Venue.addVenue(locationInfo);
+    const res = await db.query(`
+        UPDATE event SET
+        name = $1,
+        start_time = $2,
+        end_time = $3,
+        visibility = $4,
+        budget = $5,
+        street_num = $6,
+        street = $7,
+        postal_code = $8
+        WHERE event_id = $9
+        RETURNING *`, params);
+
+    return res.rows[0];
+}
+
+export async function findEventByCity(city: string) { 
     const res = await db.query(`SELECT
         name,
         start_time,
@@ -38,7 +56,7 @@ export async function findEventByCity(city: string) {
         FROM event NATURAL JOIN city NATURAL JOIN province
         WHERE city ILIKE $1 || '%'`, [city]);
         return res.rows;
-}
+ }
 
 export async function findEventByProvince(province: string) {
     const res = await db.query(`SELECT
@@ -64,7 +82,7 @@ export async function createEvent(params: any[], locationInfo: any[]) {
         INSERT INTO event(name, start_time, end_time, visibility, budget, organizer_id, street_num, street, postal_code)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) 
         RETURNING *
-    `, params.slice(0,9));
+    `, params);
 
     return res;
 }

@@ -124,8 +124,10 @@ function EventItem({
                     </div>
                 </div>
             </div>
-            <Link className='self-center pr-2' to='/editEvent'>
-                <PencilSquareIcon className='w-6 h-6 text-black' />
+            <Link className='self-center pr-2' to={`/editEvent/${item.event_id}`}>
+                <div className={`hover:bg-gray-200 p-2 rounded-full`}>
+                    <PencilSquareIcon className='w-6 h-6 text-black' />
+                </div>
             </Link>
         </div>
     )

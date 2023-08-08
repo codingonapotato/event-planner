@@ -12,34 +12,34 @@ export default function EventForm({errors, touched, userInfo}) {
     return (
         <Form>
             <Field 
-                as={CustomField}
+                component={CustomField}
                 name="event_name" 
                 placeholder={eventDescriptor}
-                className='focus:border-b-indigo-500 rounded-lg w-2/3 text-3xl mt-2'
+                className='focus:border-b-indigo-500 rounded-lg w-2/3 text-3xl font-semibold mt-2'
                 validate={requiredField}
             /> 
             {errors.event_name && touched.event_name ? <div className='text-sm font-semilight text-rose-500'>{errors.event_name}</div>: null}
             <div className='flex space-x-20 w-full mt-4'>
                 <CustomInput labelFor='start-date' labelText='Starts At: '>
-                    <Field id='start-date' as={CustomField} type='date' name='start_date' className='rounded-lg' validate={requiredField}/>
+                    <Field id='start-date' component={CustomField} type='date' name='start_date' className='rounded-lg' validate={requiredField}/>
                     {errors.start_date && touched.start_date ? <div className='text-sm font-semilight text-rose-500'>{errors.start_date}</div>: null}
                     <Field component={CustomField} type='time' name='start_time' className='rounded-lg mt-2' validate={requiredField}/>
                     {errors.start_time && touched.start_time ? <div className='text-sm font-semilight text-rose-500'>{errors.start_time}</div>: null}
                 </CustomInput>
                 <CustomInput labelFor='end-date' labelText='Ends At: '>
-                    <Field id='end-date' as={CustomField} type='date' name='end_date' className='rounded-lg' validate={requiredField}/>
+                    <Field id='end-date' component={CustomField} type='date' name='end_date' className='rounded-lg' validate={requiredField}/>
                     {errors.end_date && touched.end_date ? <div className='text-sm font-semilight text-rose-500'>{errors.end_date}</div>: null}
-                    <Field as={CustomField} type='time' name='end_time' className='rounded-lg mt-2' validate={requiredField}/>
+                    <Field component={CustomField} type='time' name='end_time' className='rounded-lg mt-2' validate={requiredField}/>
                     {errors.end_time && touched.end_time ? <div className='text-sm font-semilight text-rose-500'>{errors.end_time}</div>: null}
                 </CustomInput>
             </div>
                 <div className='flex space-x-5 w-full mt-4'>
                     <CustomInput labelFor='address' labelText='Address: '> 
-                        <Field id='address' as={CustomField} type='text' name='address' className='w-96 rounded-lg' validate={requiredField}/>
+                        <Field id='address' component={CustomField} type='text' name='address' className='w-96 rounded-lg' validate={requiredField}/>
                         {errors.address && touched.address ? <div className='text-sm font-semilight text-rose-500'>{errors.address}</div>: null}
                     </CustomInput>
                     <CustomInput labelFor='city' labelText='City: '> 
-                        <Field id='city' as={CustomField} type='text' name='city' className='w-48 rounded-lg' validate={requiredField}/>
+                        <Field id='city' component={CustomField} type='text' name='city' className='w-48 rounded-lg' validate={requiredField}/>
                         {errors.city && touched.city ? <div className='text-sm font-semilight text-rose-500'>{errors.city}</div>: null}
                     </CustomInput>
                     <CustomInput labelFor='province' labelText='Province: '> 
@@ -61,7 +61,7 @@ export default function EventForm({errors, touched, userInfo}) {
                         {errors.province && touched.province ? <div className='text-sm font-semilight text-rose-500'>{errors.province}</div>: null}
                     </CustomInput>
                     <CustomInput labelFor='postal_code' labelText='Postal Code: '> 
-                        <Field id='postal_code' as={CustomField} type='text' name='postal_code' className='w-24 rounded-lg' validate={requiredField}/>
+                        <Field id='postal_code' component={CustomField} type='text' name='postal_code' className='w-24 rounded-lg' validate={requiredField}/>
                         {errors.postal_code && touched.postal_code ? <div className='text-sm font-semilight text-rose-500'>{errors.postal_code}</div>: null}
                     </CustomInput>
                 </div>
@@ -73,8 +73,8 @@ export default function EventForm({errors, touched, userInfo}) {
                         </Field>
                         {errors.visibility && touched.visibility ? <div className='text-sm font-semilight text-rose-500'>{errors.visibility}</div>: null}
                     </CustomInput>
-                    <CustomInput labelFor='budget' labelText='Budget: '>
-                        <Field id='budget' as={CustomField} type='number' name='budget' className='w-24 rounded-lg' step='any' validate={requiredField}/>
+                    <CustomInput labelFor='budget' labelText='Budget ($): '>
+                        <Field id='budget' component={CustomField} type='number' name='budget' className='w-36 rounded-lg' step='0.01' validate={requiredField}/>
                         {errors.budget && touched.budget ? <div className='text-sm font-semilight text-rose-500'>{errors.budget}</div>: null}
                     </CustomInput>
                 </div>
@@ -102,7 +102,6 @@ const CustomField = ({field, form, ...props}) => {
 
 function requiredField(value) {
     let error;
-    console.log(value)
     if (!value) {
         error = '*This field is required'
     }

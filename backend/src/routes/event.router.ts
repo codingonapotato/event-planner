@@ -65,6 +65,23 @@ eventRouter.get('/user/:id', async (req, response) => {
 
 });
 
+eventRouter.post('/:id', async (req, response) => {
+   const { address, start_date, start_time, end_date, end_time } = req.body;
+   const startDate = new Date(start_date+'T'+start_time);
+   const endDate = new Date(end_date+'T'+end_time);
+   const [street_num, street] = address.split(' ', 2);
+   console.log(street_num);
+   const { city, province } = req.body;
+   const postal_code = req.body.postal_code.replaceAll(' ', '');
+   const params = [req.body.name, startDate, endDate, req.body.visibility, req.body.budget, street_num, street, req.body.postal_code, req.body.event_id];
+   Event.updateEvent(params, [street_num, street, postal_code, city, province]).then(res => {
+      response.status(200).send(res);
+   }, err => {
+      console.log(err);
+      response.status(500).json(err);
+   })
+})
+
 eventRouter.put('/', async (req, response) => {
     const { address, start_date, start_time, end_date, end_time } = req.body;
     const startDate = new Date(start_date+'T'+start_time);

@@ -25,7 +25,7 @@ function App() {
           <Route path="/manageEvent" element={<EventManager />} />
           <Route path="/profile" element={<UserProfilePage />} />
           <Route path="/createEvent" element={<EventCreator/>} />
-          <Route path="/editEvent" element={<EventEditor />} />
+          <Route path="/editEvent/:event_id" element={<EventEditor />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
