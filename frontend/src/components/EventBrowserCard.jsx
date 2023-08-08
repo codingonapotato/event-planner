@@ -5,16 +5,16 @@ import { Formik, Field, Form } from 'formik';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import axios from 'axios';
-import { NumberSequence } from 'ag-grid-community';
 
 export default function EventBrowserCard() {
     const user = localStorage.getItem('user_id')
     const provinces = ['NL', 'PE', 'NS', 'NB', 'QC', 'ON', 'MB', 'SK', 'AB', 'BC', 'YT', 'NT', 'NU'];
     const [rowData, setRowData] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState({});
+    const [currentProvince, setCurrentProvince] = useState('');
+    const [currentCity, setCurrentCity] = useState('');
     const [tiers, setTiers] = useState([]);
     const [currentTier, setCurrentTier] = useState({})
-    const [defaultEventState, setDefaultEventState] = useState(false);
     const [numberOfTickets, setNumberOfTickets] = useState([]);
     const [totalPrice, setTotalPrice] = useState([]);
     const [columnDefs] = useState([
@@ -28,17 +28,62 @@ export default function EventBrowserCard() {
         { field: 'postal_code', headerName: 'Postal Code', resizable: true }
     ])
 
-    useEffect(() => {
-        axios.get('http://localhost:8000/event/public/all').then((res) => {
-            for (let i = 0; i < res.data.length; i++) {
-                res.data[i]['start_time'] = (res.data[i]['start_time']).slice(0, 10)
-                res.data[i]['end_time'] = (res.data[i]['end_time']).slice(0, 10)
-            }
-            setRowData(res.data);
-        })
-    }, [defaultEventState]);
-
     useEffect(retrieveTierOptions, [selectedEvent]);
+
+    useEffect(() => {
+        if (currentProvince && currentCity) {
+            axios.get(`http://localhost:8000/event?city=${currentCity}&&province=${currentProvince}`).then((req, res) => {
+                for (let i = 0; i < req.data.length; i++) {
+                    let startTime = req.data[i]['start_time']
+                    let endTime = req.data[i]['end_time']
+                    if (startTime && endTime) {
+                        startTime = startTime.slice(0, 10)
+                        endTime = endTime.slice(0, 10)
+                    }
+                    req.data[i]['start_time'] = startTime;
+                    req.data[i]['end_time'] = endTime;
+                }
+                setRowData(req.data)
+            })
+        } else if (currentProvince && !currentCity) {
+            axios.get(`http://localhost:8000/event?province=${currentProvince}`).then((req, res) => {
+                for (let i = 0; i < req.data.length; i++) {
+                    let startTime = req.data[i]['start_time']
+                    let endTime = req.data[i]['end_time']
+                    if (startTime && endTime) {
+                        startTime = startTime.slice(0, 10)
+                        endTime = endTime.slice(0, 10)
+                    }
+                    req.data[i]['start_time'] = startTime;
+                    req.data[i]['end_time'] = endTime;
+                }
+                setRowData(req.data)
+            })
+        } else if (currentCity && !currentProvince) {
+            console.log(currentCity && !currentProvince)
+            axios.get(`http://localhost:8000/event?city=${currentCity}`).then((req, res) => {
+                for (let i = 0; i < req.data.length; i++) {
+                    let startTime = req.data[i]['start_time']
+                    let endTime = req.data[i]['end_time']
+                    if (startTime && endTime) {
+                        startTime = startTime.slice(0, 10)
+                        endTime = endTime.slice(0, 10)
+                    }
+                    req.data[i]['start_time'] = startTime;
+                    req.data[i]['end_time'] = endTime;
+                }
+                setRowData(req.data)
+            })
+        } else {
+            axios.get('http://localhost:8000/event/public/all').then((res) => {
+                for (let i = 0; i < res.data.length; i++) {
+                    res.data[i]['start_time'] = (res.data[i]['start_time']).slice(0, 10)
+                    res.data[i]['end_time'] = (res.data[i]['end_time']).slice(0, 10)
+                }
+                setRowData(res.data);
+            })
+        }
+    }, [currentCity, currentProvince])
 
     useEffect(() => {
         let total = 0
@@ -77,10 +122,6 @@ export default function EventBrowserCard() {
         }
     }
 
-
-    // Look at onChange functions for the search field
-    // Reminder to remember to implement the ticket buying feature
-    // Click on a row to launch the ticket buying thing?
     return (
         <div className="rows-2 py-4 px-4 ag-theme-alpine " style={{ height: 500 }}>
             <div className='flex-1 py-4'>
@@ -89,21 +130,9 @@ export default function EventBrowserCard() {
                         <div className='flex gap-x-4'>
                             <select onChange={async (event) => {
                                 if (event.target.value != 'default') {
-                                    await axios.get(`http://localhost:8000/event?province=${event.target.value}`).then((req, res) => {
-                                        for (let i = 0; i < req.data.length; i++) {
-                                            let startTime = req.data[i]['start_time']
-                                            let endTime = req.data[i]['end_time']
-                                            if (startTime && endTime) {
-                                                startTime = startTime.slice(0, 10)
-                                                endTime = endTime.slice(0, 10)
-                                            }
-                                            req.data[i]['start_time'] = startTime;
-                                            req.data[i]['end_time'] = endTime;
-                                        }
-                                        setRowData(req.data)
-                                    });
+                                    setCurrentProvince(event.target.value)
                                 } else {
-                                    setDefaultEventState(!defaultEventState);
+                                    setCurrentProvince('');
                                 }
                             }} className='flex rounded-lg w-30 hover:bg-slate-100'>
                                 <option value='default'>--Province--</option>
@@ -119,21 +148,10 @@ export default function EventBrowserCard() {
                                 }}
                                 onSubmit={async (values) => {
                                     if (values.city) {
-                                        await axios.get(`http://localhost:8000/event?city=${values.city}`).then((req, res) => {
-                                            for (let i = 0; i < req.data.length; i++) {
-                                                let startTime = req.data[i]['start_time']
-                                                let endTime = req.data[i]['end_time']
-                                                if (startTime && endTime) {
-                                                    startTime = startTime.slice(0, 10)
-                                                    endTime = endTime.slice(0, 10)
-                                                }
-                                                req.data[i]['start_time'] = startTime;
-                                                req.data[i]['end_time'] = endTime;
-                                            }
-                                            setRowData(req.data)
-                                        });
-                                    } else if (!values.city) {
-                                        setDefaultEventState(!defaultEventState);
+                                        setCurrentCity(values.city);
+                                    }
+                                    else if (!values.city) {
+                                        setCurrentCity('');
                                     }
                                 }}>
                                 {({ isSubmitting }) => {
@@ -242,9 +260,12 @@ export default function EventBrowserCard() {
                                             data.push(obj);
                                         }
                                         // console.log(data);
-                                        const res = await axios.post('http://localhost:8000/event/purchase-tickets',
+                                        axios.post('http://localhost:8000/event/purchase/tickets',
                                             data,
-                                            { headers: { 'content-type': 'application/json' } })
+                                            { headers: { 'content-type': 'application/json' } }).then((req) => { alert('Ticket purchased successfully') }).catch(err => {
+                                                alert(err);
+                                            });
+
                                     } else {
                                         alert('You must buy at least one ticket >:(. We have families to feed')
                                     }

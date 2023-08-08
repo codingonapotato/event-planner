@@ -16,7 +16,7 @@ organizerRouter.get('/:id', (req, res) => {
     });
 })
 
-organizerRouter.get('/events/:id', (req, res) => {
+organizerRouter.get('/:id/events', (req, res) => {
     const id = parseInt(req.params.id);
     Organizer.findEvents(id).then((result) => {
         if (result === - 1) {
@@ -26,6 +26,36 @@ organizerRouter.get('/events/:id', (req, res) => {
         }
     }).catch((err) => {
         res.status(500).send('Database query failed');
+    });
+})
+
+organizerRouter.get('/:id/stats', async (req, response) => {
+    const id = parseInt(req.params.id);
+    Organizer.getOrganizerStats(id).then(res => {
+        response.status(200).json(res);
+    }, err => {
+        console.log(err);
+        response.status(500).json(err);
+    });
+})
+
+organizerRouter.get('/:id/star/volunteer', async (req, response) => {
+    const id = parseInt(req.params.id);
+    Organizer.getStarVolunteer(id).then(res => {
+        response.status(200).send(res);
+    }, err => {
+        console.log(err);
+        response.status(500).json(err);
+    });
+})
+
+organizerRouter.get('/:id/star/customer', async (req, response) => {
+    const id = parseInt(req.params.id);
+    Organizer.getStarCustomer(id).then(res => {
+        response.status(200).send(res);
+    }, err => {
+        console.log(err);
+        response.status(500).json(err);
     });
 })
 
