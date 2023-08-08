@@ -138,7 +138,7 @@ export default function EventBrowserCard() {
                                 <option value='default'>--Province--</option>
                                 {
                                     provinces.map((province) => {
-                                        return <option value={province}>{province}</option>
+                                        return <option key={province} value={province}>{province}</option>
                                     })
                                 }
                             </select>
@@ -177,7 +177,7 @@ export default function EventBrowserCard() {
                         columnDefs={columnDefs}>
                     </AgGridReact>
                 </div>
-                <div className='flex flex-1 flex-col rounded-lg border-indigo-500 border-2 bg-slate-200'>
+                <div className='flex flex-1 flex-col rounded-lg border-indigo-500 border-2 p-2 bg-slate-200'>
                     <div className='title rounded-lg flex justify-center text-2xl font-bold mb-4 py-2'>Purchase Tickets for "{Object.keys(selectedEvent) != 0 && selectedEvent.name}"</div>
                     <select
                         onChange={(event) => {
@@ -189,7 +189,7 @@ export default function EventBrowserCard() {
                         className='rounded-lg flex hover:bg-slate-100'>
                         <option value='default'> --- Select Tier ---  </option>
                         {tiers.map(tier => {
-                            return <option value={tier.tier_id}>{tier.tier_name}: {tier.tier_description} ----------------------- Price: {tier.price}</option>
+                            return <option key={tier.tier_id} value={tier.tier_id}>{tier.tier_name}: {tier.tier_description} ----------------------- Price: {tier.price}</option>
                         })}
                     </select>
                     <div className='title rounded-lg flex justify-center text-2xl font-bold mb-4 py-2'> Number of Tickets </div>
@@ -211,7 +211,7 @@ export default function EventBrowserCard() {
                         className='rounded-lg flex hover:bg-slate-100'>
                         <option value={0}> --- Select Number of Ticket(s) ---  </option>
                         {[...Array(10).keys()].map((e) => {
-                            return <option value={e + 1}>{e + 1}</option>
+                            return <option key={e} value={e + 1}>{e + 1}</option>
                         })}
                     </select>
                     <div className='card flex-auto'>

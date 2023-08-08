@@ -94,8 +94,8 @@ export async function findEventByProvince(province: string) {
 
 export async function findTiersForEvent(eventId: number) {
     const res = await db.query(
-        `SELECT tier_id, tier_name, tier_description, price
-    FROM tier
+        `SELECT DISTINCT tier_id, tier_name, tier_description, price
+    FROM ticket NATURAL JOIN tier
     WHERE event_id = $1`, [eventId]);
     return res.rows;
 }
