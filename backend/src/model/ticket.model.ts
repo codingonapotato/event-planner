@@ -28,19 +28,6 @@ export async function modifyTicket(id: number, req) {
     }
 }
 
-/**  EFFECTs: If there is ticket w/o a customer_id = @param cid, and supposing the customer has a non-negative balance after purchase,
- * this function handles the ticket purchase associated 
-*/
-// export async function handlePurchase(cid: number) {
-//     const res = await db.query(`SELECT * FROM ticket WHERE customer_id IS NULL`, []);
-//     if (res.rows.length === 0) {
-//         console.error('Sold out')
-//     } else {
-//         Customer.deductBalance();
-//     }
-
-// }
-
 export async function createTicket(req) {
     const { seat_number: seatNumber, tier_id: tierId, event_id: eventId, customer_id: customerId } = req.body;
     const res = await db.query(`INSERT INTO ticket (seat_number, tier_id, event_id, customer_id) VALUES ($1, $2, $3, $4) RETURNING *`,

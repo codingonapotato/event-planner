@@ -8,13 +8,15 @@ import axios from 'axios';
 import { NumberSequence } from 'ag-grid-community';
 
 export default function EventBrowserCard() {
+    const user = localStorage.getItem('user_id')
     const provinces = ['NL', 'PE', 'NS', 'NB', 'QC', 'ON', 'MB', 'SK', 'AB', 'BC', 'YT', 'NT', 'NU'];
     const [rowData, setRowData] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState({});
     const [tiers, setTiers] = useState([]);
     const [currentTier, setCurrentTier] = useState({})
-    const [defaultVal, setDefault] = useState(false);
+    const [defaultEventState, setDefaultEventState] = useState(false);
     const [numberOfTickets, setNumberOfTickets] = useState([]);
+    const [totalPrice, setTotalPrice] = useState([]);
     const [columnDefs] = useState([
         { field: 'name', headerName: 'Name', resizable: true },
         { field: 'start_time', headerName: 'Start Time', resizable: true },
@@ -34,9 +36,21 @@ export default function EventBrowserCard() {
             }
             setRowData(res.data);
         })
-    }, [defaultVal]);
+    }, [defaultEventState]);
 
     useEffect(retrieveTierOptions, [selectedEvent]);
+
+    useEffect(() => {
+        let total = 0
+        if (numberOfTickets.length > 0 && tiers.length > 0) {
+            const regex = /[^$]\d*\.\d*/
+            for (let i = 0; i < tiers.length; i++) {
+                const parsed = parseFloat(tiers[i].price.match(regex)[0]);
+                total += parsed * parseInt(numberOfTickets[i].number);
+            }
+        }
+        setTotalPrice(total);
+    }, [numberOfTickets, tiers])
 
     function handleParseTicketNumber(tier) {
         if (numberOfTickets.length > 0) {
@@ -89,7 +103,7 @@ export default function EventBrowserCard() {
                                         setRowData(req.data)
                                     });
                                 } else {
-                                    setDefault(!defaultVal);
+                                    setDefaultEventState(!defaultEventState);
                                 }
                             }} className='flex rounded-lg w-30 hover:bg-slate-100'>
                                 <option value='default'>--Province--</option>
@@ -119,7 +133,7 @@ export default function EventBrowserCard() {
                                             setRowData(req.data)
                                         });
                                     } else if (!values.city) {
-                                        setDefault(!defaultVal);
+                                        setDefaultEventState(!defaultEventState);
                                     }
                                 }}>
                                 {({ isSubmitting }) => {
@@ -139,15 +153,17 @@ export default function EventBrowserCard() {
                     <AgGridReact
                         className="border-indigo-500 border-2 rounded-lg"
                         rowData={rowData}
-                        onRowClicked={(e) => { setSelectedEvent(e.data) }}
+                        onRowClicked={(e) => {
+                            setSelectedEvent(e.data)
+                        }}
                         columnDefs={columnDefs}>
                     </AgGridReact>
                 </div>
-                <div className='overflow-auto flex flex-1 flex-col rounded-lg border-indigo-500 border-2 bg-slate-200'>
-                    <div className='title rounded-lg flex justify-center text-2xl font-bold mb-4 py-4'>Purchase Tickets for "{Object.keys(selectedEvent) != 0 && selectedEvent.name}"</div>
+                <div className='flex flex-1 flex-col rounded-lg border-indigo-500 border-2 bg-slate-200'>
+                    <div className='title rounded-lg flex justify-center text-2xl font-bold mb-4 py-2'>Purchase Tickets for "{Object.keys(selectedEvent) != 0 && selectedEvent.name}"</div>
                     <select
                         onChange={(event) => {
-                            if (tiers && event.target.value) {
+                            if (tiers.length > 0 && event.target.value) {
                                 const res = tiers.find((t) => { return t.tier_id == event.target.value })
                                 setCurrentTier(res);
                             }
@@ -158,19 +174,19 @@ export default function EventBrowserCard() {
                             return <option value={tier.tier_id}>{tier.tier_name}: {tier.tier_description} ----------------------- Price: {tier.price}</option>
                         })}
                     </select>
-                    <div className='title rounded-lg flex justify-center text-2xl font-bold mb-4 py-4'> Number of Tickets </div>
+                    <div className='title rounded-lg flex justify-center text-2xl font-bold mb-4 py-2'> Number of Tickets </div>
                     <select
                         onChange={(event) => {
-                            if (currentTier && numberOfTickets.length > 0) {
+                            if (numberOfTickets.length > 0) {
                                 let arr = []
                                 for (let i = 0; i < numberOfTickets.length; i++) {
                                     let obj = numberOfTickets[i];
                                     if (obj.tier_id == currentTier.tier_id) {
                                         obj.number = event.target.value;
+                                        console.log(obj.number)
                                     }
                                     arr.push(obj);
                                 }
-                                console.log(arr);
                                 setNumberOfTickets(arr);
                             }
                         }}
@@ -181,7 +197,7 @@ export default function EventBrowserCard() {
                         })}
                     </select>
                     <div className='card flex-auto'>
-                        <div className='title rounded-lg flex justify-evenly text-2xl font-bold mb-4 py-4'>Total</div>
+                        <div className='title rounded-lg flex justify-evenly text-2xl font-bold py-2'>Transaction Breakdown</div>
                         <dl className='total justify-evenly grid grid-cols-2 py-4'>
                             {tiers.map(tier => {
                                 return (
@@ -192,9 +208,48 @@ export default function EventBrowserCard() {
                                 );
                             })}
                         </dl>
+                        <div className='title rounded-lg flex justify-start text-2xl font-bold mb-4 py-4'>Total Price ---- ${totalPrice}</div>
                         <div className='flex justify-center gap-8 py-4'>
-                            <button className='flex justify-center text-slate-100 text-medium font-medium rounded-full w-28 bg-red-500 hover:bg-red-300 px-4 py-4'> Restart </button>
-                            <button className='flex justify-center text-slate-100 text-medium font-medium rounded-full w-28 bg-green-500 hover:bg-green-300 px-4 py-4'> Confirm </button>
+                            <button
+                                onClick={() => {
+                                    let arr = [];
+                                    numberOfTickets.forEach(obj => {
+                                        obj.number = 0;
+                                        arr.push(obj);
+                                    })
+                                    setNumberOfTickets(arr);
+                                }}
+                                className='flex justify-center text-slate-100 text-medium font-medium rounded-full w-32 bg-red-500 hover:bg-red-300 px-4 py-4'> Reset </button>
+                            <button
+                                onClick={async () => {
+                                    let data = [];
+                                    if (totalPrice > 0) {
+                                        for (let i = 0; i < tiers.length; i++) {
+                                            let obj = {};
+                                            obj['user_id'] = user;
+                                            obj['event_id'] = selectedEvent.event_id;
+                                            obj['tier_id'] = numberOfTickets[i].tier_id;
+                                            obj['number'] = parseInt(numberOfTickets[i].number);
+                                            const regex = /[^$]\d*\.\d*/
+                                            // const curr = tiers.find(tier => { return tier.tier_id == numberOfTickets[i].tier_id });
+                                            // obj['price'] = parseFloat(curr.price.match(regex)[0]);
+                                            obj['total_price'] = totalPrice;
+                                            // console.log(obj['event_id'])
+                                            // console.log(obj['user_id'])
+                                            // console.log(obj['tier_id'])
+                                            // console.log(obj['number'])
+                                            // console.log(obj['price'])
+                                            data.push(obj);
+                                        }
+                                        // console.log(data);
+                                        const res = await axios.post('http://localhost:8000/event/purchase-tickets',
+                                            data,
+                                            { headers: { 'content-type': 'application/json' } })
+                                    } else {
+                                        alert('You must buy at least one ticket >:(. We have families to feed')
+                                    }
+                                }}
+                                className='flex justify-center text-slate-100 text-medium font-medium rounded-full w-30 bg-green-500 hover:bg-green-300 px-4 py-4'> Confirm Purchase </button>
                         </div>
                     </div>
                 </div>

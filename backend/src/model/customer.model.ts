@@ -40,21 +40,23 @@ export async function addDependant(id: number, req) {
 */
 export async function deductBalance(id: number, amt: number) {
     const res = await db.query(`SELECT balance FROM users WHERE user_id = $1`, [id]);
-    const balance = parseFloat(res.rows[0]);
-    const remaining = balance - amt;
+    const regex = /[^$]\d*\.\d*/
+    const balance = parseFloat(res.rows[0].balance.match(regex)[0]);
 
+    const remaining = balance - amt;
     if (remaining < 0) {
-        console.error('You broke af');
+        return -1;
     } else {
         await db.query(`UPDATE users SET balance = $2 WHERE user_id = $1`, [id, remaining]);
+        return 1;
     }
-    return remaining;
 }
 
 /** EFFECTS: Handles logic of adding balance to customer with  @param id for @param amt*/
 export async function addBalance(id: number, amt: number) {
     const res = await db.query(`SELECT balance FROM users WHERE user_id = $1`, [id]);
     const balance = parseFloat(res.rows[0]);
+
     const remaining = balance + amt;
     db.query(`UPDATE users SET balance = $2 WHERE user_id = $1`, [id, remaining]);
 }

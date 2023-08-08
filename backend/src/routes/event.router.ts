@@ -72,6 +72,17 @@ eventRouter.get('/tiers/:id', (req, response) => {
    }).catch(e => { response.status(500).send('Database error :(') })
 })
 
+// handles purchase
+eventRouter.post('/purchase-tickets/', (req, response) => {
+   Event.handlePurchase(req.body).then(res => {
+      if (res === -1) {
+         // response.status(500).send('An error has occured')
+      } else {
+         response.status(200).send(res);
+      }
+
+   })
+})
 
 // Retrieve upcoming events for user with given id
 eventRouter.get('/user/:id', async (req, response) => {
