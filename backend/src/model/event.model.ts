@@ -31,6 +31,21 @@ export async function findEventByCity(city: string) {
     return res.rows;
 }
 
+// Guaranteed that both are not null or undefined since checked in the router
+export async function findEventByCityAndProvince(city: string, province: string) {
+    const res = await db.query(`SELECT name,
+        start_time,
+        end_time,
+        street_num,
+        street,
+        postal_code,
+        city,
+        province
+        FROM event NATURAL JOIN city NATURAL JOIN province
+        WHERE city ILIKE $1 || '%' AND province = $2`, [city, province]);
+    return res.rows;
+}
+
 export async function findEventByProvince(province: string) {
     const res = await db.query(`SELECT
         name,
@@ -43,6 +58,14 @@ export async function findEventByProvince(province: string) {
         province
         FROM event NATURAL JOIN city NATURAL JOIN province
         WHERE province = $1`, [province]);
+    return res.rows;
+}
+
+export async function findTiersForEvent(eventId: number) {
+    const res = await db.query(
+        `SELECT tier_id, tier_name, tier_description, price
+    FROM tier
+    WHERE event_id = $1`, [eventId]);
     return res.rows;
 }
 

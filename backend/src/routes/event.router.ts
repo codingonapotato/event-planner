@@ -22,7 +22,17 @@ eventRouter.get('/:id', async (req, res) => {
 
 // TODO: add search functionality (search by name)
 eventRouter.get('/', async (req, response) => {
-   if (req.query.city) {
+   if (req.query.city && req.query.province) {
+      console.log(req.query.city);
+      console.log(req.query.province);
+      const city: string = req.query.city as string;
+      const province: string = req.query.province as string;
+      Event.findEventByCityAndProvince(city, province).then(res => {
+         response.status(200).send(res);
+      }).catch((err) => {
+         console.log(err);
+      });
+   } else if (req.query.city) {
       console.log(req.query.city);
       const city: string = req.query.city as string;
       Event.findEventByCity(city).then(res => {
@@ -40,7 +50,12 @@ eventRouter.get('/', async (req, response) => {
          response.status(500).send('Database error')
       });
    } else {
-      response.status(404).send('Not epic');
+      Event.findAllPublicEvents().then((res) => {
+         response.status(200).send(res.rows);
+      }).catch((err) => {
+         console.log(err);
+         response.status(500).send('Database error');
+      });
    }
 });
 
@@ -49,6 +64,12 @@ eventRouter.get('/public/all', (req, response) => {
    Event.findAllPublicEvents().then((res) => {
       response.status(200).send(res.rows)
    })
+})
+
+eventRouter.get('/tiers/:id', (req, response) => {
+   Event.findTiersForEvent(parseInt(req.params.id)).then(res => {
+      response.status(200).send(res)
+   }).catch(e => { response.status(500).send('Database error :(') })
 })
 
 
