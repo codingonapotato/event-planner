@@ -366,7 +366,8 @@ VALUES
 	('Ore''s Amazing Event',     '2023-09-17 18:00:00', '2023-09-18 00:00:00', 'public', 500.00, 7, 4321, 'Planning St', 'K8V2V3'),
 	('Family Storytime',         '2023-05-18 12:00:00', '2023-05-18 16:00:00', 'public', 0.00, 4, 350, 'W Georgia St', 'V6B6B1'),
 	('New Years'' Fireworks',    '2023-12-31 23:00:00', '2024-01-01 02:00:00', 'public', 10000.00, 1, 800, 'Griffiths Way', 'V6B6G1'),
-	('Summer Storytime',         '2023-08-17 12:00:00', '2023-08-17 13:00:00', 'public', 1000.00, 2, 350, 'W Georgia St', 'V6B6B1');
+	('Summer Storytime',         '2023-08-17 12:00:00', '2023-08-17 13:00:00', 'public', 1000.00, 2, 350, 'W Georgia St', 'V6B6B1'),
+    ('BMO Concert',              '2023-08-25 17:00:00', '2023-08-25 21:00:00', 'public', 3000.00, 3, 170, 'Princes'' Blvd', 'M6K3C3');
 
 
 INSERT
@@ -388,6 +389,10 @@ VALUES
     (50, 1, 2, 8),
 	(NULL, 6, 5, NULL),
 	(NULL, 6, 5, 7),
+    (NULL, 3, 6, 7),
+    (NULL, 3, 6, 7),
+    (NULL, 4, 6, 7),
+    (NULL, 4, 6, 7),
 	(500, 2, 1, 1),
 	(125, 4, 2, 8),
 	(5, 5, 4, 7),
