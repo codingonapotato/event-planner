@@ -39,7 +39,7 @@ organizerRouter.get('/:id/stats', async (req, response) => {
     });
 })
 
-organizerRouter.get('/:id/starvolunteer', async (req, response) => {
+organizerRouter.get('/:id/star/volunteer', async (req, response) => {
     const id = parseInt(req.params.id);
     Organizer.getStarVolunteer(id).then(res => {
         response.status(200).send(res);
@@ -49,7 +49,7 @@ organizerRouter.get('/:id/starvolunteer', async (req, response) => {
     });
 })
 
-organizerRouter.get('/:id/starcustomer', async (req, response) => {
+organizerRouter.get('/:id/star/customer', async (req, response) => {
     const id = parseInt(req.params.id);
     Organizer.getStarCustomer(id).then(res => {
         response.status(200).send(res);

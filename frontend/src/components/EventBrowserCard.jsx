@@ -19,7 +19,7 @@ export default function EventBrowserCard() {
     useEffect(() => {
         axios.get('http://localhost:8000/event/public/all').then((res) => {
             setRowData(res.data);
-            console.log(temp)
+            // console.log(temp)
         })
     }, [])
 

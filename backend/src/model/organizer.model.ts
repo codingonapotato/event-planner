@@ -34,7 +34,7 @@ export async function getOrganizerStats(organizer_id: number) {
 
 export async function getStarVolunteer(organizer_id: number) {
     const res = await db.query(`
-    SELECT first_name, last_name
+    SELECT U.user_id, first_name, last_name
     FROM users U, volunteer V
     WHERE V.volunteer_id = U.user_id AND NOT EXISTS (
         (SELECT E.event_id
@@ -51,7 +51,7 @@ export async function getStarVolunteer(organizer_id: number) {
 
 export async function getStarCustomer(organizer_id: number) {
     const res = await db.query(`
-    SELECT first_name, last_name
+    SELECT U.user_id, first_name, last_name
     FROM users U, customer C
     WHERE C.customer_id = U.user_id AND NOT EXISTS (
         (SELECT E.event_id

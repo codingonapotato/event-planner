@@ -78,7 +78,7 @@ export default function EventForm({errors, touched, userInfo}) {
                         {errors.budget && touched.budget ? <div className='text-sm font-semilight text-rose-500'>{errors.budget}</div>: null}
                     </CustomInput>
                 </div>
-                <button type='submit' className="focus:border-black rounded-lg w-48 mt-4 py-3 bg-indigo-500 text-white font-semibold">
+                <button type='submit' className="focus:border-black border rounded-lg w-48 mt-4 py-3 bg-indigo-500 text-white font-semibold">
                     Submit
                 </button>
         </Form>
