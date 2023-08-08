@@ -61,7 +61,7 @@ export default function EventManager() {
                     </div>
                     <div className="scrollbar overflow-auto overscroll-auto flex flex-col mt-2 w-full space-y-1">
                         {
-                            mockEvents.map((event, i) => {
+                            events.map((event, i) => {
                                 return <EventItem key={`event`+i} item={event} index={i} />
                             })
                         }
