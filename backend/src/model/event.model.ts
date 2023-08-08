@@ -2,15 +2,22 @@ import * as db from "../../db";
 import * as Venue from "./venue.model"
 import * as Ticket from "./ticket.model"
 
-export function findEvent(id: number) {
-    return db.query(`SELECT 
+export async function findEvent(id: number) {
+    const res = await db.query(`SELECT 
     name,
     start_time,
     end_time,
+    visibility,
+    budget,
     street_num,
     street,
-    postal_code
-    FROM event WHERE event_id = $1`, [id]);
+    postal_code,
+    city,
+    province
+    FROM event NATURAL JOIN city NATURAL JOIN province
+    WHERE event_id = $1`, [id]);
+
+    return res.rows[0];
 }
 
 export async function findAllPublicEvents() {
@@ -187,6 +194,7 @@ export async function getEventTicketInfo(event_id: number) {
 export async function getManagedEvents(organizer_id: number) {
     const res = await db.query(`
         SELECT 
+        event_id,
         name,
         start_time,
         end_time,

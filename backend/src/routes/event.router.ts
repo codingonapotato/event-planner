@@ -9,10 +9,10 @@ eventRouter.get('/:id', async (req, res) => {
 
    Event.findEvent(id)
    .then((result) => {
-      if (result.rows.length === 0) {
+      if (result === undefined) {
          res.status(404).send('event not found') 
       } else {
-        res.status(200).send(result.rows);
+        res.status(200).send(result);
       }
    })
    .catch((err) => {
