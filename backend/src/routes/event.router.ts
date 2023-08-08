@@ -21,6 +21,7 @@ eventRouter.get('/:id', async (req, res) => {
    });
 }); 
 
+
 // TODO: add search functionality (search by name)
 eventRouter.get('/', async (req, response) => {
    if (req.query.city) {
@@ -65,8 +66,13 @@ eventRouter.get('/user/:id', async (req, response) => {
 });
 
 eventRouter.put('/', async (req, response) => {
-    const params = Object.values(req.body);
-    const { street, street_num, postal_code, city, province } = req.body;
+    const { address, start_date, start_time, end_date, end_time } = req.body;
+    const startDate = new Date(start_date+'T'+start_time);
+    const endDate = new Date(end_date+'T'+end_time);
+    const [street_num, street] = address.split(' ', 2);
+    const { city, province } = req.body;
+    const postal_code = req.body.postal_code.replace(' ', '');
+    const params = [req.body.name, startDate, endDate, req.body.visibility, req.body.budget, req.body.organizer_id, street_num, street, postal_code]
     Event.createEvent(params, [street_num, street, postal_code, city, province]).then(res => {
         response.status(200).send(res.rows);
     }, (err) => {
