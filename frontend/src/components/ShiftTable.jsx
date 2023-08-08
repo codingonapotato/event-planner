@@ -39,65 +39,67 @@ export default function ShiftTable({type}) {
                     <div className='text-left text-3xl m-4 font-semibold'>{(type==='available')?'Available Shifts':<></>}{(type==='volunteerID')?'Your Shifts':<></>}</div>
                 }
             
-                
-            <Formik
-                initialValues={{
-                    filter: '',
-                    field:''
-                }}
-                onSubmit={async (values) => {
-                        // console.log(values);
-                        const queryURL = url +'?'+values.filter+'='+ values.field;
-                        // console.log(queryURL);
-                        await axios.get(queryURL, {
+                {(type ==='available')?<>
+                    <Formik
+                    initialValues={{
+                        filter: '',
+                        field:''
+                    }}
+                    onSubmit={async (values) => {
+                            // console.log(values);
+                            const queryURL = url +'?'+values.filter+'='+ values.field;
+                            // console.log(queryURL);
+                            await axios.get(queryURL, {
 
-                        }, {
-                            headers: {'content-type': 'application/json'}
-                        })
-                        .then((response) => {                                    
-                            const arr = [];
-                            for(let i = 0; i < response.data.length; i++) {
-                                arr.push(response.data[i]);
-                            }
-                            set_shifts(arr);     
+                            }, {
+                                headers: {'content-type': 'application/json'}
+                            })
+                            .then((response) => {                                    
+                                const arr = [];
+                                for(let i = 0; i < response.data.length; i++) {
+                                    arr.push(response.data[i]);
+                                }
+                                set_shifts(arr);     
 
-                        }, reason => {
-                            console.log(reason);
-                        });
-                }}
-            >
-                {props => (
-                    <Form>
-                        
-                        <div className='flex flex-row'>
-                            <div className='flex flex-row space-x-2'>
-                                <div className='text-left mt-4 font-semibold'>Filter: </div>
-                                <Field as="select" name="filter" id="filter" onChange={props.handleChange} className="space-x-10 mt-2 pr-10 max-h-11 rounded-lg bg-gray-50 border-white-300 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 text-white">
-                                    <option >Please Select</option>
-                                    <option value="city">City</option>
-                                    <option value="province">Province</option>
-                                </Field>
-                                
-                                <Input
-                                    id={'field'}
-                                    type={'text'}
-                                    onChange={props.handleChange}
-                                    value={props.values.field||''} 
+                            }, reason => {
+                                console.log(reason);
+                            });
+                    }}
+                    >
+                    {props => (
+                        <Form>
+
+                            <div className='flex flex-row'>
+                                <div className='flex flex-row space-x-2'>
+                                    <div className='text-left mt-4 font-semibold'>Filter: </div>
+                                    <Field as="select" name="filter" id="filter" onChange={props.handleChange} className="space-x-10 mt-2 pr-10 max-h-11 rounded-lg bg-gray-50 border-white-300 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 text-white">
+                                        <option >Please Select</option>
+                                        <option value="city">City</option>
+                                        <option value="province">Province</option>
+                                    </Field>
+
+                                    <Input
+                                        id={'field'}
+                                        type={'text'}
+                                        onChange={props.handleChange}
+                                        value={props.values.field||''} 
+                                    />
+                                </div>
+                                <Input 
+                                    id={'submit'}
+                                    type={'submit'}
+                                    // customClass={'mt-9'}
+                                    customColor={'bg-green-50 dark:bg-green-600 hover:bg-green-700 text-white cursor-pointer'}
+                                    value={'Go'} 
                                 />
                             </div>
-                            <Input 
-                                id={'submit'}
-                                type={'submit'}
-                                // customClass={'mt-9'}
-                                customColor={'bg-green-50 dark:bg-green-600 hover:bg-green-700 text-white cursor-pointer'}
-                                value={'Go'} 
-                            />
-                        </div>
-                    
-                        
-                    </Form>
-                )}
-            </Formik>
+
+
+                        </Form>
+                    )}
+                    </Formik>
+                </>:<></>}
+            
             </div>
 
 
