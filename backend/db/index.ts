@@ -8,6 +8,7 @@ const pool = new pg.Pool({
   port: 5432
 });
 
-export const query = (text: string, values: any[]) => {
-  return pool.query(text, values);
+export const query = async (text: string, values: any[]) => {
+    const res = await pool.query(text, values);
+    return res;
 };

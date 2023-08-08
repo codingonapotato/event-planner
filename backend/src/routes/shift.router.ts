@@ -145,9 +145,9 @@ shiftRouter.post('/drop/:id', async (req, res) => {
  */
 shiftRouter.put('', async (req, res) => {
 
-   const {role, start_time, end_time, station, volunteer_id, event_id, organizer_id} = req.body;
+   const {role, start_time, end_time, station, volunteer_id, event_id} = req.body;
 
-   Shift.addShift(role, start_time, end_time, station, volunteer_id, event_id, organizer_id)
+   Shift.addShift(role, start_time, end_time, station, volunteer_id, event_id)
    .then((result) => {
       res.status(200).send(result.rows);
    })

@@ -69,7 +69,7 @@ function NavigationLink({
                 isActive ? "py-4 bg-indigo-500 text-teal-50" : "py-4"
             } 
         >
-            <div className="flex flex-row items-center justify-start space-x-4 px-2">
+            <div className="flex flex-row items-center justify-start space-x-4 px-4">
                 <Icon className="h-6 w-6 text-white" />
                 <span 
                     className="inline-block pr-8 font-semibold text-white"

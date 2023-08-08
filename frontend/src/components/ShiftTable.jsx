@@ -1,6 +1,6 @@
 import {useEffect, useState } from "react";
 import axios from 'axios';
-import ShiftAlert from "./ShiftEdit";
+import ShiftEdit from "./ShiftEdit";
 import { Formik, Form, Field } from 'formik';
 import Input from "./Input"
 import React from 'react';
@@ -165,7 +165,7 @@ export default function ShiftTable({type}) {
                                 
                                 <td className="px-6 py-4">
                                     {/* Create Edit Form for Organizers*/}
-                                    {(type === 'organizerID') ? <><ShiftAlert item={item}/></>:<></>}
+                                    {(type === 'organizerID') ? <><ShiftEdit item={item}/></>:<></>}
 
                                     {/* {Create confirmation alert for Accepting shifts} */}
                                     {
