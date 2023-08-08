@@ -8,6 +8,7 @@ import RegisterPage from './components/RegisterPage'
 import EventBrowser from './components/EventBrowser'
 import NotFound from './components/NotFound'
 import ShiftBrowser from './components/ShiftBrowser'
+import Browser from './components/Browser'
 import UserProfilePage from './components/UserProfilePage'
 import EventManager from './components/EventManager'
 
@@ -20,6 +21,7 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="/events" element={<EventBrowser />} />
           <Route path="/shifts" element={<ShiftBrowser />} />
+          <Route path="/browser" element={<Browser />} />
           <Route path="/manageEvent" element={<EventManager />} />
           <Route path="/profile" element={<UserProfilePage />} />
         </Route>

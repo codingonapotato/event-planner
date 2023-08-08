@@ -23,6 +23,11 @@ const navLinks = [
         icon: SquaresPlusIcon
     },
     {
+        text: 'Browser',
+        target: '/browser',
+        icon: SquaresPlusIcon
+    },
+    {
         text: 'Sign Out',
         target: '/login',
         icon: ArrowLeftOnRectangleIcon
