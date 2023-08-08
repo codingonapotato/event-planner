@@ -8,7 +8,7 @@ import RegisterPage from './components/RegisterPage'
 import EventBrowser from './components/EventBrowser'
 import NotFound from './components/NotFound'
 import ShiftBrowser from './components/ShiftBrowser'
-import Browser from './components/Browser'
+import Browse from './components/Browse'
 import UserProfilePage from './components/UserProfilePage'
 import EventManager from './components/EventManager'
 import EventCreator from './components/EventCreator'
@@ -29,7 +29,7 @@ function App() {
             <Route index element={<GeneralEventList />}/>
             <Route path='revenue' element={<RevenueEventList />}/>
           </Route>
-          <Route path="/browser" element={<Browser />} />
+          <Route path="/browse" element={<Browse />} />
           <Route path="/manageEvent" element={<EventManager />} />
           <Route path="/profile" element={<UserProfilePage />} />
           <Route path="/createEvent" element={<EventCreator/>} />

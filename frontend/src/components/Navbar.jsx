@@ -23,8 +23,8 @@ const navLinks = [
         icon: SquaresPlusIcon
     },
     {
-        text: 'Browser',
-        target: '/browser',
+        text: 'Browse',
+        target: '/browse',
         icon: SquaresPlusIcon
     },
     {

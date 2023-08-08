@@ -183,7 +183,7 @@ shiftRouter.get('/browser/shift/:a1/:a2/:a3/:a4/:a5', async (req, res) => {
    });
 });
 
-shiftRouter.get('/browser/:type/:a1/:a2/:a3/:a4/:a5/:a6/:a7', async (req, res) => {
+shiftRouter.get('/browse/:type/:a1/:a2/:a3/:a4/:a5/:a6/:a7', async (req, res) => {
    const type:string =req.params.type;
    let arr:any[] =[req.params.a1,req.params.a2,req.params.a3,
       req.params.a4,req.params.a5,req.params.a6,req.params.a7];

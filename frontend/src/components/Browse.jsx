@@ -8,7 +8,7 @@ import ShiftCreate from "./ShiftCreate";
 import Select from "react-select";
 
 
-export default function Browser () {
+export default function Browse () {
     const [type, setType] = useState('test');
     const [shifts, set_shifts] = useState([]);
     const [selected, setSelected] = useState([]);
@@ -36,7 +36,7 @@ export default function Browser () {
     return (
         <>
             <div >
-                <div className='text-left text-3xl m-4 font-semibold'>Browser</div>
+                <div className='text-left text-3xl m-4 font-semibold'>Browse</div>
                 <div className='mx-5'>
                 <div className='mt-2 ml-2 font-semibold'>Select: </div>
                 <select className="mx-2 rounded-lg" onChange={
@@ -77,7 +77,7 @@ export default function Browser () {
                             })
                         }
                         // console.log(`arr: ${arr}`);
-                        await axios.get(`http://localhost:8000/shift/browser/${type}/${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}`, {
+                        await axios.get(`http://localhost:8000/shift/browse/${type}/${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}`, {
                         }, {
                             headers: {'content-type': 'application/json'}
                         })
@@ -106,12 +106,12 @@ export default function Browser () {
             
 
 
-            <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <div className="relative overflow-x-auto m-7">
             {(shifts.length <= 0) ? <>
             {/* <div className='text-left text-2xl m-4 pl-5 font-semibold'>No {type}s available</div> */}
             </>
             :
-            <table className="w-auto m-5 text-sm text-left text-blue-100 dark:bg-gray-800">
+            <table className="w-auto border-b text-sm text-left text-blue-100 dark:bg-gray-800">
                 <thead className="text-xs text-white uppercase bg-gray-800 border-b border-blue-400 dark:bg-gray-800">
                     <tr>
                         {
