@@ -2,7 +2,7 @@ import * as db from "../../db";
 
 // returns a query containing the row of the shift specified by [id: number]
 export function get_using_shiftID(id: number) {
-    return db.query(`SELECT role, start_time, end_time, station, volunteer_id, event_id, organizer_id 
+    return db.query(`SELECT role, start_time, end_time, station, volunteer_id, event_id 
     FROM shift WHERE shift_id = $1::integer`, [id]);
 }
 
@@ -106,19 +106,19 @@ export function dropShift(id: number) {
  * @returns promise to a QueryResult
  */
 export function addShift(role: string, startTime: string, 
-    endTime: string, station: string, volunteer_id: any, event_id: number, organizer_id: number) {
+    endTime: string, station: string, volunteer_id: any, event_id: number) {
     
     if (volunteer_id === null || volunteer_id == '') {
         return db.query(`INSERT INTO shift(role, start_time, end_time, station, volunteer_id, 
-            event_id, organizer_id) VALUES ($1::text, $2::timestamp, 
-            $3::timestamp, $4::text, null, $5::integer, $6::integer);`, 
-            [role, startTime, endTime, station, event_id, organizer_id]);
+            event_id) VALUES ($1::text, $2::timestamp, 
+            $3::timestamp, $4::text, null, $5::integer);`, 
+            [role, startTime, endTime, station, event_id]);
     }
 
     return db.query(`INSERT INTO shift(role, start_time, end_time, station, volunteer_id, 
-        event_id, organizer_id) VALUES ($1::text, $2::timestamp, 
-        $3::timestamp, $4::text, $5::integer, $6::integer, $7::integer);`, 
-        [role, startTime, endTime, station, volunteer_id, event_id, organizer_id]);
+        event_id) VALUES ($1::text, $2::timestamp, 
+        $3::timestamp, $4::text, $5::integer, $6::integer);`, 
+        [role, startTime, endTime, station, volunteer_id, event_id]);
 }
 
 // delete the shift associated with [id:number] from the database
