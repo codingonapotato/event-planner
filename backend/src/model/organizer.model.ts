@@ -31,3 +31,37 @@ export async function getOrganizerStats(organizer_id: number) {
 
     return {...totalRevenue, ...totalTickets, ...avgRevenue, ...eventsManaged };
 }
+
+export async function getStarVolunteer(organizer_id: number) {
+    const res = await db.query(`
+    SELECT first_name, last_name
+    FROM users U, volunteer V
+    WHERE V.volunteer_id = U.user_id AND NOT EXISTS (
+        (SELECT E.event_id
+        FROM event E
+        WHERE E.organizer_id = $1)
+        EXCEPT
+        (SELECT VE.event_id
+        FROM volunteers_for_event VE
+        WHERE V.volunteer_id = VE.volunteer_id))
+    `, [organizer_id]);
+
+    return res.rows;
+}
+
+export async function getStarCustomer(organizer_id: number) {
+    const res = await db.query(`
+    SELECT first_name, last_name
+    FROM users U, customer C
+    WHERE C.customer_id = U.user_id AND NOT EXISTS (
+        (SELECT E.event_id
+        FROM event E
+        WHERE E.organizer_id = $1)
+        EXCEPT
+        (SELECT T.event_id
+        FROM ticket T
+        WHERE C.customer_id = T.customer_id))
+    `, [organizer_id]);
+
+    return res.rows;
+}

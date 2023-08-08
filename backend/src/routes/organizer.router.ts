@@ -36,7 +36,27 @@ organizerRouter.get('/:id/stats', async (req, response) => {
     }, err => {
         console.log(err);
         response.status(500).json(err);
-    })
+    });
+})
+
+organizerRouter.get('/:id/starvolunteer', async (req, response) => {
+    const id = parseInt(req.params.id);
+    Organizer.getStarVolunteer(id).then(res => {
+        response.status(200).send(res);
+    }, err => {
+        console.log(err);
+        response.status(500).json(err);
+    });
+})
+
+organizerRouter.get('/:id/starcustomer', async (req, response) => {
+    const id = parseInt(req.params.id);
+    Organizer.getStarCustomer(id).then(res => {
+        response.status(200).send(res);
+    }, err => {
+        console.log(err);
+        response.status(500).json(err);
+    });
 })
 
 export default organizerRouter;
