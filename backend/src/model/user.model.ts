@@ -58,3 +58,14 @@ export async function registerUser(params: any[]) {
     VALUES ($1, $2, $3, $4, $5) RETURNING *`, params).then();
     return parseInt(res.rows[0]['user_id']);
 }
+
+export async function makeCustomer(user_id: number) {
+    const res = await db.query(`
+        INSERT INTO customer
+        VALUES ($1)
+        ON CONFLICT DO NOTHING
+        RETURNING * 
+    `, [user_id]);
+
+    return res;
+}
