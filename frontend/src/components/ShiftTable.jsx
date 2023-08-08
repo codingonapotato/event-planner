@@ -5,11 +5,9 @@ import { Formik, Form, Field } from 'formik';
 import Input from "./Input"
 import React from 'react';
 import ShiftCreate from "./ShiftCreate";
-import Select from "react-select";
 
 export default function ShiftTable({type}) {
     const [shifts, set_shifts] = useState([]);
-      const [selected, setSelected] = useState([{},{}]);
     const userID = localStorage.getItem('user_id');
     const preUrl = `http://localhost:8000/shift/` + type + '/';
     const url = (type === 'available') ? preUrl : preUrl + userID;
@@ -27,36 +25,21 @@ export default function ShiftTable({type}) {
 
         })
     }, []);
-
-    const handleChange = event => {
-        console.log(event.target.value);
-        if (event.target.value === 'city') {
-            const options = [
-                {value:'', text: 'Please Select'},
-                {},
-                {},
-                {},
-            ];
-        }
-        
-    };
-
-    const shiftOptions = [
-        {value: "city", label: "city"},
-        {value: "province", label: "province"}
-    ];
    
 
     return (
         <>
-        {/* Create title and filter*/}
-        <div className="flex items-center justify-between">
-            {
-                (type==='organizerID')?
-                <ShiftCreate/>
-                :
-                <div className='text-left text-3xl m-4 font-semibold'>{(type==='available')?'Available Shifts':<></>}{(type==='volunteerID')?'Your Shifts':<></>}</div>
-            }
+
+
+            <div className="flex items-center justify-between">
+                {
+                    (type==='organizerID')?
+                    <ShiftCreate/>
+                    :
+                    <div className='text-left text-3xl m-4 font-semibold'>{(type==='available')?'Available Shifts':<></>}{(type==='volunteerID')?'Your Shifts':<></>}</div>
+                }
+            
+                
             <Formik
                 initialValues={{
                     filter: '',
@@ -67,6 +50,7 @@ export default function ShiftTable({type}) {
                         const queryURL = url +'?'+values.filter+'='+ values.field;
                         // console.log(queryURL);
                         await axios.get(queryURL, {
+
                         }, {
                             headers: {'content-type': 'application/json'}
                         })
@@ -76,35 +60,24 @@ export default function ShiftTable({type}) {
                                 arr.push(response.data[i]);
                             }
                             set_shifts(arr);     
+
                         }, reason => {
                             console.log(reason);
                         });
                 }}
             >
                 {props => (
-                    <Form>    
+                    <Form>
+                        
                         <div className='flex flex-row'>
                             <div className='flex flex-row space-x-2'>
-                                <Field as="select" name="from" id="from" onChange={props.handleChange} className="space-x-10 mt-2 pr-10 max-h-11 rounded-lg bg-gray-50 border-white-300 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 text-white">
-                                    <option >Please Select</option>
-                                    <option value="city">City</option>
-                                    <option value="province">Province</option>
-                                </Field>
                                 <div className='text-left mt-4 font-semibold'>Filter: </div>
-                                <Select 
-                                    name="filter2"
-                                    id="filter2"
-                                    isMulti
-                                    options = {shiftOptions}
-                                        
-                            
-                                />
-                                <Field as="Select" isMulti name="filter" id="filter" onChange={handleChange} className="space-x-10 mt-2 pr-10 max-h-11 rounded-lg bg-gray-50 border-white-300 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 text-white">
+                                <Field as="select" name="filter" id="filter" onChange={props.handleChange} className="space-x-10 mt-2 pr-10 max-h-11 rounded-lg bg-gray-50 border-white-300 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 text-white">
                                     <option >Please Select</option>
                                     <option value="city">City</option>
                                     <option value="province">Province</option>
                                 </Field>
-
+                                
                                 <Input
                                     id={'field'}
                                     type={'text'}
@@ -120,14 +93,24 @@ export default function ShiftTable({type}) {
                                 value={'Go'} 
                             />
                         </div>
+                    
+                        
                     </Form>
                 )}
             </Formik>
-        </div>
+            </div>
 
 
 
-        {/** Create tables for shift. Table styling from https://flowbite.com/docs/components/tables*/}
+
+
+
+
+
+
+
+
+        {/**Table styling from https://flowbite.com/docs/components/tables*/}
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             {(shifts.length <= 0) ? 
             <div className='text-left text-2xl m-4 pl-5 font-semibold'>No Shifts Available</div>
@@ -228,7 +211,7 @@ export default function ShiftTable({type}) {
                                         </button></>:<></>
                                     }
 
-                                    {/* {Create confirmation alert for dropping shifts} */}
+                                    {/* {Create drop confirmation alert for shifts} */}
                                     {
                                         (type === 'volunteerID') ? <>
                                         <div id={"overlay"+item.shift_id} className="fixed hidden z-40 w-screen h-screen inset-0 bg-gray-900 bg-opacity-60"></div>

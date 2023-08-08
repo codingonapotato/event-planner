@@ -33,14 +33,14 @@ export function get_using_volunteerID(id: number) {
 
 export function get_using_noID() {
     return db.query(`
-    SELECT shift_id, role, S.start_time, S.end_time, station, S.event_id, organizer_id 
+    SELECT shift_id, role, S.start_time, S.end_time, station, S.event_id, E.organizer_id 
     FROM shift S, event E 
     WHERE S.event_id = E.event_id AND volunteer_id IS NULL`,[]);
 }
 
 export async function get_using_noID_city(city: string) {
     return db.query(`
-    SELECT shift_id, role, S.start_time, S.end_time, station, S.event_id, organizer_id 
+    SELECT shift_id, role, S.start_time, S.end_time, station, S.event_id, E.organizer_id 
     FROM shift S, event E 
     WHERE volunteer_id IS NULL AND S.event_id = E.event_id AND S.event_id IN 
         (SELECT event_id 
