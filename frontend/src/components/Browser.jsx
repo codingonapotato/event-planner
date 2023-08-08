@@ -76,9 +76,8 @@ export default function Browser () {
                                 arr.push(attribute.value);
                             })
                         }
-                        console.log(`arr: ${arr}`);
-                        await axios.get(`http://localhost:8000/shift/browser/${type}/${arr.pop()}/
-                        ${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}`, {
+                        // console.log(`arr: ${arr}`);
+                        await axios.get(`http://localhost:8000/shift/browser/${type}/${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}`, {
                         }, {
                             headers: {'content-type': 'application/json'}
                         })
@@ -112,7 +111,7 @@ export default function Browser () {
             {/* <div className='text-left text-2xl m-4 pl-5 font-semibold'>No {type}s available</div> */}
             </>
             :
-            <table className="w-full text-sm text-left text-blue-100 dark:bg-gray-800">
+            <table className="w-auto m-5 text-sm text-left text-blue-100 dark:bg-gray-800">
                 <thead className="text-xs text-white uppercase bg-gray-800 border-b border-blue-400 dark:bg-gray-800">
                     <tr>
                         {
@@ -133,7 +132,7 @@ export default function Browser () {
                             <tr className="bg-gray-700 border-b border-gray-400 hover:bg-gray-600">
                                 {select_attr.map((rows)=> {
                                     const test =rows.value;
-                                    console.log(test);
+                                    // console.log(test);
                                     return (
                                         <td className="px-6 py-4">  {item[test]}  </td>        
                                     )
