@@ -267,12 +267,12 @@ export async function getHighestRevenue(organizer_id: number) {
 // Retrieves ticket information for a given evnet
 export async function getEventTicketInfo(event_id: number) {
     const res = await db.query(`
-        SELECT tier_id, name, tier_name, 
+        SELECT tier_id, tier_name, 
         COUNT(*) FILTER (WHERE customer_id IS NULL) AS tickets_for_sale,
         COUNT(*) FILTER (WHERE customer_id IS NOT NULL) AS sold_tickets
         FROM ticket NATURAL JOIN tier NATURAL JOIN event
         WHERE event_id = $1
-        GROUP BY tier_id, name, tier_name
+        GROUP BY tier_id, tier_name
     `, [event_id]);
 
     return res.rows;
