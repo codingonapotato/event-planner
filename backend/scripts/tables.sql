@@ -222,8 +222,8 @@ CREATE TABLE performs (
     end_time    TIMESTAMP,
    location    TEXT,
     PRIMARY KEY (guest_id, event_id),
-    FOREIGN KEY (guest_id) REFERENCES special_guest,
-        ON DELETE CASCADE
+    FOREIGN KEY (guest_id) REFERENCES special_guest
+        ON DELETE CASCADE,
     FOREIGN KEY (event_id) REFERENCES event
         ON DELETE CASCADE);
 
