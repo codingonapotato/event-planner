@@ -1,4 +1,13 @@
-### Brief Overview
+## CPSC 304 Project - Event Planning
+The goal of our project was to create a platform for planning/organizing events. Here is a brief list of features:
+* Users can register for an account and freely edit their account details 
+* Users can create, edit and delete events; they can also adjust how many tickets are released for an event 
+* Users can purchase tickets, or sign up/drop volunteer shifts - they can finetune their experience by filtering by city or province
+* Users can browse a catalogue of all events/shifts
+* Event organizers can view statistics about their events, like lifetime revenue or the number of returning customers
+
+
+### Instructions for Running the App Locally
 To run the project locally, make sure to run `npm install` in both the `frontend` and `backend` directories. Please also ensure that you have Docker installed.
 
 Run `docker compose up --build` from the root directory. This should launch containers for PostgreSQL, the backend, the frontend, and pgAdmin. To shut down, run `docker compose down`. 
