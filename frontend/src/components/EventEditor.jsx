@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Formik, Form, Field } from "formik";
 import { useEffect, useState } from "react";
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams, Link } from "react-router-dom";
 import EventForm from "./EventForm";
 import { ArrowLeftIcon, PlusSmallIcon, MinusSmallIcon } from '@heroicons/react/24/solid'
 import { getDateString, getTimeString, itemColors } from "../assets/constants";
@@ -46,7 +46,12 @@ export default function EventEditor() {
                 <ArrowLeftIcon className='w-6 h-6' onClick={(e) => navigate(-1)}/>
             </button>
             <div className="flex flex-col flex-1 bg-white drop-shadow-md rounded-lg mx-6 my-5 pt-4 px-10 overflow-y-scroll">
-                <div className='text-4xl font-bold mt-5'>Edit Your Event</div>
+                <div className='flex items-center justify-end mt-5'>
+                    <div className='inline align-middle text-4xl font-bold flex-1'>Edit Your Event</div>
+                    <Link onClick={deleteEventHandler} to='/manageEvent' className='rounded-lg bg-rose-500 text-white font-semibold px-8 py-2 hover:bg-rose-600'>
+                        Delete Event
+                    </Link>
+                </div>
                 <Formik
                     initialValues={{
                         event_name: eventInfo.name || '',
@@ -169,6 +174,15 @@ export default function EventEditor() {
             </div>
         </div>
     )
+
+    async function deleteEventHandler() {
+        await axios.delete(`http://localhost:8000/event/${event_id}`)
+        .then(res => {
+            alert('Event has been successfully deleted')
+        }, err => {
+            console.log(err);
+        })
+    }
 }
 
 function NumTicketInput({field, form, ...props}) {
