@@ -88,10 +88,14 @@ export default function EventBrowserCard() {
     useEffect(() => {
         let total = 0
         if (numberOfTickets.length > 0 && tiers.length > 0) {
-            const regex = /[^$]\d*\.\d*/
             for (let i = 0; i < tiers.length; i++) {
-                const parsed = parseFloat(tiers[i].price.match(regex)[0]);
-                total += parsed * parseInt(numberOfTickets[i].number);
+                let tierPrice = tiers[i].price;
+                tierPrice = tierPrice.replace(/,/g, '')
+                tierPrice = tierPrice.replace(/\$/g, '')
+                tierPrice = parseFloat(tierPrice);
+                console.log(tierPrice)
+                // const parsed = parseFloat(tiers[i].price.match(regex)[0]);
+                total += tierPrice * parseInt(numberOfTickets[i].number);
             }
         }
         setTotalPrice(total);
@@ -220,8 +224,8 @@ export default function EventBrowserCard() {
                             {tiers.map(tier => {
                                 return (
                                     <>
-                                        <dt className='flex text-base justify-evenly'> {tier.tier_name} ----- {tier.tier_description} </dt>
-                                        <dd className='flex text-base justify-evenly'> {handleParseTicketNumber(tier)} Ticket(s) in cart </dd>
+                                        <dt className='flex-wrap text-base justify-start py-2'>{tier.tier_name} ----- {tier.tier_description} </dt>
+                                        <dd className='flex text-base justify-end px-4'> {handleParseTicketNumber(tier)} Ticket(s) in cart </dd>
                                     </>
                                 );
                             })}
@@ -248,7 +252,6 @@ export default function EventBrowserCard() {
                                             obj['event_id'] = selectedEvent.event_id;
                                             obj['tier_id'] = numberOfTickets[i].tier_id;
                                             obj['number'] = parseInt(numberOfTickets[i].number);
-                                            const regex = /[^$]\d*\.\d*/
                                             // const curr = tiers.find(tier => { return tier.tier_id == numberOfTickets[i].tier_id });
                                             // obj['price'] = parseFloat(curr.price.match(regex)[0]);
                                             obj['total_price'] = totalPrice;
