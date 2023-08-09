@@ -137,6 +137,7 @@ CREATE TABLE shift (
     volunteer_id    INTEGER,
     event_id        INTEGER     NOT NULL,
     FOREIGN KEY (volunteer_id) REFERENCES volunteer
+        ON DELETE SET NULL
         ON UPDATE CASCADE,
     FOREIGN KEY (event_id) REFERENCES event
         ON DELETE CASCADE
@@ -173,6 +174,7 @@ CREATE TABLE requests (
     PRIMARY KEY (req_user_id, item_id),
     FOREIGN KEY (req_user_id)
         REFERENCES users (user_id)
+        ON DELETE CASCADE
         ON UPDATE CASCADE,
     FOREIGN KEY (item_id)
         REFERENCES items (item_id)
@@ -221,6 +223,7 @@ CREATE TABLE performs (
    location    TEXT,
     PRIMARY KEY (guest_id, event_id),
     FOREIGN KEY (guest_id) REFERENCES special_guest,
+        ON DELETE CASCADE
     FOREIGN KEY (event_id) REFERENCES event
         ON DELETE CASCADE);
 

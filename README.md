@@ -1,7 +1,7 @@
 ### Brief Overview
-To setup, make sure to run `npm install` in both the `frontend` and `backend` directories. 
+To run the project locally, make sure to run `npm install` in both the `frontend` and `backend` directories. Please also ensure that you have Docker installed.
 
-Run `docker compose up --build` from the root directory. This should launch containers for PostgreSQL and the backend. To shut down, run `docker compose down`. 
+Run `docker compose up --build` from the root directory. This should launch containers for PostgreSQL, the backend, the frontend, and pgAdmin. To shut down, run `docker compose down`. 
 
 The frontend is viewable from `localhost:5173`
 
