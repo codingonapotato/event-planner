@@ -24,7 +24,6 @@ export default function Dashboard() {
             axios.get(`http://localhost:8000/shift/volunteerID/${userInfo.user_id}`)
             .then(res => {
                 setShifts(res.data);
-                console.log(shifts);
             }).catch(err => {
                 console.log(err);
             });
@@ -32,7 +31,6 @@ export default function Dashboard() {
             axios.get(`http://localhost:8000/customer/dependant/${userInfo.user_id}`)
             .then(res => {
                 setDependants(res.data);
-                console.log(dependants);
             }).catch(err => {
                 console.log(err)
             });
