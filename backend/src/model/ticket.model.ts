@@ -49,7 +49,7 @@ export async function buyTicket(customer_id: number, event_id: number, tier_id: 
 }
 
 export async function createTicket(params: any) {
-    const { seat_number = null, tier_id, event_id, customer_id = null} = params;
+    const { seat_number = null, tier_id, event_id, customer_id = null } = params;
     const res = await db.query(`
         INSERT INTO ticket (seat_number, tier_id, event_id, customer_id) 
         VALUES ($1, $2, $3, $4) 
