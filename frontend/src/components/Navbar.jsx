@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router-dom"
-import { HomeIcon, TicketIcon, ArrowLeftOnRectangleIcon, DocumentTextIcon, CubeTransparentIcon, SquaresPlusIcon } from "@heroicons/react/24/solid"
+import { HomeIcon, TicketIcon, ArrowLeftOnRectangleIcon, DocumentTextIcon, CubeTransparentIcon, SquaresPlusIcon, BookOpenIcon } from "@heroicons/react/24/solid"
 
 const navLinks = [
     {
@@ -23,9 +23,9 @@ const navLinks = [
         icon: SquaresPlusIcon
     },
     {
-        text: 'Browse',
+        text: 'Catalogue',
         target: '/browse',
-        icon: SquaresPlusIcon
+        icon: BookOpenIcon
     },
     {
         text: 'Sign Out',

@@ -127,6 +127,8 @@ export default function ShiftTable({type}) {
                         <th scope="col" className="px-6 py-3">  End Time    </th>
                         <th scope="col" className="px-6 py-3">  Station     </th>
                         {(type == 'organizerID') ? <th scope="col" className="px-6 py-3">Volunteer ID</th>:<></>}
+                        {(type == 'available') ?<><th className="px-6 py-4">City</th>
+                                                        <th className="px-6 py-4">Province</th></> :<></>}
                         
                     </tr>
                 </thead>
@@ -147,6 +149,8 @@ export default function ShiftTable({type}) {
                                 <td className="px-6 py-4">  {item.end_time}     </td>
                                 <td className="px-6 py-4">  {item.station}      </td>
                                 {(type == 'organizerID') ? <td className="px-6 py-4">{item.volunteer_id}</td>:<></>}
+                                {(type == 'available') ?<><td className="px-6 py-4">{item.city}</td>
+                                                        <td className="px-6 py-4">{item.province}</td></> :<></>}
                                 
                                 <td className="px-6 py-4">
                                     {/* Create Edit Form for Organizers*/}
