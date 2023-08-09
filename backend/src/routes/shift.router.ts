@@ -67,9 +67,20 @@ shiftRouter.get('/volunteerID/:id', async (req, res) => {
  * Send tuple(s) containing shifts with no volunteer_id
  */
 shiftRouter.get('/available', async (req, res) => {
-   if (req.query.city) {
-      const city: string = req.query.city as string;
-      Shift.get_using_noID_city(city)
+   const city: string = req.query.city as string;
+      const province: string = req.query.province as string;
+      let type: string;
+      let attribute: string;
+      if (city !== undefined) {
+         type = 'city'
+         attribute = city;
+      } else {
+         type = 'province'
+         attribute = province;
+      }
+   if (req.query.city !== undefined || req.query.province !== undefined) {
+      
+      Shift.get_using_noID_filter(attribute, type)
       .then((result) => {
          res.status(200).send(result.rows);
       })

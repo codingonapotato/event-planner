@@ -321,8 +321,8 @@ VALUES (6, 500), (2, 4), (4, 8), (1, 5), (5, 10), (7, 10);
 INSERT INTO 
 venue (street_num, street, postal_code, name, capacity)
 VALUES
-	(1234,	'Event St', 		'K8V2V3', null, 	100),
-	(4321,	'Planning St', 		'K8V2V3', null, 	100),
+	(1234,	'Event St', 		'K8V2V3', null, 	1000),
+	(4321,	'Planning St', 		'K8V2V3', null, 	1000),
 	(800, 	'Griffiths Way', 	'V6B6G1', 'Rogers Arena', 			19700),
 	(6288,	'Stadium Rd', 		'V6T1Z3', 'Thunderbird Stadium', 	12000),
 	(170,	'Princes'' Blvd', 	'M6K3C3', 'BMO Field', 				40000),
