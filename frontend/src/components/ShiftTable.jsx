@@ -5,6 +5,8 @@ import { Formik, Form, Field } from 'formik';
 import Input from "./Input"
 import React from 'react';
 import ShiftCreate from "./ShiftCreate";
+import { getFullDateString } from "../assets/constants";
+
 
 export default function ShiftTable({type}) {
     const [shifts, set_shifts] = useState([]);
@@ -145,8 +147,8 @@ export default function ShiftTable({type}) {
                                     {item.event_id}
                                 </th>
                                 <td className="px-6 py-4">  {item.role}         </td>
-                                <td className="px-6 py-4">  {item.start_time}   </td>
-                                <td className="px-6 py-4">  {item.end_time}     </td>
+                                <td className="px-6 py-4">  {getFullDateString(new Date(item.start_time))}   </td>
+                                <td className="px-6 py-4">  {getFullDateString(new Date(item.end_time))}     </td>
                                 <td className="px-6 py-4">  {item.station}      </td>
                                 {(type == 'organizerID') ? <td className="px-6 py-4">{item.volunteer_id}</td>:<></>}
                                 {(type == 'available') ?<><td className="px-6 py-4">{item.city}</td>

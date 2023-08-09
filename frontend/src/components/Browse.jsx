@@ -6,6 +6,8 @@ import Input from "./Input"
 import React from 'react';
 import ShiftCreate from "./ShiftCreate";
 import Select from "react-select";
+import { getFullDateString } from "../assets/constants";
+
 
 
 export default function Browse () {
@@ -131,10 +133,12 @@ export default function Browse () {
                         return (
                             <tr className="bg-gray-700 border-b border-gray-400 hover:bg-gray-600">
                                 {select_attr.map((rows)=> {
-                                    const test =rows.value;
-                                    // console.log(test);
+                                    const type =rows.value;
+                                    let info = (rows.value ==='start_time' || rows.value ==='end_time') ? 
+                                    getFullDateString(new Date(item[type])):item[type]
+                                    
                                     return (
-                                        <td className="px-6 py-4">  {item[test]}  </td>        
+                                        <td className="px-6 py-4">  {info}  </td>        
                                     )
                                     
                                 })}
