@@ -139,6 +139,7 @@ CREATE TABLE shift (
     FOREIGN KEY (volunteer_id) REFERENCES volunteer
         ON UPDATE CASCADE,
     FOREIGN KEY (event_id) REFERENCES event
+        ON DELETE CASCADE
         ON UPDATE CASCADE);
 
 CREATE TABLE items (
@@ -157,9 +158,11 @@ CREATE TABLE contributes (
     PRIMARY KEY (contrib_user_id, item_id),
     FOREIGN KEY (contrib_user_id)
         REFERENCES users(user_id)
+        ON DELETE CASCADE
         ON UPDATE CASCADE,
     FOREIGN KEY (item_id)
         REFERENCES items (item_id)
+        ON DELETE CASCADE
         ON UPDATE CASCADE
 );
 
@@ -173,6 +176,7 @@ CREATE TABLE requests (
         ON UPDATE CASCADE,
     FOREIGN KEY (item_id)
         REFERENCES items (item_id)
+        ON DELETE CASCADE
         ON UPDATE CASCADE
 );
 
@@ -202,7 +206,7 @@ CREATE VIEW tickets_per_customer(event_id, ticket_count) AS
 SELECT E.event_id, COUNT(*)
 FROM ticket T, users U, event E
 WHERE T.customer_id = U.user_id AND T.event_id = E.event_id
-GROUP BY T.customer_id, E.event_id
+GROUP BY T.customer_id, E.event_id;
 
 CREATE TABLE special_guest (
     id          SERIAL PRIMARY KEY,
