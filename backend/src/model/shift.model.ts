@@ -33,19 +33,24 @@ export function get_using_volunteerID(id: number) {
 
 export function get_using_noID() {
     return db.query(`
-    SELECT shift_id, role, S.start_time, S.end_time, station, S.event_id, E.organizer_id 
-    FROM shift S, event E 
-    WHERE S.event_id = E.event_id AND volunteer_id IS NULL`,[]);
+    SELECT shift_id, role, S.start_time, S.end_time, station, S.event_id, E.organizer_id, city, province 
+    FROM shift S, event E, city C, province P 
+    WHERE volunteer_id IS NULL AND S.event_id = E.event_id AND E.postal_code = C.postal_code AND E.postal_code = P.postal_code `,[]);
 }
 
 export async function get_using_noID_filter(attribute: string, type: string) {
+    let comp: string = '';
+    if (type === 'city') {
+        comp = 'AND E.postal_code = C.postal_code'
+    } else if (type ==='province') {
+        comp = 'AND E.postal_code = P.postal_code'
+    }
+
     return db.query(`
-    SELECT shift_id, role, S.start_time, S.end_time, station, S.event_id, E.organizer_id 
-    FROM shift S, event E 
-    WHERE volunteer_id IS NULL AND S.event_id = E.event_id AND S.event_id IN 
-        (SELECT event_id 
-        FROM event NATURAL JOIN city NATURAL JOIN province 
-        WHERE ${type} ILIKE $1 || '%')`, [attribute]);
+    SELECT shift_id, role, S.start_time, S.end_time, station, S.event_id, E.organizer_id, city, province 
+    FROM shift S, event E, city C, province P 
+    WHERE volunteer_id IS NULL AND S.event_id = E.event_id AND E.postal_code = C.postal_code AND E.postal_code = P.postal_code 
+        AND ${type} ILIKE $1 || '%'`, [attribute]);
 }
 
 
