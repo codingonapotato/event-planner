@@ -104,6 +104,7 @@ export async function findTiersForEvent(eventId: number) {
  * this function handles the ticket purchase associated 
 */
 export async function handlePurchase(arr) {
+    // console.log(arr);
     const user = arr[0].user_id;
     const event = arr[0].event_id;
     const totalPrice = arr[0].total_price;
@@ -115,7 +116,7 @@ export async function handlePurchase(arr) {
     arr.forEach((e) => {
         totalTickets += e.number;
     })
-    // console.log(totalTickets)
+    console.log(totalTickets)
 
     const eventVenueKey = await db.query(`SELECT street, street_num, postal_code FROM event WHERE event_id = $1`, [event])
     street = eventVenueKey.rows[0].street
@@ -124,8 +125,9 @@ export async function handlePurchase(arr) {
     // console.log(`${street} ${postal_code} ${street_num}`)
 
     const ticketQuery = await getEventTicketInfo(event);
-    // console.log(ticketQuery)
+    console.log(ticketQuery)
     const { tickets_for_sale } = ticketQuery[0]
+    console.log(tickets_for_sale)
 
     if (totalTickets > tickets_for_sale) {
         return -1; // disallow operation

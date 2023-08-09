@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { useState, useEffect, useId } from "react";
-import { useOutletContext } from "react-router-dom"
 import { Formik, Field, Form } from 'formik';
 
 export default function UserDetailCard() {
@@ -8,7 +7,6 @@ export default function UserDetailCard() {
     const [userInfo, setUserInfo] = useState({});
     const [dependants, setDependants] = useState([]);
     const [editState, setEditState] = useState(false);
-    const [serverError, setServerError] = useState('');
     const [manageDependantState, setManageDependantState] = useState(false);
 
     const user = localStorage.getItem('user_id');
@@ -273,7 +271,7 @@ export default function UserDetailCard() {
     };
 
     function handleDelete(obj) {
-        axios.delete(`http://localhost:8000/customer/dependant-remove/${user}`, { data: obj }, {headers: {'content-type': 'application/json'}}).then((res) => {
+        axios.delete(`http://localhost:8000/customer/dependant-remove/${user}`, { data: obj }, { headers: { 'content-type': 'application/json' } }).then((res) => {
             let arr = dependants.filter((e) => {
                 return !(e['first_name'] == res.data[0]['first_name'] && e['last_name'] == res.data[0]['last_name'] && e['birthdate'] == res.data[0]['birthdate']);
             })

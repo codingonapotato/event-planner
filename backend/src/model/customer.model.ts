@@ -40,10 +40,14 @@ export async function addDependant(id: number, req) {
 */
 export async function deductBalance(id: number, amt: number) {
     const res = await db.query(`SELECT balance FROM users WHERE user_id = $1`, [id]);
-    const regex = /[^$]\d*\.\d*/
-    const balance = parseFloat(res.rows[0].balance.match(regex)[0]);
+    let balance = res.rows[0].balance;
+    balance = balance.replace(/\$/g, '');
+    balance = balance.replace(/,/g, '');
+    balance = parseFloat(balance);
 
     const remaining = balance - amt;
+    // console.log(balance)
+    // console.log(amt)
     if (remaining < 0) {
         return -1;
     } else {
