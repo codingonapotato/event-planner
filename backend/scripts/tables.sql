@@ -1,4 +1,5 @@
 DROP VIEW IF EXISTS volunteer_event;
+DROP VIEW IF EXISTS tickets_per_customer;
 DROP TABLE IF EXISTS contracts_event_organizer;
 DROP TABLE IF EXISTS contracts_guest_event;
 DROP TABLE IF EXISTS customer_invite;
@@ -196,6 +197,12 @@ CREATE VIEW volunteer_event (event_id, name, start_time, end_time, organizer_fir
 SELECT e.event_id, e.name, e.start_time, e.end_time, u.first_name, u.last_name, e.street_num, e.street, e.postal_code
 FROM event e, users u 
 WHERE e.organizer_id = u.user_id;
+
+CREATE VIEW tickets_per_customer(event_id, ticket_count) AS
+SELECT E.event_id, COUNT(*)
+FROM ticket T, users U, event E
+WHERE T.customer_id = U.user_id AND T.event_id = E.event_id
+GROUP BY T.customer_id, E.event_id
 
 CREATE TABLE special_guest (
     id          SERIAL PRIMARY KEY,

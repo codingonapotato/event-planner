@@ -26,10 +26,10 @@ export async function findEvents(id: number) {
 export async function getOrganizerStats(organizer_id: number) {
     const totalRevenue = await Event.getTotalRevenue(organizer_id);
     const totalTickets = await Event.getTotalTickets(organizer_id);
-    const avgRevenue = await Event.getHighestRevenue(organizer_id);
+    const returningCustomers = await getReturningCustomers(organizer_id);
     const eventsManaged = await Event.getManagedEventCount(organizer_id);
 
-    return {...totalRevenue, ...totalTickets, ...avgRevenue, ...eventsManaged };
+    return {...totalRevenue, ...totalTickets, ...returningCustomers, ...eventsManaged };
 }
 
 export async function getStarVolunteer(organizer_id: number) {
@@ -64,4 +64,17 @@ export async function getStarCustomer(organizer_id: number) {
     `, [organizer_id]);
 
     return res.rows;
+}
+
+export async function getReturningCustomers(organizer_id: number) {
+    const res = await db.query(`
+        SELECT COUNT(*) FROM (
+            SELECT customer_id, COUNT(*)
+            FROM ticket NATURAL JOIN event
+            WHERE organizer_id=$1
+            GROUP BY customer_id
+            HAVING count(*) > 1) AS returning_customers
+    `, [organizer_id]);
+
+    return res.rows[0];
 }
