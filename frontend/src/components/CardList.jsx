@@ -18,7 +18,7 @@ export default function CardList({
                     </Link>
                 </>
                 : items.map(item => {
-                    return <ListItem key={item.name} item={item} type={type}/>
+                    return <ListItem key={(type == 'Events') ? 'event'+item.event_id : 'shift'+item.shift_id} item={item} type={type}/>
                 })}
             </div>
         </div>
