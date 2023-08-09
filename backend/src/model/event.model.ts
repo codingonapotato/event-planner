@@ -1,4 +1,5 @@
 import * as db from "../../db";
+import * as Customer from './customer.model'
 import * as Venue from "./venue.model"
 import * as Ticket from "./ticket.model"
 
@@ -21,7 +22,7 @@ export async function findEvent(id: number) {
 }
 
 export async function findAllPublicEvents() {
-    const res = await db.query(`SELECT * FROM event WHERE visibility='public'`, []);
+    const res = await db.query(`SELECT * FROM event NATURAL JOIN city NATURAL JOIN province WHERE visibility = 'public'`, []);
     return res;
 }
 
@@ -43,7 +44,8 @@ export async function updateEvent(params: any[], locationInfo: any[]) {
     return res.rows[0];
 }
 
-export async function findEventByCity(city: string) { 
+export async function findEventByCity(city: string) {
+    console.log('I ran')
     const res = await db.query(`SELECT
         name,
         start_time,
@@ -55,8 +57,24 @@ export async function findEventByCity(city: string) {
         province
         FROM event NATURAL JOIN city NATURAL JOIN province
         WHERE city ILIKE $1 || '%'`, [city]);
-        return res.rows;
- }
+    return res.rows;
+}
+
+// Guaranteed that both are not null or undefined since checked in the router
+export async function findEventByCityAndProvince(city: string, province: string) {
+    console.log('Running!')
+    const res = await db.query(`SELECT name,
+        start_time,
+        end_time,
+        street_num,
+        street,
+        postal_code,
+        city,
+        province
+        FROM event NATURAL JOIN city NATURAL JOIN province
+        WHERE city ILIKE $1 || '%' AND province = $2`, [city, province]);
+    return res.rows;
+}
 
 export async function findEventByProvince(province: string) {
     const res = await db.query(`SELECT
@@ -72,6 +90,57 @@ export async function findEventByProvince(province: string) {
         FROM event NATURAL JOIN city NATURAL JOIN province
         WHERE province = $1`, [province]);
     return res.rows;
+}
+
+export async function findTiersForEvent(eventId: number) {
+    const res = await db.query(
+        `SELECT DISTINCT tier_id, tier_name, tier_description, price
+    FROM ticket NATURAL JOIN tier
+    WHERE event_id = $1`, [eventId]);
+    return res.rows;
+}
+
+/**  EFFECTs: If there is ticket w/o a customer_id = @param cid, and supposing the customer has a non-negative balance after purchase,
+ * this function handles the ticket purchase associated 
+*/
+export async function handlePurchase(arr) {
+    const user = arr[0].user_id;
+    const event = arr[0].event_id;
+    const totalPrice = arr[0].total_price;
+    let totalTickets = 0;
+    let street = '';
+    let street_num = '';
+    let postal_code = '';
+
+    arr.forEach((e) => {
+        totalTickets += e.number;
+    })
+    // console.log(totalTickets)
+
+    const eventVenueKey = await db.query(`SELECT street, street_num, postal_code FROM event WHERE event_id = $1`, [event])
+    street = eventVenueKey.rows[0].street
+    street_num = eventVenueKey.rows[0].street_num
+    postal_code = eventVenueKey.rows[0].postal_code
+    // console.log(`${street} ${postal_code} ${street_num}`)
+
+    const ticketQuery = await getEventTicketInfo(event);
+    // console.log(ticketQuery)
+    const { tickets_for_sale } = ticketQuery[0]
+
+    if (totalTickets > tickets_for_sale) {
+        return -1; // disallow operation
+    } else {
+        if (await Customer.deductBalance(user, totalPrice) != -1) {
+            arr.forEach((e) => {
+                for (let i = 0; i < e.number; i++) {
+                    Ticket.buyTicket(user, event, e.tier_id);
+                }
+            })
+            return 1; // Completed successfully
+        } else {
+            return -1; // user is broke
+        }
+    }
 }
 
 export async function createEvent(params: any[], locationInfo: any[]) {
@@ -90,14 +159,15 @@ export async function createEvent(params: any[], locationInfo: any[]) {
 export async function createEventTickets(numTickets: number, tier_id: number, event_id: number, seat_start: number) {
     const ret = [];
     for (let i = 0; i < numTickets; i++) {
-        await Ticket.createTicket({seat_number: seat_start+i, tier_id: tier_id, event_id: event_id}).then(res => {
+        const seat_num = seat_start === null ? null : seat_start+i;
+        await Ticket.createTicket({seat_number: seat_num, tier_id: tier_id, event_id: event_id}).then(res => {
             if (res === -1) {
-                ret.push({err: `Creation of ticket sent with request ${i} failed due to seat conflict on seat ${seat_start+i}`})
+                ret.push({ err: `Creation of ticket sent with request ${i} failed due to seat conflict on seat ${seat_start + i}` })
             } else {
                 ret.push(res);
             }
         }, err => {
-            ret.push({err: `Creation of ticket sent with request ${i} failed with error ${err}`});
+            ret.push({ err: `Creation of ticket sent with request ${i} failed with error ${err}` });
         });
     }
     return ret;
@@ -131,15 +201,13 @@ export async function deleteEvent(event_id: number): Promise<boolean> {
 // Retrieve revenue for each event organized by given organizer; retrieves result only if event has revenue
 export async function getAllRevenue(organizer_id: number) {
     const res = await db.query(`
-        SELECT name AS event_name, sum(tiersum) AS event_revenue
+        SELECT name AS event_name, event_revenue 
         FROM event NATURAL JOIN (
-        	SELECT event_id, SUM(price) AS tiersum
+        	SELECT event_id, SUM(price) AS event_revenue
         	FROM ticket NATURAL JOIN tier
         	WHERE customer_id IS NOT NULL AND organizer_id=$1
-        	GROUP BY event_id
-        ) AS tiersumtable
-        GROUP BY event_id
-        HAVING organizer_id=$1
+        	GROUP BY event_id) as event_revenue_table
+        ORDER BY event_revenue DESC
     `, [organizer_id]);
 
     return res.rows;
@@ -176,7 +244,7 @@ export async function getManagedEventCount(organizer_id: number) {
     return res.rows[0];
 }
 
-export async function getHighestRevenue(organizer_id: number) { 
+export async function getHighestRevenue(organizer_id: number) {
     const res = await db.query(`
         SELECT MAX(event_revenue::numeric)::money AS max_revenue
         FROM (
@@ -192,7 +260,7 @@ export async function getHighestRevenue(organizer_id: number) {
     `, [organizer_id])
 
     return res.rows[0];
- }
+}
 
 // Retrieves ticket information for a given evnet
 export async function getEventTicketInfo(event_id: number) {
@@ -223,7 +291,19 @@ export async function getManagedEvents(organizer_id: number) {
         province
         FROM event NATURAL JOIN organizer NATURAL JOIN city NATURAL JOIN province
         WHERE organizer_id = $1
+        ORDER BY start_time ASC
     `, [organizer_id]);
 
     return res;
+}
+
+export async function getAvgTicketsPerEvent(organizer_id: number) {
+    const res = await db.query(`
+        SELECT E.event_id, name, AVG(ticket_count)
+        FROM event E, tickets_per_customer T
+        WHERE E.event_id = T.event_id AND organizer_id = $1 
+        GROUP BY E.event_id, E.name
+    `, [organizer_id]);
+
+    return res.rows;
 }

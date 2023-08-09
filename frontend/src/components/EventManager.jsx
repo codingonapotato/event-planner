@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Link, useOutletContext, Outlet, NavLink } from "react-router-dom";
 
 
-const statNames = ['Total Revenue', 'Ticket(s) Sold', 'Most Revenue Gained', 'Event(s) Managed']
+const statNames = ['Total Revenue', 'Ticket(s) Sold', 'Returning Customer(s)', 'Event(s) Managed']
 const statIcons = [BanknotesIcon, TicketIcon, SparklesIcon, CalendarDaysIcon]
 const statIconColors = ['text-emerald-500', 'text-rose-500', 'text-sky-500', 'text-purple-500']
 
@@ -107,9 +107,17 @@ export default function EventManager() {
                             to='revenue'
                             replace={true}
                             className={({isActive}) => 
-                                (isActive) ? "bg-indigo-500 text-white px-2 py-1 rounded-r-lg" : "rounded-r-lg px-2 py-1 bg-gray-100 hover:bg-gray-200 text-black"}
+                                (isActive) ? "bg-indigo-500 text-white px-2 py-1" : "px-2 py-1 bg-gray-100 hover:bg-gray-200 text-black"}
                         >
                             Revenue
+                        </NavLink>
+                        <NavLink 
+                            to='tickets'
+                            replace={true}
+                            className={({isActive}) =>
+                                (isActive) ? "bg-indigo-500 text-white px-2 py-1 rounded-r-lg" : "rounded-r-lg px-2 py-1 bg-gray-100 hover:bg-gray-200 text-black"}
+                        >
+                            Avg Tickets
                         </NavLink>
                         <span className='flex flex-1 items-end justify-end'>
                             <div className="p-2 hover:bg-gray-100 rounded-full">

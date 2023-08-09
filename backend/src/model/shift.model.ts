@@ -38,14 +38,14 @@ export function get_using_noID() {
     WHERE S.event_id = E.event_id AND volunteer_id IS NULL`,[]);
 }
 
-export async function get_using_noID_city(city: string) {
+export async function get_using_noID_filter(attribute: string, type: string) {
     return db.query(`
     SELECT shift_id, role, S.start_time, S.end_time, station, S.event_id, E.organizer_id 
     FROM shift S, event E 
     WHERE volunteer_id IS NULL AND S.event_id = E.event_id AND S.event_id IN 
         (SELECT event_id 
         FROM event NATURAL JOIN city NATURAL JOIN province 
-        WHERE city ILIKE $1 || '%')`, [city]);
+        WHERE ${type} ILIKE $1 || '%')`, [attribute]);
 }
 
 

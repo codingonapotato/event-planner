@@ -1,4 +1,5 @@
 DROP VIEW IF EXISTS volunteer_event;
+DROP VIEW IF EXISTS tickets_per_customer;
 DROP TABLE IF EXISTS contracts_event_organizer;
 DROP TABLE IF EXISTS contracts_guest_event;
 DROP TABLE IF EXISTS customer_invite;
@@ -197,6 +198,12 @@ SELECT e.event_id, e.name, e.start_time, e.end_time, u.first_name, u.last_name, 
 FROM event e, users u 
 WHERE e.organizer_id = u.user_id;
 
+CREATE VIEW tickets_per_customer(event_id, ticket_count) AS
+SELECT E.event_id, COUNT(*)
+FROM ticket T, users U, event E
+WHERE T.customer_id = U.user_id AND T.event_id = E.event_id
+GROUP BY T.customer_id, E.event_id
+
 CREATE TABLE special_guest (
     id          SERIAL PRIMARY KEY,
     first_name  TEXT,
@@ -321,8 +328,8 @@ VALUES (6, 500), (2, 4), (4, 8), (1, 5), (5, 10), (7, 10);
 INSERT INTO 
 venue (street_num, street, postal_code, name, capacity)
 VALUES
-	(1234,	'Event St', 		'K8V2V3', null, 	100),
-	(4321,	'Planning St', 		'K8V2V3', null, 	100),
+	(1234,	'Event St', 		'K8V2V3', null, 	1000),
+	(4321,	'Planning St', 		'K8V2V3', null, 	1000),
 	(800, 	'Griffiths Way', 	'V6B6G1', 'Rogers Arena', 			19700),
 	(6288,	'Stadium Rd', 		'V6T1Z3', 'Thunderbird Stadium', 	12000),
 	(170,	'Princes'' Blvd', 	'M6K3C3', 'BMO Field', 				40000),
@@ -364,7 +371,7 @@ event (name, start_time, end_time, visibility, budget, organizer_id, street_num,
 VALUES
 	('Ore''s Spectacular Event', '2023-08-20 10:00:00', '2023-08-20 16:00:00', 'public', 1000.00, 7, 1234, 'Event St', 'K8V2V3'),
 	('Ore''s Amazing Event',     '2023-09-17 18:00:00', '2023-09-18 00:00:00', 'public', 500.00, 7, 4321, 'Planning St', 'K8V2V3'),
-	('Family Storytime',         '2023-05-18 12:00:00', '2023-05-18 16:00:00', 'public', 0.00, 4, 350, 'W Georgia St', 'V6B6B1'),
+	('Family Storytime',         '2023-10-18 12:00:00', '2023-10-18 16:00:00', 'public', 0.00, 4, 350, 'W Georgia St', 'V6B6B1'),
 	('New Years'' Fireworks',    '2023-12-31 23:00:00', '2024-01-01 02:00:00', 'public', 10000.00, 1, 800, 'Griffiths Way', 'V6B6G1'),
 	('Summer Storytime',         '2023-08-17 12:00:00', '2023-08-17 13:00:00', 'public', 1000.00, 2, 350, 'W Georgia St', 'V6B6B1'),
     ('BMO Concert',              '2023-08-25 17:00:00', '2023-08-25 21:00:00', 'public', 3000.00, 3, 170, 'Princes'' Blvd', 'M6K3C3');
@@ -403,9 +410,9 @@ INTO shift(role, start_time, end_time, station, volunteer_id, event_id)
 VALUES 
 ('Barista',     '2023-08-20 10:00:00', '2023-08-20 16:00:00', 'Concession',     6,      1),
 ('Line Cook',   '2023-09-17 18:00:00', '2023-09-17 23:00:00', 'Concession',     6,      2),
-('Cashier',     '2023-05-18 12:00:00', '2023-05-18 16:00:00', 'Concession',     4,      3),
+('Cashier',     '2023-10-18 12:00:00', '2023-10-18 16:00:00', 'Concession',     7,      3),
 ('Greeter',     '2023-12-31 23:00:00', '2024-01-01 00:00:00', 'Front of House', 1,      4),
-('Cashier',     '2023-12-31 23:00:00', '2024-01-01 00:00:00', 'Ticket Booth',   7,      4),
+('Cashier',     '2023-12-31 23:00:00', '2024-01-01 00:00:00', 'Ticket Booth',   4,      4),
 ('Security',    '2023-08-17 12:00:00', '2023-08-17 13:00:00', 'Security',       1,      5),
 ('Valet',       '2023-12-31 23:00:00', '2024-01-01 02:00:00', 'Parking Lot',    null,   4),
 ('Security',    '2023-08-20 10:00:00', '2023-08-20 16:00:00', 'Security',       null,   1),
