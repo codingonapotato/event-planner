@@ -273,7 +273,7 @@ export default function UserDetailCard() {
     };
 
     function handleDelete(obj) {
-        axios.delete(`http://localhost:8000/customer/dependant-remove/1`, { data: obj }).then((res) => {
+        axios.delete(`http://localhost:8000/customer/dependant-remove/${user}`, { data: obj }, {headers: {'content-type': 'application/json'}}).then((res) => {
             let arr = dependants.filter((e) => {
                 return !(e['first_name'] == res.data[0]['first_name'] && e['last_name'] == res.data[0]['last_name'] && e['birthdate'] == res.data[0]['birthdate']);
             })
