@@ -33,19 +33,39 @@ export function get_using_volunteerID(id: number) {
 
 export function get_using_noID() {
     return db.query(`
-    SELECT shift_id, role, S.start_time, S.end_time, station, S.event_id, organizer_id 
+    SELECT shift_id, role, S.start_time, S.end_time, station, S.event_id, E.organizer_id 
     FROM shift S, event E 
     WHERE S.event_id = E.event_id AND volunteer_id IS NULL`,[]);
 }
 
-export async function get_using_noID_city(city: string) {
+export async function get_using_noID_filter(attribute: string, type: string) {
     return db.query(`
-    SELECT shift_id, role, S.start_time, S.end_time, station, S.event_id, organizer_id 
+    SELECT shift_id, role, S.start_time, S.end_time, station, S.event_id, E.organizer_id 
     FROM shift S, event E 
     WHERE volunteer_id IS NULL AND S.event_id = E.event_id AND S.event_id IN 
         (SELECT event_id 
         FROM event NATURAL JOIN city NATURAL JOIN province 
-        WHERE city ILIKE $1 || '%')`, [city]);
+        WHERE ${type} ILIKE $1 || '%')`, [attribute]);
+}
+
+
+export async function get_browser(selection: string[], from: string) {
+    let s:string="";
+    for(let i=0;i<selection.length;i++) {
+        if (selection[i] === 'undefined') {
+            s = s.substring(0,s.length-2);
+            break;
+        } else {
+            s = s + selection[i];
+            ((i + 1 < selection.length)) ? s = s + ', ' : s = s + ' '
+            // console.log(`i:${i}, length:${selection.length}, s:${s}`);
+        }
+        
+    }
+    const res = await db.query(`
+                        SELECT ${s} 
+                        FROM ${from}`,[]);
+    return res.rows;
 }
 
 /**

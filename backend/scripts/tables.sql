@@ -1,4 +1,5 @@
 DROP VIEW IF EXISTS volunteer_event;
+DROP VIEW IF EXISTS tickets_per_customer;
 DROP TABLE IF EXISTS contracts_event_organizer;
 DROP TABLE IF EXISTS contracts_guest_event;
 DROP TABLE IF EXISTS customer_invite;
@@ -138,6 +139,7 @@ CREATE TABLE shift (
     FOREIGN KEY (volunteer_id) REFERENCES volunteer
         ON UPDATE CASCADE,
     FOREIGN KEY (event_id) REFERENCES event
+        ON DELETE CASCADE
         ON UPDATE CASCADE);
 
 CREATE TABLE items (
@@ -156,9 +158,11 @@ CREATE TABLE contributes (
     PRIMARY KEY (contrib_user_id, item_id),
     FOREIGN KEY (contrib_user_id)
         REFERENCES users(user_id)
+        ON DELETE CASCADE
         ON UPDATE CASCADE,
     FOREIGN KEY (item_id)
         REFERENCES items (item_id)
+        ON DELETE CASCADE
         ON UPDATE CASCADE
 );
 
@@ -172,6 +176,7 @@ CREATE TABLE requests (
         ON UPDATE CASCADE,
     FOREIGN KEY (item_id)
         REFERENCES items (item_id)
+        ON DELETE CASCADE
         ON UPDATE CASCADE
 );
 
@@ -196,6 +201,12 @@ CREATE VIEW volunteer_event (event_id, name, start_time, end_time, organizer_fir
 SELECT e.event_id, e.name, e.start_time, e.end_time, u.first_name, u.last_name, e.street_num, e.street, e.postal_code
 FROM event e, users u 
 WHERE e.organizer_id = u.user_id;
+
+CREATE VIEW tickets_per_customer(event_id, ticket_count) AS
+SELECT E.event_id, COUNT(*)
+FROM ticket T, users U, event E
+WHERE T.customer_id = U.user_id AND T.event_id = E.event_id
+GROUP BY T.customer_id, E.event_id;
 
 CREATE TABLE special_guest (
     id          SERIAL PRIMARY KEY,
@@ -432,7 +443,7 @@ ticket(seat_number, tier_id, event_id, customer_id)
 VALUES
     (50, 5, 1, 7),
     (50, 6, 2, 7),
-	(NULL, 6, 2, NULL),
+	(NULL, 6, 2, 2),
 	(NULL, 6, 2, 7),
     (NULL, 3, 2, 7),
     (NULL, 4, 2, 7),
@@ -502,18 +513,24 @@ INTO shift(role, start_time, end_time, station, volunteer_id, event_id)
 VALUES 
 ('Barista',     '2023-08-09 10:00:00', '2023-08-20 16:00:00', 'Concession',     6,      1),
 ('Line Cook',   '2023-09-17 18:00:00', '2023-09-17 23:00:00', 'Concession',     6,      2),
-('Cashier',     '2023-05-18 12:00:00', '2023-05-18 16:00:00', 'Concession',     4,      3),
+('Cashier',     '2023-10-18 12:00:00', '2023-10-18 16:00:00', 'Concession',     7,      3),
 ('Greeter',     '2023-12-31 23:00:00', '2024-01-01 00:00:00', 'Front of House', 1,      4),
 ('Cashier',     '2023-12-31 23:00:00', '2024-01-01 00:00:00', 'Ticket Booth',   7,      4),
 ('Greeter',     '2023-12-31 23:00:00', '2024-01-01 00:00:00', 'Front of House', 2,      4),
 ('Cashier',     '2023-12-31 23:00:00', '2024-01-01 00:00:00', 'Ticket Booth',   2,      4),
 ('Security',    '2023-08-17 12:00:00', '2023-08-17 13:00:00', 'Security',       1,      5),
-('Valet',       '2023-12-31 23:00:00', '2024-01-01 02:00:00', 'Parking Lot',    null,   12),
+('Valet',       '2023-12-19 23:00:00', '2024-01-01 02:00:00', 'Parking Lot',    null,   12),
 ('Security',    '2023-08-20 10:00:00', '2023-08-20 16:00:00', 'Security',       null,   1),
-('Cashier',     '2023-08-20 10:00:00', '2023-08-10 16:00:00', 'Concession',     null,   8),
-('Valet',       '2023-12-31 23:00:00', '2024-01-01 02:00:00', 'Parking Lot',    null,   3),
+('Cashier',     '2023-08-21 10:00:00', '2023-08-10 16:00:00', 'Concession',     null,   8),
+('Valet',       '2023-12-30 23:00:00', '2024-01-01 02:00:00', 'Parking Lot',    null,   3),
 ('Security',    '2023-08-20 10:00:00', '2023-08-20 16:00:00', 'Security',       null,   3),
 ('Cashier',     '2023-08-20 10:00:00', '2023-08-10 16:00:00', 'Concession',     null,   3),
+('Valet',       '2023-12-31 23:00:00', '2024-01-01 02:00:00', 'Parking Lot',    null,   2),
+('Security',    '2023-08-20 10:00:00', '2023-08-20 16:00:00', 'Security',       null,   4),
+('Cashier',     '2023-08-20 10:00:00', '2023-08-10 16:00:00', 'Concession',     null,   5),
+('Valet',       '2023-12-31 23:00:00', '2024-01-01 02:00:00', 'Parking Lot',    null,   6),
+('Security',    '2023-08-20 10:00:00', '2023-08-20 16:00:00', 'Security',       null,   7),
+('Cashier',     '2023-08-20 10:00:00', '2023-08-10 16:00:00', 'Concession',     null,   1),
 ('Barista',     '2023-08-25 14:00:00', '2023-08-25 14:59:00', 'Concession',     1,      8),
 ('Line Cook',   '2023-08-25 15:00:00', '2023-08-25 17:00:00', 'Concession',     1,      8),
 ('Cashier',     '2023-05-18 12:00:00', '2023-05-18 16:00:00', 'Concession',     1,      8),

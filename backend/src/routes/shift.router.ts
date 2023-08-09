@@ -67,9 +67,20 @@ shiftRouter.get('/volunteerID/:id', async (req, res) => {
  * Send tuple(s) containing shifts with no volunteer_id
  */
 shiftRouter.get('/available', async (req, res) => {
-   if (req.query.city) {
-      const city: string = req.query.city as string;
-      Shift.get_using_noID_city(city)
+   const city: string = req.query.city as string;
+      const province: string = req.query.province as string;
+      let type: string;
+      let attribute: string;
+      if (city !== undefined) {
+         type = 'city'
+         attribute = city;
+      } else {
+         type = 'province'
+         attribute = province;
+      }
+   if (req.query.city !== undefined || req.query.province !== undefined) {
+      
+      Shift.get_using_noID_filter(attribute, type)
       .then((result) => {
          res.status(200).send(result.rows);
       })
@@ -162,6 +173,36 @@ shiftRouter.delete('/:id', async (req, res) => {
    .then((result) => {
 
       res.status(200).send(result.rows);
+   })
+   .catch((err) => {
+      res.status(404).json({message: 'Shift not found', error: err});
+   });
+});
+
+
+shiftRouter.get('/browser/shift/:a1/:a2/:a3/:a4/:a5', async (req, res) => {
+   const type:string ='shift';
+   const arr:any[] =[req.params.a1,req.params.a2,req.params.a3,req.params.a4,req.params.a5];
+   // console.log(arr);
+
+   Shift.get_browser(arr, type)
+   .then((result) => {
+      res.status(200).send(result);
+   })
+   .catch((err) => {
+      res.status(404).json({message: 'Shift not found', error: err});
+   });
+});
+
+shiftRouter.get('/browse/:type/:a1/:a2/:a3/:a4/:a5/:a6/:a7', async (req, res) => {
+   const type:string =req.params.type;
+   let arr:any[] =[req.params.a1,req.params.a2,req.params.a3,
+      req.params.a4,req.params.a5,req.params.a6,req.params.a7];
+   // console.log(arr);
+
+   Shift.get_browser(arr, type)
+   .then((result) => {
+      res.status(200).send(result);
    })
    .catch((err) => {
       res.status(404).json({message: 'Shift not found', error: err});
