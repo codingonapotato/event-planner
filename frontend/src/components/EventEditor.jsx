@@ -84,6 +84,12 @@ export default function EventEditor() {
                         }, {
                             headers: { 'Content-Type': 'application/json' }
                         })
+                        .then(res => {
+                            console.log('hit')
+                            alert('Event has been updated');
+                        }, err => {
+                            console.log(err);
+                        });
                     }}>
                         {({errors, touched}) => (
                             <EventForm errors={errors} touched={touched} userInfo={userInfo}/>
