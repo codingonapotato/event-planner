@@ -188,7 +188,7 @@ export async function getUpcomingEvents(user_id: number) {
         city,
         province,
         COUNT(*) AS count
-        FROM event NATURAL JOIN city NATURAL JOIN province NATURAL JOIN ticket NATURAL JOIN tier
+        FROM event NATURAL JOIN city NATURAL JOIN province NATURAL JOIN ticket
         WHERE customer_id = $1 AND start_time >= (SELECT NOW())
         GROUP BY event_id, name, start_time, end_time, street_num, street, postal_code, city, province
         ORDER BY start_time`, [user_id]);
@@ -267,12 +267,12 @@ export async function getHighestRevenue(organizer_id: number) {
 // Retrieves ticket information for a given evnet
 export async function getEventTicketInfo(event_id: number) {
     const res = await db.query(`
-        SELECT tier_id, name, tier_name, 
+        SELECT tier_id, tier_name, 
         COUNT(*) FILTER (WHERE customer_id IS NULL) AS tickets_for_sale,
         COUNT(*) FILTER (WHERE customer_id IS NOT NULL) AS sold_tickets
         FROM ticket NATURAL JOIN tier NATURAL JOIN event
         WHERE event_id = $1
-        GROUP BY tier_id, name, tier_name
+        GROUP BY tier_id, tier_name
     `, [event_id]);
 
     return res.rows;
