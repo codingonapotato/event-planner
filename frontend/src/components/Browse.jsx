@@ -6,13 +6,17 @@ import Input from "./Input"
 import React from 'react';
 import ShiftCreate from "./ShiftCreate";
 import Select from "react-select";
+import { getFullDateString } from "../assets/constants";
+
 
 
 export default function Browse () {
-    const [type, setType] = useState('test');
+    const [type, setType] = useState('Please Select');
     const [shifts, set_shifts] = useState([]);
     const [selected, setSelected] = useState([]);
+    const [isChanged, set_isChanged] = useState(false);
     const [select_attr, set_select_attr] = useState([]);
+    
 
 
     const shiftOptions = [
@@ -24,7 +28,6 @@ export default function Browse () {
     ];
 
     const eventOptions = [
-        {value: "event_id", label: "Event ID"},
         {value: "name", label: "Name"},
         {value: "start_time", label: "Start Time"},
         {value: "end_time", label: "End Time"},
@@ -33,15 +36,39 @@ export default function Browse () {
         {value: "postal_code", label: "Postal Code"}
     ];
 
+    async function sendGET() {
+        if (type !== 'Please Select') {
+            let arr = [];
+            if (select_attr.length !== 0) {
+                select_attr.map(attribute => {
+                    arr.push(attribute.value);
+                })
+            }
+            await axios.get(`http://localhost:8000/shift/browse/${type}/${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}/`, {
+            }, {
+                headers: {'content-type': 'application/json'}
+            })
+            .then((response) => {
+                // console.log(response);
+                set_shifts(response.data);
+                set_isChanged(true);
+            }, reason => {
+                console.log(reason);
+            });
+        }
+    }
+
     return (
         <>
-            <div >
+            {/* Create filter for type(shift/event) and attribute*/}
+            <div>
                 <div className='text-left text-3xl m-4 font-semibold'>Browse</div>
                 <div className='mx-5'>
                 <div className='mt-2 ml-2 font-semibold'>Select: </div>
                 <select className="mx-2 rounded-lg" onChange={
-                    (event)=>{
-                        set_select_attr('');
+                    async (event)=>{
+                        set_shifts([]);
+                        set_select_attr([]);
                         setType(event.target.value);
                         if (event.target.value === 'shift') {
                             setSelected(shiftOptions);
@@ -62,31 +89,19 @@ export default function Browse () {
                     isMulti
                     options = {selected}
                     className="max-w-xs mx-2 my-2"
-                    onChange={set_select_attr}
+                    onChange={ async (event)=> {
+                        set_isChanged(false);
+                        set_select_attr(event);                        
+                    }}
                     value={select_attr}
                 />
                 </div>
-            
+                
+                {/* Submit button to get result from db */}
                 <Formik
                     initialValues={{}}
                     onSubmit={async (values) => {
-                        let arr = [];
-                        if (select_attr.length !== 0) {
-                            select_attr.map(attribute => {
-                                arr.push(attribute.value);
-                            })
-                        }
-                        // console.log(`arr: ${arr}`);
-                        await axios.get(`http://localhost:8000/shift/browse/${type}/${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}/${arr.pop()}`, {
-                        }, {
-                            headers: {'content-type': 'application/json'}
-                        })
-                        .then((response) => {
-                            console.log(response);
-                            set_shifts(response.data);
-                        }, reason => {
-                            console.log(reason);
-                        });
+                        sendGET();
                     }}
                 >
                     {props => (
@@ -105,21 +120,19 @@ export default function Browse () {
             
             
 
-
             <div className="relative overflow-x-auto m-7">
-            {(shifts.length <= 0) ? <>
+            {(shifts.length <= 0 || isChanged === false) ? <>
             {/* <div className='text-left text-2xl m-4 pl-5 font-semibold'>No {type}s available</div> */}
             </>
             :
+            
             <table className="w-auto border-b text-sm text-left text-blue-100 dark:bg-gray-800">
                 <thead className="text-xs text-white uppercase bg-gray-800 border-b border-blue-400 dark:bg-gray-800">
                     <tr>
                         {
                             select_attr.map((columnName)=> {
-                                return (
-                                    <>
-                                    <th scope="col" className="px-6 py-3">  {columnName.label}    </th>
-                                    </>
+                                return (     
+                                    <th key={"headerColumn"+columnName.value} scope="col" className="px-6 py-3">  {columnName.label}    </th>
                                 )
                             })
                         }
@@ -129,12 +142,13 @@ export default function Browse () {
                     {/* {Table Body} */}
                     {shifts.map((item) => {
                         return (
-                            <tr className="bg-gray-700 border-b border-gray-400 hover:bg-gray-600">
+                            <tr key ={(type ==='shift')? "body"+type + item.shift_id : "body"+type + item.event_id} className="bg-gray-700 border-b border-gray-400 hover:bg-gray-600">
                                 {select_attr.map((rows)=> {
-                                    const test =rows.value;
-                                    // console.log(test);
+                                    const typeOfAttribute =rows.value;
+                                    let info = (rows.value ==='start_time' || rows.value ==='end_time') ? 
+                                        getFullDateString(new Date(item[typeOfAttribute])):item[typeOfAttribute]
                                     return (
-                                        <td className="px-6 py-4">  {item[test]}  </td>        
+                                        <td key={type + item.shift_id+typeOfAttribute+info} className="px-6 py-4">  {info}  </td>        
                                     )
                                     
                                 })}

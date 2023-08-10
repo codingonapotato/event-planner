@@ -2,7 +2,8 @@ import { useState } from "react"
 import axios from 'axios';
 import { Formik, Form } from 'formik';
 import Input from "./Input"
-import { Navigate, Link } from "react-router-dom";
+import { getFullDateString } from "../assets/constants";
+
 
 export default function ShiftAlert({item}) {
     
@@ -31,9 +32,9 @@ export default function ShiftAlert({item}) {
             <div className="border-t border-white-500 text-black"></div>
                 <Formik
                         initialValues={{
-                            role: item.role, 
-                            start_time: item.start_time,
-                            end_time: item.end_time,
+                            role: item.role,
+                            start_time: getFullDateString(new Date(item.start_time)),
+                            end_time:   getFullDateString(new Date(item.end_time)),
                             station: item.station,
                             volunteer_id: item.volunteer_id,
                             event_id: item.event_id
@@ -53,7 +54,7 @@ export default function ShiftAlert({item}) {
                                     console.log(res);
                                     document.getElementById("dialogEdit"+item.shift_id).classList.add('hidden');
                                     document.getElementById('overlayEdit'+item.shift_id).classList.add('hidden');
-                                    // location.reload();
+                                    location.reload();
                                     
                                 }, reason => {
                                     console.log(reason);

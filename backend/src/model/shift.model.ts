@@ -18,9 +18,9 @@ export function get_using_eventID(id: number) {
 
 export function get_using_organizerID(id: number) {
     return db.query(`
-    SELECT S.* 
+    SELECT S.*, E.name 
     FROM shift S, event E 
-    WHERE S.event_id = E.event_id AND E.organizer_id = $1::integer`
+    WHERE S.event_id = E.event_id AND E.organizer_id = $1::integer ORDER BY start_time`
     , [id]);
 }
 
@@ -28,14 +28,14 @@ export function get_using_volunteerID(id: number) {
     return db.query(`
     SELECT E.name, shift_id, role, S.start_time, S.end_time, station, S.event_id, E.organizer_id, E.street_num, E.street, E.postal_code, city, province
     FROM shift S, event E NATURAL JOIN city NATURAL JOIN province
-    WHERE S.event_id = E.event_id AND volunteer_id = $1::integer`, [id]);
+    WHERE S.event_id = E.event_id AND volunteer_id = $1::integer ORDER BY start_time`, [id]);
 }
 
 export function get_using_noID() {
     return db.query(`
-    SELECT shift_id, role, S.start_time, S.end_time, station, S.event_id, E.organizer_id, city, province 
+    SELECT shift_id, role, S.start_time, S.end_time, station, S.event_id, E.organizer_id, city, province, E.name 
     FROM shift S, event E, city C, province P 
-    WHERE volunteer_id IS NULL AND S.event_id = E.event_id AND E.postal_code = C.postal_code AND E.postal_code = P.postal_code `,[]);
+    WHERE volunteer_id IS NULL AND S.event_id = E.event_id AND E.postal_code = C.postal_code AND E.postal_code = P.postal_code ORDER BY S.start_time`,[]);
 }
 
 export async function get_using_noID_filter(attribute: string, type: string) {
@@ -47,10 +47,10 @@ export async function get_using_noID_filter(attribute: string, type: string) {
     }
 
     return db.query(`
-    SELECT shift_id, role, S.start_time, S.end_time, station, S.event_id, E.organizer_id, city, province 
+    SELECT shift_id, role, S.start_time, S.end_time, station, S.event_id, E.organizer_id, city, province, E.name 
     FROM shift S, event E, city C, province P 
     WHERE volunteer_id IS NULL AND S.event_id = E.event_id AND E.postal_code = C.postal_code AND E.postal_code = P.postal_code 
-        AND ${type} ILIKE $1 || '%'`, [attribute]);
+        AND ${type} ILIKE $1 || '%' ORDER BY start_time`, [attribute]);
 }
 
 
@@ -63,7 +63,6 @@ export async function get_browser(selection: string[], from: string) {
         } else {
             s = s + selection[i];
             ((i + 1 < selection.length)) ? s = s + ', ' : s = s + ' '
-            // console.log(`i:${i}, length:${selection.length}, s:${s}`);
         }
         
     }
@@ -73,15 +72,6 @@ export async function get_browser(selection: string[], from: string) {
     return res.rows;
 }
 
-/**
- * Updates attributes with the exception of foreign keys in Shift
- * @param id the shift_id of the shift we want to change
- * @param role 
- * @param startTime 
- * @param endTime 
- * @param station 
- * @returns promise to a query result
- */
 export function updateShift(id: number, role: string, startTime: string, 
     endTime: string, station: string, volunteer_id: any) {
     if (volunteer_id === null || volunteer_id == '') {
