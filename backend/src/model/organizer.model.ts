@@ -68,12 +68,17 @@ export async function getStarCustomer(organizer_id: number) {
 
 export async function getReturningCustomers(organizer_id: number) {
     const res = await db.query(`
-        SELECT COUNT(*) FROM (
-            SELECT customer_id, COUNT(*)
-            FROM ticket NATURAL JOIN event
-            WHERE organizer_id=$1
+        SELECT COUNT(*)
+        FROM (
+            SELECT customer_id
+            FROM (
+                SELECT customer_id, event_id, COUNT(*)
+                FROM ticket NATURAL JOIN event
+                WHERE organizer_id=$1
+                GROUP BY customer_id, event_id) AS customer_attends_event
+            WHERE customer_id IS NOT NULL
             GROUP BY customer_id
-            HAVING count(*) > 1) AS returning_customers
+            HAVING COUNT(*) > 1) AS returning_customer
     `, [organizer_id]);
 
     return res.rows[0];
